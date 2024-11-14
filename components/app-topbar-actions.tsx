@@ -2,7 +2,7 @@
 
 import ThemeToggle from '@/components/toggle-theme';
 import { useState, useEffect } from 'react';
-import LanguageToggle from './toggle-language';
+import LanguageToggle from '@/components/toggle-language';
 
 export function NavActions() {
   const [isOpen, setIsOpen] = useState(false);

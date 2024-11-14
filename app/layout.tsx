@@ -42,8 +42,7 @@ export default function RootLayout({
         >
           <SidebarProvider>
             <AppSidebar />
-            <SidebarInset>
-              {' '}
+            <SidebarInset className=" ">
               <header className="flex h-16 shrink-0 items-center gap-2 px-4">
                 <div className="flex items-center gap-2">
                   <SidebarTrigger className="-ml-1" />
@@ -71,7 +70,7 @@ export default function RootLayout({
                   <NavActions />
                 </div>
               </header>
-              {children}
+              <div className="space-y-6 pt-4 pb-16 pl-12 pr-12 ">{children}</div>
             </SidebarInset>
           </SidebarProvider>
         </ThemeProvider>

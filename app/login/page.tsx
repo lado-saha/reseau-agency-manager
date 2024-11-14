@@ -1,38 +1,18 @@
-import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
-// import { signIn } from '@/lib/auth';
+import StationProfileForm from '@/components/form-station-profile';
+import { Separator } from '@/components/ui/separator';
 
-export default function LoginPage() {
+export default function SettingsProfilePage() {
   return (
-    <div className="min-h-screen flex justify-center items-start md:items-center p-8">
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
-          <CardDescription>
-            This demo uses GitHub for authentication.
-          </CardDescription>
-        </CardHeader>
-        <CardFooter>
-          <form
-            action={
-              () => {}
-              // 'use server';
-              // await signIn('github', {
-              //   redirectTo: '/'
-              // });
-            }
-            className="w-full"
-          >
-            <Button className="w-full">Sign in with GitHub</Button>
-          </form>
-        </CardFooter>
-      </Card>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-3xl font-medium pb-2">Station Profile</h1>
+        <p className="text-sm text-muted-foreground">
+          {/* TODO: Add good description */}
+          This profile differentiates this station from others in the agency.
+        </p>
+      </div>
+      <Separator />
+      <StationProfileForm />
     </div>
   );
 }
