@@ -1,0 +1,20 @@
+services:
+  scylladb:
+    image: scylladb/scylla
+    container_name: scylladb
+    environment:
+      - SCYLLA_CLUSTER_NAME=TestCluster
+    ports:
+      - '9042:9042' # CQL port for accessing ScyllaDB
+      - '9180:9180' # HTTP API port
+    volumes:
+      - scylladb_data:/var/lib/scylla
+    networks:
+      - backend
+
+volumes:
+  scylladb_data:
+
+networks:
+  backend:
+    driver: bridge

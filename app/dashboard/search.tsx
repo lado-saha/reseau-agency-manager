@@ -5,8 +5,14 @@ import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/icons';
 import { Search } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import clsx from 'clsx';
 
-export function SearchInput() {
+interface SearchInputProps {
+  className?: string;
+}
+
+export function SearchInput({ className = '' }: SearchInputProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -19,7 +25,10 @@ export function SearchInput() {
   }
 
   return (
-    <form action={searchAction} className="relative ml-auto flex-1 md:grow-0">
+    <form
+      action={searchAction}
+      className={clsx('relative ml-auto flex-1 md:grow-0', className)}
+    >
       <Search className="absolute left-2.5 top-[.75rem] h-4 w-4 text-muted-foreground" />
       <Input
         name="q"
