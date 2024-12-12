@@ -1,0 +1,527 @@
+[
+  {
+    "tripId": "trip1",
+    "fromStation": {
+      "name": "Downtown Station",
+      "agency": {
+        "agencyId": "agency1",
+        "name": "MetroTransport",
+        "motto": "Connecting Cities with Care",
+        "auditInfo": {
+          "createdOn": "2024-12-10T12:50:09.167Z",
+          "updatedOn": "2024-12-10T12:50:09.167Z",
+          "createdBy": "admin",
+          "updatedBy": "admin"
+        },
+        "logoUrl": "https://metrotransport.com/logo.png",
+        "contactInfo": {
+          "phone": "123-456-7890",
+          "email": "contact@metrotransport.com"
+        },
+        "settings": {
+          "operatingHours": "9 AM - 9 PM"
+        }
+      },
+      "auditInfo": {
+        "createdOn": "2024-12-10T12:50:09.168Z",
+        "updatedOn": "2024-12-10T12:50:09.168Z",
+        "createdBy": "admin",
+        "updatedBy": "admin"
+      },
+      "location": {
+        "country": "Country A",
+        "region": "Region 1",
+        "town": "City X",
+        "quarter": "Downtown",
+        "gpsPosition": {
+          "latitude": 12.9716,
+          "longitude": 77.5946
+        }
+      },
+      "photosUrls": [
+        "https://station1-photo.com/image1.png",
+        "https://station1-photo.com/image2.png"
+      ],
+      "settings": {
+        "operatingHours": "9 AM - 9 PM"
+      }
+    },
+    "toStation": {
+      "name": "Central Park Station",
+      "agency": {
+        "agencyId": "agency1",
+        "name": "MetroTransport",
+        "motto": "Connecting Cities with Care",
+        "auditInfo": {
+          "createdOn": "2024-12-10T12:50:09.167Z",
+          "updatedOn": "2024-12-10T12:50:09.167Z",
+          "createdBy": "admin",
+          "updatedBy": "admin"
+        },
+        "logoUrl": "https://metrotransport.com/logo.png",
+        "contactInfo": {
+          "phone": "123-456-7890",
+          "email": "contact@metrotransport.com"
+        },
+        "settings": {
+          "operatingHours": "9 AM - 9 PM"
+        }
+      },
+      "auditInfo": {
+        "createdOn": "2024-12-10T12:50:09.168Z",
+        "updatedOn": "2024-12-10T12:50:09.168Z",
+        "createdBy": "admin",
+        "updatedBy": "admin"
+      },
+      "location": {
+        "country": "Country A",
+        "region": "Region 1",
+        "town": "City Y",
+        "quarter": "Central Park",
+        "gpsPosition": {
+          "latitude": 12.9716,
+          "longitude": 77.595
+        }
+      },
+      "photosUrls": [
+        "https://station2-photo.com/image1.png",
+        "https://station2-photo.com/image2.png"
+      ],
+      "settings": {
+        "operatingHours": "9 AM - 9 PM"
+      }
+    },
+    "auditInfo": {
+      "createdOn": "2024-12-10T12:50:09.172Z",
+      "updatedOn": "2024-12-10T12:50:09.172Z",
+      "createdBy": "admin",
+      "updatedBy": "admin"
+    },
+    "vehicles": [
+      "vehicle1",
+      "vehicle2"
+    ],
+    "departureDateTime": "2024-12-15T07:00:00.000Z",
+    "passengersCount": 100
+  },
+  {
+    "tripId": "trip2",
+    "fromStation": {
+      "name": "Central Park Station",
+      "agency": {
+        "agencyId": "agency1",
+        "name": "MetroTransport",
+        "motto": "Connecting Cities with Care",
+        "auditInfo": {
+          "createdOn": "2024-12-10T12:50:09.167Z",
+          "updatedOn": "2024-12-10T12:50:09.167Z",
+          "createdBy": "admin",
+          "updatedBy": "admin"
+        },
+        "logoUrl": "https://metrotransport.com/logo.png",
+        "contactInfo": {
+          "phone": "123-456-7890",
+          "email": "contact@metrotransport.com"
+        },
+        "settings": {
+          "operatingHours": "9 AM - 9 PM"
+        }
+      },
+      "auditInfo": {
+        "createdOn": "2024-12-10T12:50:09.168Z",
+        "updatedOn": "2024-12-10T12:50:09.168Z",
+        "createdBy": "admin",
+        "updatedBy": "admin"
+      },
+      "location": {
+        "country": "Country A",
+        "region": "Region 1",
+        "town": "City Y",
+        "quarter": "Central Park",
+        "gpsPosition": {
+          "latitude": 12.9716,
+          "longitude": 77.595
+        }
+      },
+      "photosUrls": [
+        "https://station2-photo.com/image1.png",
+        "https://station2-photo.com/image2.png"
+      ],
+      "settings": {
+        "operatingHours": "9 AM - 9 PM"
+      }
+    },
+    "toStation": {
+      "name": "East End Station",
+      "agency": {
+        "agencyId": "agency1",
+        "name": "MetroTransport",
+        "motto": "Connecting Cities with Care",
+        "auditInfo": {
+          "createdOn": "2024-12-10T12:50:09.167Z",
+          "updatedOn": "2024-12-10T12:50:09.167Z",
+          "createdBy": "admin",
+          "updatedBy": "admin"
+        },
+        "logoUrl": "https://metrotransport.com/logo.png",
+        "contactInfo": {
+          "phone": "123-456-7890",
+          "email": "contact@metrotransport.com"
+        },
+        "settings": {
+          "operatingHours": "9 AM - 9 PM"
+        }
+      },
+      "auditInfo": {
+        "createdOn": "2024-12-10T12:50:09.168Z",
+        "updatedOn": "2024-12-10T12:50:09.168Z",
+        "createdBy": "admin",
+        "updatedBy": "admin"
+      },
+      "location": {
+        "country": "Country A",
+        "region": "Region 3",
+        "town": "City Z",
+        "quarter": "East End",
+        "gpsPosition": {
+          "latitude": 12.973,
+          "longitude": 77.598
+        }
+      },
+      "photosUrls": [
+        "https://station3-photo.com/image1.png",
+        "https://station3-photo.com/image2.png"
+      ],
+      "settings": {
+        "operatingHours": "9 AM - 9 PM"
+      }
+    },
+    "auditInfo": {
+      "createdOn": "2024-12-10T12:50:09.173Z",
+      "updatedOn": "2024-12-10T12:50:09.173Z",
+      "createdBy": "admin",
+      "updatedBy": "admin"
+    },
+    "vehicles": [
+      "vehicle3",
+      "vehicle4"
+    ],
+    "departureDateTime": "2024-12-15T09:00:00.000Z",
+    "passengersCount": 120
+  },
+  {
+    "tripId": "trip3",
+    "fromStation": {
+      "name": "Downtown Station",
+      "agency": {
+        "agencyId": "agency1",
+        "name": "MetroTransport",
+        "motto": "Connecting Cities with Care",
+        "auditInfo": {
+          "createdOn": "2024-12-10T12:50:09.167Z",
+          "updatedOn": "2024-12-10T12:50:09.167Z",
+          "createdBy": "admin",
+          "updatedBy": "admin"
+        },
+        "logoUrl": "https://metrotransport.com/logo.png",
+        "contactInfo": {
+          "phone": "123-456-7890",
+          "email": "contact@metrotransport.com"
+        },
+        "settings": {
+          "operatingHours": "9 AM - 9 PM"
+        }
+      },
+      "auditInfo": {
+        "createdOn": "2024-12-10T12:50:09.168Z",
+        "updatedOn": "2024-12-10T12:50:09.168Z",
+        "createdBy": "admin",
+        "updatedBy": "admin"
+      },
+      "location": {
+        "country": "Country A",
+        "region": "Region 1",
+        "town": "City X",
+        "quarter": "Downtown",
+        "gpsPosition": {
+          "latitude": 12.9716,
+          "longitude": 77.5946
+        }
+      },
+      "photosUrls": [
+        "https://station1-photo.com/image1.png",
+        "https://station1-photo.com/image2.png"
+      ],
+      "settings": {
+        "operatingHours": "9 AM - 9 PM"
+      }
+    },
+    "toStation": {
+      "name": "East End Station",
+      "agency": {
+        "agencyId": "agency1",
+        "name": "MetroTransport",
+        "motto": "Connecting Cities with Care",
+        "auditInfo": {
+          "createdOn": "2024-12-10T12:50:09.167Z",
+          "updatedOn": "2024-12-10T12:50:09.167Z",
+          "createdBy": "admin",
+          "updatedBy": "admin"
+        },
+        "logoUrl": "https://metrotransport.com/logo.png",
+        "contactInfo": {
+          "phone": "123-456-7890",
+          "email": "contact@metrotransport.com"
+        },
+        "settings": {
+          "operatingHours": "9 AM - 9 PM"
+        }
+      },
+      "auditInfo": {
+        "createdOn": "2024-12-10T12:50:09.168Z",
+        "updatedOn": "2024-12-10T12:50:09.168Z",
+        "createdBy": "admin",
+        "updatedBy": "admin"
+      },
+      "location": {
+        "country": "Country A",
+        "region": "Region 3",
+        "town": "City Z",
+        "quarter": "East End",
+        "gpsPosition": {
+          "latitude": 12.973,
+          "longitude": 77.598
+        }
+      },
+      "photosUrls": [
+        "https://station3-photo.com/image1.png",
+        "https://station3-photo.com/image2.png"
+      ],
+      "settings": {
+        "operatingHours": "9 AM - 9 PM"
+      }
+    },
+    "auditInfo": {
+      "createdOn": "2024-12-10T12:50:09.173Z",
+      "updatedOn": "2024-12-10T12:50:09.173Z",
+      "createdBy": "admin",
+      "updatedBy": "admin"
+    },
+    "vehicles": [
+      "vehicle5",
+      "vehicle6"
+    ],
+    "departureDateTime": "2024-12-15T11:00:00.000Z",
+    "passengersCount": 80
+  },
+  {
+    "tripId": "trip4",
+    "fromStation": {
+      "name": "Central Park Station",
+      "agency": {
+        "agencyId": "agency1",
+        "name": "MetroTransport",
+        "motto": "Connecting Cities with Care",
+        "auditInfo": {
+          "createdOn": "2024-12-10T12:50:09.167Z",
+          "updatedOn": "2024-12-10T12:50:09.167Z",
+          "createdBy": "admin",
+          "updatedBy": "admin"
+        },
+        "logoUrl": "https://metrotransport.com/logo.png",
+        "contactInfo": {
+          "phone": "123-456-7890",
+          "email": "contact@metrotransport.com"
+        },
+        "settings": {
+          "operatingHours": "9 AM - 9 PM"
+        }
+      },
+      "auditInfo": {
+        "createdOn": "2024-12-10T12:50:09.168Z",
+        "updatedOn": "2024-12-10T12:50:09.168Z",
+        "createdBy": "admin",
+        "updatedBy": "admin"
+      },
+      "location": {
+        "country": "Country A",
+        "region": "Region 1",
+        "town": "City Y",
+        "quarter": "Central Park",
+        "gpsPosition": {
+          "latitude": 12.9716,
+          "longitude": 77.595
+        }
+      },
+      "photosUrls": [
+        "https://station2-photo.com/image1.png",
+        "https://station2-photo.com/image2.png"
+      ],
+      "settings": {
+        "operatingHours": "9 AM - 9 PM"
+      }
+    },
+    "toStation": {
+      "name": "Downtown Station",
+      "agency": {
+        "agencyId": "agency1",
+        "name": "MetroTransport",
+        "motto": "Connecting Cities with Care",
+        "auditInfo": {
+          "createdOn": "2024-12-10T12:50:09.167Z",
+          "updatedOn": "2024-12-10T12:50:09.167Z",
+          "createdBy": "admin",
+          "updatedBy": "admin"
+        },
+        "logoUrl": "https://metrotransport.com/logo.png",
+        "contactInfo": {
+          "phone": "123-456-7890",
+          "email": "contact@metrotransport.com"
+        },
+        "settings": {
+          "operatingHours": "9 AM - 9 PM"
+        }
+      },
+      "auditInfo": {
+        "createdOn": "2024-12-10T12:50:09.168Z",
+        "updatedOn": "2024-12-10T12:50:09.168Z",
+        "createdBy": "admin",
+        "updatedBy": "admin"
+      },
+      "location": {
+        "country": "Country A",
+        "region": "Region 1",
+        "town": "City X",
+        "quarter": "Downtown",
+        "gpsPosition": {
+          "latitude": 12.9716,
+          "longitude": 77.5946
+        }
+      },
+      "photosUrls": [
+        "https://station1-photo.com/image1.png",
+        "https://station1-photo.com/image2.png"
+      ],
+      "settings": {
+        "operatingHours": "9 AM - 9 PM"
+      }
+    },
+    "auditInfo": {
+      "createdOn": "2024-12-10T12:50:09.173Z",
+      "updatedOn": "2024-12-10T12:50:09.173Z",
+      "createdBy": "admin",
+      "updatedBy": "admin"
+    },
+    "vehicles": [
+      "vehicle1",
+      "vehicle5"
+    ],
+    "departureDateTime": "2024-12-16T07:00:00.000Z",
+    "passengersCount": 110
+  },
+  {
+    "tripId": "trip5",
+    "fromStation": {
+      "name": "East End Station",
+      "agency": {
+        "agencyId": "agency1",
+        "name": "MetroTransport",
+        "motto": "Connecting Cities with Care",
+        "auditInfo": {
+          "createdOn": "2024-12-10T12:50:09.167Z",
+          "updatedOn": "2024-12-10T12:50:09.167Z",
+          "createdBy": "admin",
+          "updatedBy": "admin"
+        },
+        "logoUrl": "https://metrotransport.com/logo.png",
+        "contactInfo": {
+          "phone": "123-456-7890",
+          "email": "contact@metrotransport.com"
+        },
+        "settings": {
+          "operatingHours": "9 AM - 9 PM"
+        }
+      },
+      "auditInfo": {
+        "createdOn": "2024-12-10T12:50:09.168Z",
+        "updatedOn": "2024-12-10T12:50:09.168Z",
+        "createdBy": "admin",
+        "updatedBy": "admin"
+      },
+      "location": {
+        "country": "Country A",
+        "region": "Region 3",
+        "town": "City Z",
+        "quarter": "East End",
+        "gpsPosition": {
+          "latitude": 12.973,
+          "longitude": 77.598
+        }
+      },
+      "photosUrls": [
+        "https://station3-photo.com/image1.png",
+        "https://station3-photo.com/image2.png"
+      ],
+      "settings": {
+        "operatingHours": "9 AM - 9 PM"
+      }
+    },
+    "toStation": {
+      "name": "Central Park Station",
+      "agency": {
+        "agencyId": "agency1",
+        "name": "MetroTransport",
+        "motto": "Connecting Cities with Care",
+        "auditInfo": {
+          "createdOn": "2024-12-10T12:50:09.167Z",
+          "updatedOn": "2024-12-10T12:50:09.167Z",
+          "createdBy": "admin",
+          "updatedBy": "admin"
+        },
+        "logoUrl": "https://metrotransport.com/logo.png",
+        "contactInfo": {
+          "phone": "123-456-7890",
+          "email": "contact@metrotransport.com"
+        },
+        "settings": {
+          "operatingHours": "9 AM - 9 PM"
+        }
+      },
+      "auditInfo": {
+        "createdOn": "2024-12-10T12:50:09.168Z",
+        "updatedOn": "2024-12-10T12:50:09.168Z",
+        "createdBy": "admin",
+        "updatedBy": "admin"
+      },
+      "location": {
+        "country": "Country A",
+        "region": "Region 1",
+        "town": "City Y",
+        "quarter": "Central Park",
+        "gpsPosition": {
+          "latitude": 12.9716,
+          "longitude": 77.595
+        }
+      },
+      "photosUrls": [
+        "https://station2-photo.com/image1.png",
+        "https://station2-photo.com/image2.png"
+      ],
+      "settings": {
+        "operatingHours": "9 AM - 9 PM"
+      }
+    },
+    "auditInfo": {
+      "createdOn": "2024-12-10T12:50:09.173Z",
+      "updatedOn": "2024-12-10T12:50:09.173Z",
+      "createdBy": "admin",
+      "updatedBy": "admin"
+    },
+    "vehicles": [
+      "vehicle2",
+      "vehicle6"
+    ],
+    "departureDateTime": "2024-12-16T08:00:00.000Z",
+    "passengersCount": 90
+  }
+]

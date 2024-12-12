@@ -1,5 +1,7 @@
 {
   "HomePage": {
     "title": "Hello world!"
-  }
+  },
+  "a-user-admin-dashboard-configured-with-next-js-postgres-nextauth-tailwind-css-typescript-and-prettier": "A user admin dashboard configured with Next.js, Postgres, NextAuth, Tailwind CSS, TypeScript, and Prettier.",
+  "tripbook": "Tripbook"
 }

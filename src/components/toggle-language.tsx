@@ -11,9 +11,10 @@ import {
   DropdownMenuTrigger
 } from 'src/components/ui/dropdown-menu';
 import { useState } from 'react';
+import { getLocale } from 'next-intl/server';
 
 export default function LanguageToggle() {
-  const [selectedLanguage, setSelectedLanguage] = useState('English'); // Default selected language
+  const [selectedLanguage, setSelectedLanguage] = useState('en'); // Default selected language
 
   const handleLanguageChange = (language: string) => {
     setSelectedLanguage(language);
@@ -31,22 +32,16 @@ export default function LanguageToggle() {
       <DropdownMenuContent align="end">
         <div className="space-y-1">
           <DropdownMenuItem
-            onClick={() => handleLanguageChange('English')}
-            className={selectedLanguage === 'English' ? 'bg-muted' : ''}
+            onClick={() => handleLanguageChange('en')}
+            className={selectedLanguage === 'en' ? 'bg-muted' : ''}
           >
             English
           </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={() => handleLanguageChange('Français')}
-            className={selectedLanguage === 'Français' ? 'bg-muted' : ''}
+            onClick={() => handleLanguageChange('fr')}
+            className={selectedLanguage === 'fr' ? 'bg-muted' : ''}
           >
             Français
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => handleLanguageChange('Pусский')}
-            className={selectedLanguage === 'Pусский' ? 'bg-muted' : ''}
-          >
-            Pусский
           </DropdownMenuItem>
         </div>
       </DropdownMenuContent>

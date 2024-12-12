@@ -115,3 +115,10 @@ input[type='search']::-moz-search-cancel-button {
 input[type='search']::-ms-clear {
   display: none;
 }
+
+/* styles/globals.css */
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  z-index: 0;
+}

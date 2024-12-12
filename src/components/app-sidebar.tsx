@@ -30,17 +30,8 @@ import {
   Backpack
 } from 'lucide-react';
 
-// import {
-//   BookOpen,
-//   Bot,
-//   Command,
-//   Frame,
-//   Map,
-//   PieChart,
-//   Settings2,
-//   SquareTerminal,
-// } from "lucide-react"
 import { StationSwitcher } from 'src/components/switcher-stations';
+import { usePathname } from 'next/navigation';
 
 import { NavMain } from 'src/components/nav-main';
 import { NavCustomerRel } from 'src/components/nav-projects';
@@ -143,7 +134,8 @@ const data = {
       name: 'Terminus, Yaounde',
       logo: Command,
       plan: 'BP 405, Coline rouge'
-    },  {
+    },
+    {
       name: 'Foreke, Dschang',
       logo: GalleryVerticalEnd,
       plan: 'BP 206, Rondeau'
@@ -312,8 +304,9 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  
   return (
-    <Sidebar variant="inset"  {...props}>
+    <Sidebar variant="inset" {...props}>
       <SidebarHeader>
         <SidebarHeader>
           <StationSwitcher teams={data.stations} />

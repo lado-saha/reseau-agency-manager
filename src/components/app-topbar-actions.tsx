@@ -12,7 +12,7 @@ export function NavActions() {
   }, []);
 
   return (
-    <div className="flex items-center gap-2 text-sm ml-auto">
+    <div className="flex items-center gap-1 text-sm ml-auto pl-1">
       <LanguageToggle />
       <ThemeToggle />
     </div>

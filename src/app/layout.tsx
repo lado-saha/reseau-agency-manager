@@ -2,7 +2,7 @@ import './globals.css';
 import { Analytics } from '@vercel/analytics/react';
 import { ThemeProvider } from 'src/components/theme-provider';
 import { NextIntlClientProvider } from 'next-intl';
-import { getLocale, getMessages } from 'next-intl/server';
+// import { getLocale, getMessages } from 'next-intl/server';
 
 export const metadata = {
   title: 'Next.js App Router + NextAuth + Tailwind CSS',
@@ -15,11 +15,11 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const locale = await getLocale();
+  const locale = "en";
 
   // Providing all messages to the client
   // side is the easiest way to get started
-  const messages = await getMessages();
+  // const messages = await getMessages();
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className="flex min-h-screen w-full flex-col">
@@ -29,9 +29,9 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <NextIntlClientProvider messages={messages}>
+          {/* <NextIntlClientProvider messages={messages}> */}
             {children}
-          </NextIntlClientProvider>
+          {/* </NextIntlClientProvider> */}
         </ThemeProvider>
       </body>
       <Analytics />

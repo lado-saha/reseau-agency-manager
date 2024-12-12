@@ -16,6 +16,8 @@ import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin();
 
-const nextConfig: import('next').NextConfig = {};
+const nextConfig: import('next').NextConfig = {
+  reactStrictMode: false
+};
 
 export default withNextIntl(nextConfig);

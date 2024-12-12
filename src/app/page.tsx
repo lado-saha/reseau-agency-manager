@@ -1,6 +1,4 @@
 import { AppSidebar } from 'src/components/app-sidebar';
-import { NavActions } from 'src/components/app-topbar-actions';
-import { ProfileForm } from 'src/components/form-station-profile';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -27,8 +25,9 @@ export default function Page() {
         </div>
         <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
       </div> */}
+      {/* <AppCalenderSidebar /> */}
 
-      <ProfileForm />
+      {/* <ProfileForm /> */}
     </>
   );
 }
