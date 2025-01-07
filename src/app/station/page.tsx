@@ -1,4 +1,4 @@
-import StationProfileForm from 'src/components/form-station-profile';
+import StationProfileForm from '@/components/station/form-station-profile';
 import { Separator } from 'src/components/ui/separator';
 
 export default function SettingsProfilePage() {

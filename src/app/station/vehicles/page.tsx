@@ -7,6 +7,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import {
@@ -18,12 +19,19 @@ import {
   ArrowUpCircle,
   Home,
   ArrowDownCircle,
-  MapPinned
+  MapPinned,
+  ParkingCircleIcon,
+  SortAscIcon,
+  SortDescIcon
 } from 'lucide-react';
-import { TableVehicles, GridVehicles } from '@/components/table-vehicles';
+import {
+  TableVehicles,
+  GridVehicles,
+  vehicleTableSortingOptions
+} from '@/components/vehicles/table-vehicles';
 import { JsonRepository } from '@/lib/repository/JsonRepository';
 import { Vehicle } from '@/lib/models/resource';
-import { TabsVehicles } from '@/lib/models/helpers';
+import { sortVehicles, TabsVehicles } from '@/lib/models/helpers';
 import MapVehicles from '@/components/map';
 import { LatLngExpression, LatLngTuple } from 'leaflet';
 
@@ -45,17 +53,27 @@ export default function VehicleDashboardPage(props: {
 
   const [currentView, setCurrentView] = useState<
     'mapview' | 'tableview' | 'gridview'
-  >('mapview');
+  >('tableview');
+
+  const [sortingDirection, setSortingDirection] = useState<'asc' | 'desc'>(
+    'asc'
+  );
+
+  const [currentSortOption, setCurrentSortOption] = useState<string>();
+
   const [tab, setTab] = useState<TabsVehicles>('all');
 
   const repo = new JsonRepository<Vehicle>('vehicles.json');
   const searchParams = props.searchParams;
   const search = searchParams.q ?? '';
   const offset = searchParams.offset ?? 0;
-  const { vehicles, newOffset, totalProducts } = repo.get(
-    search,
-    Number(offset)
-  );
+  const {
+    vehicles: _vehicles,
+    newOffset,
+    totalProducts
+  } = repo.get(search, Number(offset));
+
+  const [vehicles, setVehicles] = useState(_vehicles);
   const [mapCenter, setMapCenter] = useState<LatLngExpression | LatLngTuple>([
     // Temporary
     vehicles[1].positionGps.latitude,
@@ -76,30 +94,87 @@ export default function VehicleDashboardPage(props: {
             <span>All</span>
           </TabsTrigger>
 
-          <TabsTrigger value="idle" className="items-center">
-            <Home className="mx-1 " />
-            <span>Idle</span>
+          <TabsTrigger value="stationed" className="items-center">
+            <ParkingCircleIcon className="mx-1 w-4 h-4" />
+            {/* Set the width and height to match the text size */}
+            <span>Stationed</span>
           </TabsTrigger>
 
           <TabsTrigger value="incoming" className="items-center">
-            <ArrowDownCircle className="mx-1 " />
+            <ArrowDownCircle className="mx-1 w-4 h-4" />
             <span>Incoming</span>
           </TabsTrigger>
 
           <TabsTrigger value="outgoing" className="items-center">
-            <ArrowUpCircle className="mx-1 " />
+            <ArrowUpCircle className="mx-1 w-4 h-4" />
             <span>Outgoing</span>
           </TabsTrigger>
         </TabsList>
 
         {/* View Selection and Export */}
         <div className="ml-auto flex items-center gap-2">
-          <Button size="sm" variant="outline" className="h-8 gap-1">
-            <File className="h-3.5 w-3.5" />
-            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-              Export
-            </span>
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="sm" className="h-8 gap-1">
+                {sortingDirection == 'asc' ? (
+                  <SortAscIcon className="h-3.5 w-3.5" />
+                ) : (
+                  <SortDescIcon className="h-3.5 w-3.5" />
+                )}
+                <span className="sr-only sm:not-sr-only">Sort</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {/* Sorting Options */}
+              <DropdownMenuItem
+                onClick={() => {
+                  setSortingDirection('asc');
+                }}
+                className={
+                  sortingDirection === 'asc' ? 'font-bold  bg-accent' : ''
+                }
+              >
+                <SortAscIcon className="mr-2 h-4 w-4" />
+                Ascending
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  setSortingDirection('desc');
+                }}
+                className={
+                  sortingDirection === 'desc' ? 'font-bold bg-accent' : ''
+                }
+              >
+                <SortDescIcon className="mr-2 h-4 w-4" />
+                Descending
+              </DropdownMenuItem>
+
+              <DropdownMenuSeparator className="mx-1" />
+              {/* View Options */}
+              {vehicleTableSortingOptions(tab).map((option) => (
+                <DropdownMenuItem
+                  key={option.fieldName}
+                  onClick={() => {
+                    setCurrentSortOption(option.fieldName);
+                    setVehicles(
+                      sortVehicles(
+                        option.fieldName as keyof Vehicle,
+                        sortingDirection,
+                        vehicles
+                      )
+                    );
+                  }}
+                  className={
+                    currentSortOption === option.fieldName
+                      ? 'font-bold bg-accent'
+                      : ''
+                  }
+                >
+                  {option.displayName}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

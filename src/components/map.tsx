@@ -59,7 +59,7 @@ import {
   VehicleGridItem,
   VehicleMapTooltip,
   VehicleTableItem
-} from './item-vehicle';
+} from './vehicles/item-vehicle';
 
 interface MapProps {
   posix: LatLngExpression | LatLngTuple;

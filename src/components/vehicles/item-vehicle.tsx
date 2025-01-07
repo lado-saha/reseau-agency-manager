@@ -16,6 +16,7 @@ import {
   ArrowUpCircle,
   Check,
   CheckCircle2,
+  CircleParkingIcon,
   Hammer,
   Home,
   HomeIcon,
@@ -23,7 +24,8 @@ import {
   MoreHorizontal,
   MoreVertical,
   MoveRight,
-  ParkingCircle
+  ParkingCircle,
+  PauseCircleIcon
 } from 'lucide-react';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { Vehicle } from '@/lib/models/resource';
@@ -46,25 +48,31 @@ interface VehicleItemProps {
 
 function renderStatusBadge(vehicle: Vehicle) {
   switch (vehicle.status) {
-    case 'incoming':
-      return (
-        <Badge variant="default" className="items-center">
-          <ArrowDownCircle className="mr-2 " />
-          <span className="text-sm">Incoming</span>
-        </Badge>
-      );
     case 'outgoing':
       return (
-        <Badge variant="default" className="items-center">
-          <ArrowUpCircle className="mr-2 " />
+        <Badge variant="destructive" className="items-center">
+          <ArrowUpCircle className="mr-2 h-4 w-4" />
           <span className="text-sm">Outgoing</span>
         </Badge>
       );
-    case 'idle':
+    case 'incoming':
       return (
-        <Badge variant="default" className="items-center ">
-          <ParkingCircle className="mr-2  " />
-          <span className="text-sm">Idle</span>
+        <Badge
+          variant="default"
+          className="items-center bg-green-500 text-white"
+        >
+          <ArrowDownCircle className="mr-2 h-4 w-4" />
+          <span className="text-sm">Incoming</span>
+        </Badge>
+      );
+    case 'stationed':
+      return (
+        <Badge
+          variant="default"
+          className="items-center bg-gray-500 text-white"
+        >
+          <CircleParkingIcon className="mr-2 h-4 w-4" />
+          <span className="text-sm">Stationed</span>
         </Badge>
       );
     default:
@@ -76,23 +84,23 @@ function renderHealthBadge(vehicle: Vehicle) {
   switch (vehicle.health) {
     case 'normal':
       return (
-        <Badge variant="outline" className="items-center border-green-500">
-          <CheckCircle2 className="mr-2 text-green-500" />
-          Normal
+        <Badge variant="outline" className="items-center ">
+          <CheckCircle2 className="mr-2 h-4 w-4" />
+          <span className="text-sm">Normal</span>
         </Badge>
       );
     case 'damaged':
       return (
-        <Badge variant="outline" className="items-center border-red-500">
-          <AlertCircle className="mr-2  text-red-500" />
-          Damaged
+        <Badge variant="outline" className="items-center ">
+          <AlertCircle className="mr-2 h-4 w-4" />
+          <span className="text-sm">Damaged</span>
         </Badge>
       );
     case 'repairing':
       return (
-        <Badge variant="outline" className="items-center border-blue-500">
-          <Hammer className="mr-2  text-blue-500" />
-          Repairing
+        <Badge variant="outline" className="items-center">
+          <Hammer className="mr-2 w-4 h-4" />
+          <span className="text-sm">Repairing</span>
         </Badge>
       );
     default:
@@ -123,7 +131,7 @@ export function VehicleTableItem({
             <TableCell>{vehicle.estimatedArrivalTime}</TableCell>
           </>
         );
-      case 'idle':
+      case 'stationed':
         return (
           <>
             <TableCell>{vehicle.arrivedOn}</TableCell>
@@ -285,7 +293,7 @@ export function VehicleGridItem({
               </div>
             </>
           )}
-          {currentTab === 'idle' && (
+          {currentTab === 'stationed' && (
             <>
               <div>
                 <span className="block text-muted-foreground">Arrived On</span>

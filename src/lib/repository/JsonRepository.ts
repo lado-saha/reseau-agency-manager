@@ -3,6 +3,7 @@ import { Agency, Station } from '../models/agency';
 import { Vehicle, Driver } from '../models/resource';
 import { Trip } from '@/lib/models/trip';
 import { format } from 'date-fns';
+import { SortingDirection } from '../models/helpers';
 
 // const vehicleJSON = [
 //   {
@@ -27,7 +28,7 @@ import { format } from 'date-fns';
 //       latitude: 12.9716,
 //       longitude: 77.5946
 //     },
-//     status: 'idle',
+//     status: 'stationed',
 //     health: 'normal',
 //     occupiedSeats: 20,
 //     arrivedOn: '2024-12-10T08:45:00.000Z',
@@ -205,7 +206,7 @@ import { format } from 'date-fns';
 //       latitude: 12.98,
 //       longitude: 77.602
 //     },
-//     status: 'idle',
+//     status: 'stationed',
 //     health: 'repairing',
 //     occupiedSeats: 0,
 //     arrivedOn: '2024-12-11T06:30:00.000Z',
@@ -306,7 +307,7 @@ import { format } from 'date-fns';
 //       latitude: 12.983,
 //       longitude: 77.605
 //     },
-//     status: 'idle',
+//     status: 'stationed',
 //     health: 'normal',
 //     occupiedSeats: 0,
 //     arrivedOn: '2024-12-12T07:30:00.000Z',
@@ -530,7 +531,7 @@ import { format } from 'date-fns';
 //       latitude: 12.99,
 //       longitude: 77.612
 //     },
-//     status: 'idle',
+//     status: 'stationed',
 //     health: 'normal',
 //     occupiedSeats: 0,
 //     arrivedOn: '2024-12-12T10:30:00.000Z',
@@ -569,7 +570,7 @@ const vehicleJSON = [
       latitude: 12.9716,
       longitude: 77.5946
     },
-    status: 'idle',
+    status: 'stationed',
     health: 'normal',
     occupiedSeats: 20,
     arrivedOn: format(new Date('2024-12-10T08:45:00.000Z'), 'Pp'),
@@ -762,7 +763,7 @@ const vehicleJSON = [
       latitude: 12.98,
       longitude: 77.602
     },
-    status: 'idle',
+    status: 'stationed',
     health: 'repairing',
     occupiedSeats: 0,
     arrivedOn: format(new Date('2024-12-11T06:30:00.000Z'), 'Pp'),
@@ -863,7 +864,7 @@ const vehicleJSON = [
       latitude: 12.983,
       longitude: 77.605
     },
-    status: 'idle',
+    status: 'stationed',
     health: 'normal',
     occupiedSeats: 0,
     arrivedOn: format(new Date('2024-12-12T07:30:00.000Z'), 'Pp'),
@@ -1090,7 +1091,7 @@ const vehicleJSON = [
       latitude: 12.99,
       longitude: 77.612
     },
-    status: 'idle',
+    status: 'stationed',
     health: 'normal',
     occupiedSeats: 0,
     arrivedOn: format(new Date('2024-12-12T10:30:00.000Z'), 'Pp'),
@@ -1125,7 +1126,9 @@ export class JsonRepository<T> {
   get(
     search = '',
     offset = 0,
-    limit = 10
+    limit = 10,
+    sortBy = '',
+    direction: SortingDirection | undefined = undefined
   ): {
     vehicles: Vehicle[];
     newOffset: number;

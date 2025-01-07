@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 @layer base {
-  :root{
+  :root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
@@ -51,7 +51,7 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
-  .dark{
+  .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
 
@@ -110,6 +110,15 @@ input[type='search']::-webkit-search-cancel-button {
 input[type='search']::-moz-search-cancel-button {
   display: none;
 }
+
+/* Add hover styles for Sidebar Menu Items */
+a:hover {
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  /* Optional shadow */
+  transition: all 0.3s ease;
+}
+
 
 /* Microsoft Edge */
 input[type='search']::-ms-clear {

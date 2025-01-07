@@ -1,12 +1,12 @@
-"use client"
+'use client';
 
-import { ChevronRight, type LucideIcon } from "lucide-react"
+import { ChevronRight, type LucideIcon } from 'lucide-react';
 
 import {
   Collapsible,
   CollapsibleContent,
-  CollapsibleTrigger,
-} from "src/components/ui/collapsible"
+  CollapsibleTrigger
+} from 'src/components/ui/collapsible';
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -16,22 +16,23 @@ import {
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarMenuSubButton,
-  SidebarMenuSubItem,
-} from "src/components/ui/sidebar"
+  SidebarMenuSubItem
+} from 'src/components/ui/sidebar';
 
 export function NavMain({
-  items,
+  items
 }: {
   items: {
-    title: string
-    url: string
-    icon: LucideIcon
-    isActive?: boolean
+    title: string;
+    url: string;
+    icon: LucideIcon;
+    isActive?: boolean;
     items?: {
-      title: string
-      url: string
-    }[]
-  }[]
+      title: string;
+      url: string;
+      isActive?: boolean;
+    }[];
+  }[];
 }) {
   return (
     <SidebarGroup>
@@ -59,7 +60,14 @@ export function NavMain({
                       {item.items?.map((subItem) => (
                         <SidebarMenuSubItem key={subItem.title}>
                           <SidebarMenuSubButton asChild>
-                            <a href={subItem.url}>
+                            <a
+                              href={subItem.url}
+                              className={` ${
+                                subItem.isActive
+                                  ? 'font-bold shadow-md bg-accent' // Active: White text, shadow, and background for contrast
+                                  : 'hover:font-bold hover:shadow-md hover:bg-primary' // Hover: White text, shadow, and background on hover
+                              }`}
+                            >
                               <span>{subItem.title}</span>
                             </a>
                           </SidebarMenuSubButton>
@@ -74,5 +82,5 @@ export function NavMain({
         ))}
       </SidebarMenu>
     </SidebarGroup>
-  )
+  );
 }

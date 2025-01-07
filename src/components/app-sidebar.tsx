@@ -160,8 +160,7 @@ const data = {
     {
       title: 'Dashboard',
       url: '#',
-      icon: LayoutDashboard,
-      isActive: true
+      icon: LayoutDashboard
     },
 
     {
@@ -184,21 +183,20 @@ const data = {
       ]
     },
     {
-      title: 'Vehicle Management',
-      url: '#',
+      title: 'Fleet Management',
+      url: '/station/vehicles',
       icon: BusIcon,
+      isActive: true,
+
       items: [
         {
-          title: 'View Vehicles',
-          url: '#'
+          title: 'Vehicles',
+          url: 'vehicles',
+          isActive: true
         },
         {
-          title: 'Add New Vehicle',
-          url: '#'
-        },
-        {
-          title: 'Maintainance Schedule',
-          url: '#'
+          title: 'Models',
+          url: 'models'
         }
       ]
     },
@@ -304,7 +302,6 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>

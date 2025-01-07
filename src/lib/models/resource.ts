@@ -49,7 +49,7 @@ export class Vehicle {
     randomInt(3)
   ] as HealthVehicles;
   origin: string;
-  status: StatusVehicles = ['idle', 'incoming', 'outgoing'][
+  status: StatusVehicles = ['stationed', 'incoming', 'outgoing'][
     randomInt(3)
   ] as StatusVehicles;
 
@@ -69,10 +69,9 @@ export class Vehicle {
     model: string,
     positionGps: { latitude: number; longitude: number },
     createdBy: string,
-    imageUrl: string,
+    imageUrl: string
     // status: StatusVehicles
     // health: HealthVehicles = HealthVehicles,
-   
   ) {
     this.imageUrl = imageUrl;
     this.resource = new Resource(
@@ -88,11 +87,11 @@ export class Vehicle {
     this.auditInfo = new AuditInfo(createdBy); // Initialize vehicle-specific audit info
 
     // this.health = health;
-      this.health = ['damaged', 'normal', 'repairing'][
+    this.health = ['damaged', 'normal', 'repairing'][
       randomInt(3)
     ] as HealthVehicles;
     this.origin = ['Dschang', 'Yaounde', 'Maroua', 'Douala'][randomInt(4)];
-    this.status = ['idle', 'incoming', 'outgoing'][
+    this.status = ['stationed', 'incoming', 'outgoing'][
       randomInt(3)
     ] as StatusVehicles;
     this.departureTime = format(Date(), ' Pp');
@@ -103,8 +102,128 @@ export class Vehicle {
   }
 
   init() {
- 
     return this;
+  }
+
+
+}
+
+/**
+ * Represents a vehicle model with seat layout and associated bitmask.
+ */
+export class VehicleModel {
+  id: string;
+  manufacturer: string;
+  modelName: string;
+  seatBitmask: string; // The bitmask representation of the seat grid
+  numberSeats: number; // The number of seats (calculated dynamically)
+  matrix: number[][] | null; // Nullable matrix, calculated at runtime
+  columns: number; // Number of columns per row in the matrix
+
+  /**
+   * Creates a VehicleModel instance.
+   * @param id The unique ID of the vehicle model.
+   * @param manufacturer The manufacturer of the vehicle.
+   * @param modelName The name of the vehicle model.
+   * @param seatData Either a seat matrix (2D array) or a seat bitmask string.
+   * @param cellsPerRow The number of columns per row (required for bitmask conversion).
+   */
+  constructor(
+    id: string,
+    manufacturer: string,
+    modelName: string,
+    seatData: string | number[][],
+    columns: number
+  ) {
+    this.id = id;
+    this.manufacturer = manufacturer;
+    this.modelName = modelName;
+    this.seatBitmask = '';
+    this.numberSeats = 0;
+    this.matrix = null;
+    this.columns = columns;
+
+    // Determine if we are provided a bitmask or matrix
+    if (typeof seatData === 'string') {
+      this.seatBitmask = seatData;
+      this.matrix = this.convertBitmaskToMatrix();
+      this.numberSeats = this.calculateNumberOfSeats(this.matrix);
+    } else {
+      this.matrix = seatData;
+      this.seatBitmask = this.convertMatrixToBitmask(seatData);
+      this.numberSeats = this.calculateNumberOfSeats(seatData);
+    }
+  }
+
+  /**
+   * Converts a 2D seat matrix into a bitmask string.
+   * @param matrix The 2D seat matrix where 1 represents a seat and 0 represents empty space.
+   * @returns A bitmask string representing the seat matrix.
+   */
+  convertMatrixToBitmask(matrix: number[][]): string {
+    let bitmask = '';
+    for (const row of matrix) {
+      // Convert each row of the matrix into a string of 0s and 1s
+      bitmask += row.join('');
+    }
+    return bitmask;
+  }
+
+  /**
+   * Converts a bitmask string into a 2D seat matrix.
+   * @returns A 2D seat matrix where 1 represents a seat and 0 represents empty space.
+   */
+  convertBitmaskToMatrix(): number[][] {
+    if (!this.seatBitmask) return [];
+
+    const totalCells = this.seatBitmask.length;
+    const rows = Math.ceil(totalCells / this.columns); // Calculate the number of rows
+    const matrix: number[][] = [];
+
+    // Slice the bitmask into rows
+    for (let i = 0; i < rows; i++) {
+      const row = this.seatBitmask
+        .slice(i * this.columns, (i + 1) * this.columns)
+        .split('')
+        .map(Number);
+      matrix.push(row);
+    }
+
+    return matrix;
+  }
+
+  /**
+   * Calculates the number of seats (1s) in the matrix.
+   * @param matrix The 2D seat matrix to count the seats from.
+   * @returns The number of seats in the matrix.
+   */
+  calculateNumberOfSeats(matrix: number[][]): number {
+    let count = 0;
+    for (const row of matrix) {
+      count += row.filter((cell) => cell === 1).length;
+    }
+    return count;
+  }
+
+  /**
+   * Updates the seat matrix and recalculates the bitmask and seat count.
+   * @param newMatrix The new 2D seat matrix to update the bus model with.
+   */
+  updateSeatMatrix(newMatrix: number[][]): void {
+    this.matrix = newMatrix;
+    this.seatBitmask = this.convertMatrixToBitmask(newMatrix);
+    this.numberSeats = this.calculateNumberOfSeats(newMatrix);
+  }
+
+  /**
+   * Returns the matrix of seats. If the matrix is not already calculated, it will be generated.
+   * @returns The current 2D seat matrix.
+   */
+  getMatrix(): number[][] {
+    if (this.matrix === null) {
+      this.matrix = this.convertBitmaskToMatrix();
+    }
+    return this.matrix;
   }
 }
 

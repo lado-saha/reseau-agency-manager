@@ -1,7 +1,7 @@
 import './globals.css';
 import { Analytics } from '@vercel/analytics/react';
 import { ThemeProvider } from 'src/components/theme-provider';
-import { NextIntlClientProvider } from 'next-intl';
+// import { NextIntlClientProvider } from 'next-intl';
 // import { getLocale, getMessages } from 'next-intl/server';
 
 export const metadata = {

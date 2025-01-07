@@ -19,7 +19,6 @@ import { ThemeProvider } from 'src/components/theme-provider';
 import { Separator } from 'src/components/ui/separator';
 import { NavActions } from 'src/components/app-topbar-actions';
 import { usePathname } from 'next/navigation';
-import { AppCalenderSidebar } from '@/components/sidebar-station-vehicles';
 import { SearchInput } from '@/components/search-bar';
 
 export default function StationLayout({
@@ -79,9 +78,7 @@ export default function StationLayout({
             <NavActions />
           </div>
         </header>
-        <div className="grid flex-1 items-start gap-2 p-4">
-          {children}
-        </div>
+        <div className="grid flex-1 items-start gap-2 p-4">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );
