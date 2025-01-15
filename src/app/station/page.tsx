@@ -1,5 +1,5 @@
-import StationProfileForm from '@/components/station/form-station-profile';
 import { Separator } from 'src/components/ui/separator';
+import Loading from './loading';
 
 export default function SettingsProfilePage() {
   return (
@@ -12,7 +12,9 @@ export default function SettingsProfilePage() {
         </p>
       </div>
       <Separator />
-      <StationProfileForm />
+      {/* <StationProfileForm /> */}
+      {/* <Loading variant="card" message="Fetching vehicles..." value={50} /> */}
+      <Loading variant="inline" message="Loading data..." size="lg" />
     </div>
   );
 }

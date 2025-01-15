@@ -1,6 +1,5 @@
 'use client';
 import { AppSidebar } from 'src/components/app-sidebar';
-
 import { Analytics } from '@vercel/analytics/react';
 import {
   SidebarInset,
@@ -43,8 +42,9 @@ export default function StationLayout({
   return (
     <SidebarProvider>
       <AppSidebar />
+      {/* <AppCalenderSidebar /> */}
       <SidebarInset className=" flex flex-col sm:gap-4 sm:py-4">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
+        <header className="sticky top-0 z-30 flex h-14 items-center gap-5 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
           <div className="flex items-center gap-2">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-2 h-4" />
@@ -74,11 +74,13 @@ export default function StationLayout({
           </div>
           {/* This div ensures NavActions is at the far right */}
           <div className="ml-auto flex">
-            <SearchInput />
+            <div className="mb-2">
+              <SearchInput />
+            </div>
             <NavActions />
           </div>
         </header>
-        <div className="grid flex-1 items-start gap-2 p-4">{children}</div>
+        <div className="grid flex-1 items-start gap-2 px-4 ">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );

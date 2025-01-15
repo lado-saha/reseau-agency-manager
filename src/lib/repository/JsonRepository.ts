@@ -1,9 +1,10 @@
 import path from 'path';
 import { Agency, Station } from '../models/agency';
-import { Vehicle, Driver } from '../models/resource';
+import { Vehicle, Driver } from '@/lib/models/resource';
 import { Trip } from '@/lib/models/trip';
 import { format } from 'date-fns';
-import { SortingDirection } from '../models/helpers';
+import { SortingDirection, sortVehicles } from '@/lib/models/helpers';
+import { PAGE_OFFSET } from '../utils';
 
 // const vehicleJSON = [
 //   {
@@ -1105,7 +1106,7 @@ const vehicleJSON = [
   }
 ];
 
-console.log(JSON.stringify(vehicleJSON, null, 2));
+// console.log(JSON.stringify(vehicleJSON, null, 2));
 
 /**
  * Temporary repository for storing classes in json
@@ -1122,42 +1123,53 @@ export class JsonRepository<T> {
     //   fs.writeFileSync(this.filePath, JSON.stringify([]));
     // }
   }
+  // get(
+  //   search = '',
+  //   offset = 0,
 
-  get(
-    search = '',
-    offset = 0,
-    limit = 10,
-    sortBy = '',
-    direction: SortingDirection | undefined = undefined
-  ): {
-    vehicles: Vehicle[];
-    newOffset: number;
-    totalProducts: number;
-  } {
-    const vehicles = JSON.parse(JSON.stringify(vehicleJSON));
-    // const vehicles = vehicleJSON.map((v) => {
-    //   const vehicle = v as Vehicle;
-    //   vehicle.init;
-    //   return vehicle;
-    // });
+  //   sortBy: keyof Vehicle,
+  //   direction: SortingDirection,
+  //   dateSingle: number,
+  //   dateRange: { from: Number; to?: Number } | undefined,
+  // ): {
+  //   vehicles: Vehicle[];
+  //   newOffset: number;
+  //   totalProducts: number;
+  // } {
+  //   // Parse and clone the JSON to avoid mutating the original data
+  //   const vehicles = JSON.parse(JSON.stringify(vehicleJSON)) as Vehicle[];
 
-    // Filter records based on search query (case-insensitive search)
-    // const filteredRecords = allRecords.filter((record) =>
-    //   Object.values(record).some((value) =>
-    //     value.toString().toLowerCase().includes(search.toLowerCase())
-    //   )
-    // );
+  //   // Step 1: Filter records based on the search query (case-insensitive)
+  //   const filteredVehicles = search
+  //     ? vehicles.filter((vehicle) =>
+  //         Object.values(vehicle).some((value) =>
+  //           value?.toString().toLowerCase().includes(search.toLowerCase())
+  //         )
+  //       )
+  //     : vehicles;
 
-    const totalProducts = vehicles.length;
-    const objs = vehicles.slice(offset, offset + limit);
-    const newOffset = offset + objs.length;
+  //   // Step 2: Sort vehicles if `sortBy` and `direction` are provided
+  //   const sortedVehicles =
+  //     sortBy && direction
+  //       ? sortVehicles(sortBy, direction, filteredVehicles)
+  //       : filteredVehicles;
 
-    return {
-      vehicles,
-      newOffset,
-      totalProducts
-    };
-  }
+  //   // Step 3: Paginate the records
+  //   const paginatedVehicles = sortedVehicles.slice(
+  //     offset,
+  //     offset + PAGE_OFFSET
+  //   );
+
+  //   // Step 4: Calculate the new offset
+  //   const newOffset = offset + paginatedVehicles.length;
+
+  //   // Step 5: Return the processed data
+  //   return {
+  //     vehicles: paginatedVehicles,
+  //     newOffset,
+  //     totalProducts: filteredVehicles.length // Total matches after filtering (not paginated)
+  //   };
+  // }
 
   //Find a record by a specific field
   // findBy(field: keyof T, value: any): T | undefined {
@@ -1210,4 +1222,74 @@ export class JsonRepository<T> {
 
   //   return repositories;
   // }
+
+  get(
+    search = '',
+    offset = 0,
+    sortBy: keyof Vehicle,
+    direction: SortingDirection, // asc or desc
+    dateSingle: number, // Gotten from Date.getTime()
+    dateRange: { from: number; to?: number } | undefined // Same thing here Date.getTime() and exclusive to dateSingle
+  ): {
+    vehicles: Vehicle[];
+    newOffset: number;
+    totalProducts: number;
+  } {
+    // Parse and clone the JSON to avoid mutating the original data
+    const vehicles = JSON.parse(JSON.stringify(vehicleJSON)) as Vehicle[];
+
+    // Step 1: Filter records based on the search query (case-insensitive)
+    const filteredVehicles = search
+      ? vehicles.filter((vehicle) =>
+          Object.values(vehicle).some((value) =>
+            value?.toString().toLowerCase().includes(search.toLowerCase())
+          )
+        )
+      : vehicles;
+
+    // Step 2: Filter based on dateSingle or dateRange
+    const filteredByDate = filteredVehicles;
+    // .filter((vehicle) => {
+    //   const tempStartTime =  vehicle.resource.tempOwnershipStartTime ?  || vehicle.resource.tempOwnershipStartTime?.getTime();
+
+    //   if (dateSingle) {
+    //     // If a single date is provided, filter based on it
+    //     return tempStartTime === dateSingle;
+    //   }
+
+    //   if (dateRange) {
+    //     const { from, to } = dateRange;
+    //     // If a date range is provided, filter based on the range
+    //     return (
+    //       tempStartTime !== undefined &&
+    //       tempStartTime >= from &&
+    //       (to ? tempStartTime <= to : true)
+    //     );
+    //   }
+
+    //   return true; // If no date filtering is needed
+    // });
+
+    // // Step 3: Sort vehicles if `sortBy` and `direction` are provided
+    const sortedVehicles =
+      sortBy && direction
+        ? sortVehicles(sortBy, direction, filteredByDate as Vehicle[])
+        : filteredByDate;
+
+    // Step 4: Paginate the records
+    const paginatedVehicles = sortedVehicles.slice(
+      offset,
+      offset + PAGE_OFFSET
+    );
+
+    // Step 5: Calculate the new offset
+    const newOffset = offset;
+
+    // Step 6: Return the processed data
+    return {
+      vehicles: paginatedVehicles,
+      newOffset,
+      totalProducts: filteredByDate.length // Total matches after filtering (not paginated)
+    };
+  }
 }

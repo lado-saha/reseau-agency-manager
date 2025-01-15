@@ -1,43 +1,5 @@
 'use client';
 
-// import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-
-// import 'leaflet/dist/leaflet.css';
-// import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css';
-// import 'leaflet-defaulticon-compatibility';
-// import { LatLngExpression, LatLngTuple } from 'leaflet';
-
-// interface MapProps {
-//   posix: LatLngExpression | LatLngTuple;
-//   zoom?: number;
-// }
-
-// const defaults = {
-//   zoom: 11
-// };
-
-// export default function Map(Map: MapProps) {
-//   const { zoom = defaults.zoom, posix } = Map;
-
-//   return (
-//     <MapContainer
-//       // key={}
-//       center={posix}
-//       zoom={zoom}
-//       scrollWheelZoom={false}
-//       style={{ height: '100%', width: '100%' }}
-//     >
-//       <TileLayer
-//         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-//         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-//       />
-//       <Marker position={posix} draggable={false}>
-//         <Popup>Hey ! I study here</Popup>
-//       </Marker>
-//     </MapContainer>
-//   );
-// }
-
 import {
   MapContainer,
   TileLayer,
@@ -54,14 +16,14 @@ import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility
 import 'leaflet-defaulticon-compatibility';
 
 import { LatLngExpression, LatLngTuple } from 'leaflet';
-import { PropsVehicles } from '@/components/table-vehicles';
+import { PropsVehicles } from '@/components/vehicles/table-vehicles';
 import {
   VehicleGridItem,
   VehicleMapTooltip,
   VehicleTableItem
-} from './vehicles/item-vehicle';
+} from '@/components/vehicles/item-vehicle';
 
-interface MapProps {
+export interface MapProps {
   posix: LatLngExpression | LatLngTuple;
   zoom?: number;
   onCenterChange: (lat: number, lon: number) => void;
@@ -104,7 +66,9 @@ export default function MapVehicles({
       center={posix}
       zoom={zoom}
       scrollWheelZoom={false}
-      style={{ height: '100%', width: '100%' }}
+      // style={{ height: '100%', width: '100%' }}
+      // style={{ height: '400px', width: '100%' }}
+      style={{ height: 'calc(100vh - 64px)', width: '100%' }}
     >
       {/* OpenStreetMap Tile Layer */}
       <TileLayer

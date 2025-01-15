@@ -27,25 +27,38 @@ import {
   Mail,
   Users,
   TrendingUp,
-  Backpack
+  Backpack,
+  Icon,
+  CalendarRangeIcon,
+  ChevronRight
 } from 'lucide-react';
 
-import { StationSwitcher } from 'src/components/switcher-stations';
+import { StationSwitcher } from '@/components/switcher-stations';
 import { usePathname } from 'next/navigation';
 
-import { NavMain } from 'src/components/nav-main';
-import { NavCustomerRel } from 'src/components/nav-projects';
-import { NavSecondary } from 'src/components/nav-secondary';
-import { NavUser } from 'src/components/nav-user';
+import { NavMain } from '@/components/nav-main';
+import { NavCustomerRel } from '@/components/nav-projects';
+import { NavSecondary } from '@/components/nav-secondary';
+import { NavUser } from '@/components/nav-user';
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
+  SidebarGroup,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
+  SidebarMenuAction,
   SidebarMenuButton,
-  SidebarMenuItem
-} from 'src/components/ui/sidebar';
+  SidebarMenuItem,
+  SidebarSeparator
+} from '@/components/ui/sidebar';
+import { DatePicker } from './date-picker';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger
+} from '@/components/ui/collapsible';
 
 const data = {
   user: {
@@ -191,7 +204,7 @@ const data = {
       items: [
         {
           title: 'Vehicles',
-          url: 'vehicles',
+          url: '',
           isActive: true
         },
         {
@@ -309,11 +322,39 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <StationSwitcher teams={data.stations} />
         </SidebarHeader>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="overflow-x-hidden">
+        <SidebarGroup>
+          <SidebarGroupLabel>Tools</SidebarGroupLabel>
+          <SidebarMenu>
+            <Collapsible key={'Calendar'} defaultOpen={true}>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip={'Calendar'}>
+                  <a href="#">
+                    <CalendarRangeIcon />
+                    <span>Calendar</span>
+                  </a>
+                </SidebarMenuButton>
+                <>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuAction className="data-[state=open]:rotate-90">
+                      <ChevronRight />
+                      <span className="sr-only">Toggle</span>
+                    </SidebarMenuAction>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    {/* <div className='border p-1'> */}
+                    <DatePicker />
+                    {/* </div> */}
+                  </CollapsibleContent>
+                </>
+              </SidebarMenuItem>
+            </Collapsible>
+          </SidebarMenu>
+        </SidebarGroup>
+        <SidebarSeparator />
         <NavMain items={data.navMain} />
-        <NavCustomerRel projects={data.customerRelations} />
-
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        {/* <NavCustomerRel projects={data.customerRelations} /> */}
+        {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

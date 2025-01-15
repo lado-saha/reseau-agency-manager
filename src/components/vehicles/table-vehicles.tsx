@@ -13,7 +13,12 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { useRouter } from 'next/navigation';
+import {
+  ReadonlyURLSearchParams,
+  usePathname,
+  useRouter,
+  useSearchParams
+} from 'next/navigation';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Vehicle } from '@/lib/models/resource';
@@ -21,8 +26,9 @@ import {
   VehicleGridItem,
   VehicleTableItem
 } from '@/components/vehicles/item-vehicle';
-import { SortingDirection, TabsVehicles } from '@/lib/models/helpers';
-import { DropdownMenuItem } from '@radix-ui/react-dropdown-menu';
+import { TabsVehicles } from '@/lib/models/helpers';
+import { PAGE_OFFSET } from '@/lib/utils';
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
 export interface PropsVehicles {
   vehicles: Vehicle[];
@@ -74,25 +80,53 @@ export function vehicleTableSortingOptions(currentTab: string) {
   return [...defaultOptions, ...additionalOptions];
 }
 
-// Reusable function to render pagination buttons
 function Pagination({
   offset,
-  totalVehicles,
-  onPrevPage,
-  onNextPage
+  totalVehicles
 }: {
   offset: number;
   totalVehicles: number;
-  onPrevPage: () => void;
-  onNextPage: () => void;
 }) {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const handlePageChange = (page: number) => {
+    const params = new URLSearchParams(searchParams);
+    if (page > 1) {
+      params.set('page', `${page}`);
+    } else {
+      params.delete('page');
+    }
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  };
+
+  const onPrevPage = () => {
+    // Go to the previous page by subtracting PAGE_OFFSET
+    const newOffset = Math.max(0, offset - PAGE_OFFSET); // Ensure offset doesn't go below 0
+    const page = Math.floor(newOffset / PAGE_OFFSET) + 1; // Calculate the page number (1-based index)
+    handlePageChange(page);
+  };
+
+  const onNextPage = () => {
+    // Go to the next page by adding PAGE_OFFSET
+    const newOffset = offset + PAGE_OFFSET;
+    const page = Math.floor(newOffset / PAGE_OFFSET) + 1; // Calculate the page number (1-based index)
+    handlePageChange(page);
+  };
+
+  const start = offset + 1;
+  const end = Math.min(offset + PAGE_OFFSET, totalVehicles);
+
+  // console.log(`Offset: ${offset}`);
+
   return (
     <CardFooter>
       <form className="flex items-center w-full justify-between">
         <div className="text-xs text-muted-foreground">
           Showing{' '}
           <strong>
-            {Math.max(0, Math.min(offset - 5, totalVehicles) + 1)}-{offset}
+            {start}-{end}
           </strong>{' '}
           of <strong>{totalVehicles}</strong> vehicles
         </div>
@@ -102,7 +136,7 @@ function Pagination({
             variant="ghost"
             size="sm"
             type="submit"
-            disabled={offset === 5}
+            disabled={offset === 0} // Disable prev button when on the first page
           >
             <ChevronLeft className="mr-2 h-4 w-4" />
             Prev
@@ -112,7 +146,7 @@ function Pagination({
             variant="ghost"
             size="sm"
             type="submit"
-            disabled={offset + 5 > totalVehicles}
+            disabled={offset + PAGE_OFFSET >= totalVehicles} // Disable next button when on the last page
           >
             Next
             <ChevronRight className="ml-2 h-4 w-4" />
@@ -161,11 +195,6 @@ export function TableVehicles({
   currentTab,
   viewOnMap
 }: PropsVehicles) {
-  const router = useRouter();
-
-  const prevPage = () => router.back();
-  const nextPage = () => router.push(`/?offset=${offset}`, { scroll: false });
-
   return (
     <Card>
       <CardHeader>
@@ -204,12 +233,7 @@ export function TableVehicles({
           </TableBody>
         </Table>
       </CardContent>
-      <Pagination
-        offset={offset}
-        totalVehicles={totalVehicles}
-        onPrevPage={prevPage}
-        onNextPage={nextPage}
-      />
+      <Pagination offset={offset} totalVehicles={totalVehicles} />
     </Card>
   );
 }
@@ -221,11 +245,6 @@ export function GridVehicles({
   currentTab,
   viewOnMap
 }: PropsVehicles) {
-  const router = useRouter();
-
-  const prevPage = () => router.back();
-  const nextPage = () => router.push(`/?offset=${offset}`, { scroll: false });
-
   return (
     <Card>
       <CardHeader>
@@ -246,12 +265,7 @@ export function GridVehicles({
           ))}
         </div>
       </CardContent>
-      <Pagination
-        offset={offset}
-        totalVehicles={totalVehicles}
-        onPrevPage={prevPage}
-        onNextPage={nextPage}
-      />
+      <Pagination offset={offset} totalVehicles={totalVehicles} />
     </Card>
   );
 }

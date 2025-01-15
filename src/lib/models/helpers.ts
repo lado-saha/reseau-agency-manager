@@ -68,7 +68,8 @@ export function sortVehicles(
   direction: SortingDirection,
   vehicles: Vehicle[]
 ): Vehicle[] {
-  return vehicles.toSorted((a, b) => {
+  return vehicles.slice().sort((a, b) => {
+    // Use .slice() to avoid mutating the original array
     const valueA = a[field];
     const valueB = b[field];
 

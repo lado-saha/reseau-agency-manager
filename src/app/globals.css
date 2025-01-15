@@ -112,12 +112,11 @@ input[type='search']::-moz-search-cancel-button {
 }
 
 /* Add hover styles for Sidebar Menu Items */
-a:hover {
+/* a:hover {
   font-weight: bold;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  /* Optional shadow */
   transition: all 0.3s ease;
-}
+} */
 
 
 /* Microsoft Edge */
@@ -130,4 +129,24 @@ input[type='search']::-ms-clear {
   height: 100%;
   width: 100%;
   z-index: 0;
+}
+
+
+
+body {
+  font-family: var(--font-montserrat);
+}
+
+.container {
+  overflow-y: scroll;
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* Internet Explorer 10+ */
+}
+
+.container::-webkit-scrollbar {
+  /* WebKit */
+  width: 0;
+  height: 0;
 }
