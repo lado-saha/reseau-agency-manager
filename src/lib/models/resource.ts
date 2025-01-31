@@ -2,11 +2,7 @@
  * This definition file will contains all definitions related to resources
  */
 
-import {
-  AuditInfo,
-  HealthVehicles,
-  StatusVehicles
-} from '@/lib/models/helpers';
+import { AuditInfo, HealthVehicles, StatusVehicle } from '@/lib/models/helpers';
 import { randomInt } from 'crypto';
 import { format } from 'date-fns';
 
@@ -49,9 +45,9 @@ export class Vehicle {
     randomInt(3)
   ] as HealthVehicles;
   origin: string;
-  status: StatusVehicles = ['stationed', 'incoming', 'outgoing'][
+  status: StatusVehicle = ['stationed', 'incoming', 'outgoing'][
     randomInt(3)
-  ] as StatusVehicles;
+  ] as StatusVehicle;
 
   departureTime: string = format(Date(), ' Pp');
   estimatedArrivalTime = format(Date(), ' Pp');
@@ -93,7 +89,7 @@ export class Vehicle {
     this.origin = ['Dschang', 'Yaounde', 'Maroua', 'Douala'][randomInt(4)];
     this.status = ['stationed', 'incoming', 'outgoing'][
       randomInt(3)
-    ] as StatusVehicles;
+    ] as StatusVehicle;
     this.departureTime = format(Date(), ' Pp');
     this.estimatedArrivalTime = format(Date(), ' Pp');
     this.destination = ['Dschang', 'Yaounde', 'Maroua', 'Douala'][randomInt(4)];
@@ -104,8 +100,6 @@ export class Vehicle {
   init() {
     return this;
   }
-
-
 }
 
 /**
@@ -115,10 +109,13 @@ export class VehicleModel {
   id: string;
   manufacturer: string;
   modelName: string;
+  fuelType: string;
+  // fuel: string,
   seatBitmask: string; // The bitmask representation of the seat grid
   numberSeats: number; // The number of seats (calculated dynamically)
   matrix: number[][] | null; // Nullable matrix, calculated at runtime
   columns: number; // Number of columns per row in the matrix
+  auditInfo: AuditInfo; // Composition of AuditInfo for resource-level auditing
 
   /**
    * Creates a VehicleModel instance.
@@ -133,7 +130,8 @@ export class VehicleModel {
     manufacturer: string,
     modelName: string,
     seatData: string | number[][],
-    columns: number
+    columns: number,
+    fuelType: string
   ) {
     this.id = id;
     this.manufacturer = manufacturer;
@@ -142,6 +140,8 @@ export class VehicleModel {
     this.numberSeats = 0;
     this.matrix = null;
     this.columns = columns;
+    this.fuelType = fuelType;
+    this.auditInfo = new AuditInfo('admin'); // Initialize vehicle-specific audit info
 
     // Determine if we are provided a bitmask or matrix
     if (typeof seatData === 'string') {

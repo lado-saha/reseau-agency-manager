@@ -44,6 +44,8 @@ import {
   CommandGroup,
   CommandItem
 } from 'src/components/ui/command';
+import Link from 'next/link';
+
 
 const profileFormSchema = z.object({
   name: z
@@ -113,6 +115,26 @@ const profileFormSchema = z.object({
 });
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
+
+// This can come from your database or API.
+const defaultFormValues = {
+  name: 'Yaounde Main Station',
+  pobox: 'BP 12345',
+  supportPhones: ['+237612345678', '+237690123456'],
+  supportEmails: ['support@stationyaounde.cm', 'info@stationyaounde.cm'],
+  gpsCoordinates: {
+    latitude: 3.848,
+    longitude: 11.5021
+  },
+  serviceHours: '08:00-18:00',
+  serviceDays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+  socialLinks: {
+    facebook: 'https://facebook.com/stationyaounde',
+    x: 'https://x.com/stationyaounde',
+    instagram: 'https://instagram.com/stationyaounde'
+  },
+  website: 'https://stationyaounde.cm'
+} as Partial<ProfileFormValues>;
 
 const regions = [
   {
@@ -203,6 +225,7 @@ export default function ProfileForm() {
     resolver: zodResolver(profileFormSchema),
     defaultValues: defaultFormValues
   });
+  const { setValue, register,watch,control,formState: {errors} } = useForm();
 
   // const { fields: phoneFields, append: appendPhone } = useFieldArray({
   //   name: 'supportPhones',
@@ -214,6 +237,9 @@ export default function ProfileForm() {
   //   control: form.control
   // });
 
+  const selectedRegion = watch('region'); // Récupère la région sélectionnée
+
+
   function onSubmit(data: ProfileFormValues) {
     toast({
       title: 'You submitted the following values:',
@@ -224,6 +250,10 @@ export default function ProfileForm() {
       )
     });
   }
+
+   // function setValue(arg0: string, value: string) {
+     //   throw new Error('Function not implemented.');
+    //}
 
   return (
     <Form {...form}>
@@ -246,179 +276,93 @@ export default function ProfileForm() {
             </FormItem>
           )}
         />
-
-        <FormField
-          control={form.control}
-          name="creationDate"
-          render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel>Date of Creation</FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant={'outline'}
-                      className={cn(
-                        'w-[240px] pl-3 text-left font-normal',
-                        !field.value && 'text-muted-foreground'
-                      )}
-                    >
-                      {field.value ? (
-                        format(field.value, 'PPP')
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    onSelect={field.onChange}
-                    disabled={(date) =>
-                      date > new Date() || date < new Date('1900-01-01')
-                    }
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-              <FormDescription>
-                Your date of birth is used to calculate your age.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
+ {/* State */}
+       <FormField
           name="region"
           render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel>Region or State</FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      className={cn(
-                        'w-[200px] justify-between',
-                        !field.value && 'text-muted-foreground'
-                      )}
-                    >
-                      {field.value
-                        ? regions.find(
-                            (region) => region.value === region.value
-                          )?.label
-                        : 'Select Region'}
-                      <ChevronsUpDown className="opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-[200px] p-0">
-                  <Command>
-                    <CommandInput placeholder="Search region..." />
-                    <CommandList>
-                      <CommandEmpty>No region found.</CommandEmpty>
-                      <CommandGroup>
-                        {regions.map((region) => (
-                          <CommandItem
-                            value={region.label}
-                            key={region.value}
-                            onSelect={() => {
-                              form.setValue('region', region.value);
-                            }}
-                          >
-                            <Check
-                              className={cn(
-                                'mr-2',
-                                region.value === field.value
-                                  ? 'opacity-100'
-                                  : 'opacity-0'
-                              )}
-                            />
-                            {region.label}
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
+            <FormItem>
+              <FormLabel>Region</FormLabel>
+              <FormControl>
+                <Select
+                  onValueChange={(value) => {
+                    setValue('region', value);
+                    setValue('city', ''); // Reset city when region changes
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a region" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {regions.map((region) => (
+                      <SelectItem key={region.value} value={region.value}>
+                        {region.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </FormControl>
               <FormDescription>
-                Select the admistrative region in which your station is located
+                This is the region where the station is located .
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
+      
+      
 
-        <FormField
-          control={form.control}
-          name="city"
-          render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel>City</FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      className={cn(
-                        'w-[200px] justify-between',
-                        !field.value && 'text-muted-foreground'
-                      )}
-                    >
-                      {field.value
-                        ? regions.find(
-                            (region) => region.value === region.value
-                          )?.label
-                        : 'Select city'}
-                      <ChevronsUpDown className="opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-[200px] p-0">
-                  <Command>
-                    <CommandInput placeholder="Search city..." />
-                    <CommandList>
-                      <CommandEmpty>No city found</CommandEmpty>
-                      <CommandGroup>
-                        {regions.map((region) => (
-                          <CommandItem
-                            value={region.label}
-                            key={region.value}
-                            onSelect={() => {
-                              form.setValue('region', region.value);
-                            }}
-                          >
-                            <Check
-                              className={cn(
-                                'mr-2',
-                                region.value === field.value
-                                  ? 'opacity-100'
-                                  : 'opacity-0'
-                              )}
-                            />
-                            {region.label}
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
-              <FormDescription>
-                Select a city found in the region you selected where your
-                station is found
+
+
+
+ {/* Champ pour la ville */}
+ <FormField
+        name="city"
+        control={control}
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>City</FormLabel>
+            <FormControl>
+              <Select
+                onValueChange={field.onChange}
+                disabled={!selectedRegion} // Désactive si aucune région n'est sélectionnée
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a city" />
+                </SelectTrigger>
+                <SelectContent>
+                  {regions
+                    .find((region) => region.value === selectedRegion)?.cities
+                    .map((city) => (
+                      <SelectItem key={city.value} value={city.value}>
+                        {city.label}
+                      </SelectItem>
+                    )) || (
+                      <SelectItem disabled value="no cities">
+                        No cities available
+                      </SelectItem>
+                    )}
+                </SelectContent>
+              </Select>
+            </FormControl>
+            <FormDescription>
+                This is the city in the reg where the station is located .
               </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            {errors.city && <FormMessage>{String(errors.city.message)}</FormMessage>}
+          </FormItem>
+        )}
+      />
+
+
+
+
+
+
+
+
+
+
+      
+
         <Button type="submit">Update profile</Button>
       </form>
     </Form>

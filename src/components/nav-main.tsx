@@ -1,6 +1,7 @@
 'use client';
 
 import { ChevronRight, type LucideIcon } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 
 import {
   Collapsible,
@@ -34,12 +35,25 @@ export function NavMain({
     }[];
   }[];
 }) {
+  const pathname = usePathname(); // Get the current pathname
+
+  // Function to determine if the item URL is active
+  const isParentActive = (url: string) => {
+    return pathname.split('?')[0].startsWith(url);
+  };
+  const isChildActive = (url: string) => {
+    return pathname.split('?')[0].split('/').pop() === url.split('/').pop(); // Match exact or prefix URL
+  };
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Station's Platform</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
-          <Collapsible key={item.title} asChild defaultOpen={item.isActive}>
+          <Collapsible
+            key={item.title}
+            asChild
+            defaultOpen={isParentActive(item.url)}
+          >
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip={item.title}>
                 <a href={item.url}>
@@ -63,9 +77,9 @@ export function NavMain({
                             <a
                               href={subItem.url}
                               className={` ${
-                                subItem.isActive
-                                  ? 'font-bold shadow-md bg-accent' // Active: White text, shadow, and background for contrast
-                                  : 'hover:font-bold hover:shadow-md hover:bg-primary' // Hover: White text, shadow, and background on hover
+                                isChildActive(subItem.url)
+                                  ? 'font-bold bg-sidebar-accent' // Active: White text, shadow, and background for contrast
+                                  : 'hover:font-bold hover:bg-primary' // Hover: White text, shadow, and background on hover
                               }`}
                             >
                               <span>{subItem.title}</span>

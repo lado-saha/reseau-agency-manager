@@ -29,7 +29,7 @@ import {
 } from 'lucide-react';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { Vehicle } from '@/lib/models/resource';
-import { TabsVehicles } from '@/lib/models/helpers';
+import { TabsVehicle } from '@/lib/models/helpers';
 import { format } from 'date-fns';
 import {
   Card,
@@ -42,7 +42,7 @@ import {
 
 interface VehicleItemProps {
   vehicle: Vehicle;
-  currentTab: TabsVehicles;
+  currentTab: TabsVehicle;
   viewOnMap: (lat: number, lon: number) => void;
 }
 
@@ -188,7 +188,7 @@ export function VehicleTableItem({
 
 function DropdownMenuVehicle(
   vehicle: Vehicle,
-  viewOnMap: (latittude: number, longitude: number) => void
+  viewOnMap: (latitude: number, longitude: number) => void
 ) {
   return (
     <DropdownMenuContent align="end">
@@ -242,7 +242,7 @@ export function VehicleGridItem({
       </div>
 
       {/* Card Content */}
-      <CardContent className="flex flex-col items-center space-y-3 text-center">
+      <CardContent className="flex flex-col items-center space-y-1 text-center">
         {/* Status Badge */}
         <div className="py-2">
           {currentTab === 'all' ? renderStatusBadge(vehicle) : null}
@@ -309,6 +309,20 @@ export function VehicleGridItem({
           )}
         </div>
       </CardContent>
+
+      {/* Footer Metadata */}
+      <div className="border-t mt-1 py-1 text-xs  flex flex-col px-4 ">
+        <div className="flex justify-between text-muted-foreground">
+          <span>Added On</span>
+          <span>Last Updated On</span>
+        </div>
+        <div className="flex justify-between">
+          <span>{format(vehicle.auditInfo.createdOn, 'Pp')}</span>
+          <span className="text-end">
+            {format(vehicle.auditInfo.updatedOn, 'Pp')}
+          </span>
+        </div>
+      </div>
     </Card>
   );
 }

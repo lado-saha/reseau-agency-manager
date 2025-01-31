@@ -26,7 +26,7 @@ import {
   VehicleGridItem,
   VehicleTableItem
 } from '@/components/vehicles/item-vehicle';
-import { TabsVehicles } from '@/lib/models/helpers';
+import { TabsVehicle } from '@/lib/models/helpers';
 import { PAGE_OFFSET } from '@/lib/utils';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
@@ -34,7 +34,7 @@ export interface PropsVehicles {
   vehicles: Vehicle[];
   offset: number;
   totalVehicles: number;
-  currentTab: TabsVehicles;
+  currentTab: TabsVehicle;
   viewOnMap: (lat: number, lon: number) => void;
 }
 
@@ -158,7 +158,7 @@ function Pagination({
 }
 
 // Reusable function to render headers
-function RenderTableHeaders(currentTab: TabsVehicles) {
+function RenderTableHeaders(currentTab: TabsVehicle) {
   switch (currentTab) {
     case 'incoming':
       return (

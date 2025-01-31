@@ -1,0 +1,252 @@
+/* Conteneur des cartes d'employés */
+.employee-cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Adaptation de la grille pour des tailles d'écrans variées */
+    gap: 20px; /* Plus d'espace entre les cartes */
+    padding: 20px; /* Marges internes */
+    max-width: 1000px; /* Limitation de la largeur pour éviter les débordements */
+    margin: 0 auto; /* Centrage horizontal */
+    overflow: hidden; /* Empêche les éléments de déborder */
+  }
+  
+  /* Carte d'employé */
+  .employee-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    max-width: 280px; /* Limite la largeur des cartes */
+    margin: 0 auto; /* Centrage des cartes */
+  }
+  
+  .employee-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Photo de l'employé */
+  .employee-photo {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 15px;
+    border: 2px solid #ddd;
+  }
+  
+  /* Nom de l'employé */
+  .employee-card h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+  }
+  
+  /* Position de l'employé */
+  .employee-card p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #555;
+    text-align: center;
+  }
+  
+  /* Boutons dans la carte */
+  .employee-card button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    margin: 4px;
+    background-color: #1a202c;
+    color: white;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .employee-card button:hover {
+    background-color: #4a5568; /* Couleur de survol */
+  }
+  
+  /* Conteneur pour le bouton d'ajout d'employé */
+  .add-employee-button {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  /* Conteneur du formulaire */
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+  
+  .form-group input[type="file"] {
+    padding: 0;
+  }
+  
+  /* Icône d'upload et style du bloc de photo */
+  .photo-upload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 300px;
+    height: 150px;
+    border: 2px dashed #3498db; /* Bordure avec un bleu moderne */
+    border-radius: 8px;
+    background-color: #f9f9f9; /* Fond clair */
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    margin-top: 10px;
+  }
+  
+  .photo-upload:hover {
+    background-color: #eaf6ff; /* Fond légèrement bleu clair au survol */
+    border-color: #2980b9; /* Bordure plus foncée au survol */
+  }
+  
+  .photo-upload-icon {
+    font-size: 2rem; /* Icône de grande taille */
+    color: #3498db;
+  }
+  
+  .photo-upload p {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1rem;
+    color: #7f8c8d; /* Gris subtil */
+    margin: 5px 0 0 0;
+  }
+  
+  /*.hidden {
+    display: none; /* Cache le champ d'upload natif 
+  }
+  */
+  
+  /* Contenu et pieds du dialogue */
+  .DialogContent {
+    padding: 20px;
+  }
+  
+  .DialogFooter {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  
+  .DialogFooter button {
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  .DialogFooter button:hover {
+    background-color: #4a5568;
+    color: white;
+  }
+  
+  /* Masquer les éléments de type input file */
+
+  .dialog-add-employee-btn {
+    padding: 10px 20px;
+    font-size: 14px;
+    width: auto;
+    max-width: 200px;
+    display: inline-block;
+    text-align: center;
+    margin: 0 auto;
+    background-color: #333; /* Une couleur de fond différente, si souhaité */
+    color: white; /* Texte blanc */
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .dialog-add-employee-btn:hover {
+    background-color: #331; /* Couleur légèrement plus foncée au survol */
+  }
+
+  /*.hidden {
+    display: none;
+  }*/
+/* Style du titre principal */
+.app-title {
+    font-family: 'Roboto', sans-serif; /* Police moderne et épurée */
+    font-size: 2.8rem; /* Taille légèrement augmentée pour un effet imposant */
+    font-weight: bold;
+    color: #ffffff; /* Blanc pur pour contraster avec la bannière sombre */
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  
+  /* Barre décorative sous le titre */
+  .app-title::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(to right, #ffffff, #bbbbbb); /* Dégradé subtil blanc à gris clair */
+    margin: 10px auto 0 auto;
+    border-radius: 2px;
+  }
+  
+  /* Sous-titre de l'application */
+  .app-subtitle {
+    font-family: 'Open Sans', sans-serif; /* Police complémentaire légère */
+    font-size: 1.4rem;
+    color: #cccccc; /* Gris clair pour rester discret */
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  /* Bannière principale */
+  .banner {
+    background: linear-gradient(to right, #1a1a1a, #2c2c2c); /* Dégradé noir vers gris foncé */
+    color: #f0f0f0; /* Gris très clair pour un excellent contraste */
+    padding: 40px 20px;
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4); /* Ombre plus prononcée pour un effet élégant */
+    margin-bottom: 30px;
+    text-align: center;
+  }
+  
+  /* Texte dans la bannière */
+  .banner h1 {
+    font-family: 'Roboto', sans-serif;
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin: 0;
+    color: #ffffff; /* Blanc pur pour contraster avec le fond */
+  }
+  
+  .banner p {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.2rem;
+    color: #cccccc; /* Gris clair pour garder une hiérarchie dans les couleurs */
+    margin-top: 10px;
+  }
+  
+  

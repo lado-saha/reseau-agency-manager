@@ -1,48 +1,33 @@
 import { JsonRepository } from '@/lib/repository/JsonRepository';
-import { Vehicle } from '@/lib/models/resource';
-import { SortingDirection, TabsVehicle } from '@/lib/models/helpers';
-import { Suspense, useMemo } from 'react';
-import Loading from '../loading';
+import { VehicleModel } from '@/lib/models/resource';
+import { SortingDirection } from '@/lib/models/helpers';
+import { Suspense } from 'react';
 import { Metadata } from 'next';
-import StationFleetView from '@/components/vehicles/fleet-view';
 import { PAGE_OFFSET } from '@/lib/utils';
+import Loading from '../../loading';
+import VehicleModelList from '@/components/vehicles/vehicle-model-list';
 export const metadata: Metadata = {
-  title: 'Station | Fleet'
+  title: 'Station | Vehicle Models'
 };
 
 export default async function Page(props: {
   searchParams: Promise<{
     query: string;
     page: string;
-    dateRange: string;
-    dateSingle: string;
     sortBy: string;
     direction: SortingDirection;
   }>;
 }) {
-  const repo = new JsonRepository<Vehicle>('vehicles.json');
+  const repo = new JsonRepository<VehicleModel>('vehicles-model.json');
   const urlParams = await props.searchParams;
 
   const search = urlParams?.query || '';
   const page = Math.max(Number(urlParams?.page || 1), 1); // Ensure page starts from 1 (not zero)
   const sortingDirection: SortingDirection = urlParams?.direction || 'asc';
   const sortingOption = urlParams?.sortBy || '';
-  const dateSingle = Number(urlParams?.dateSingle ?? 0);
-  const dateRange = parseDateRange(urlParams?.dateRange);
   // Calculate the offset for pagination
   const offset = Math.max((page - 1) * PAGE_OFFSET, 0);
 
-  // console.log('Search Parameters:', {
-  //   search: `search=${search}`,
-  //   page: `page=${page}`,
-  //   sortingDirection: `sortingDirection=${sortingDirection}`,
-  //   sortingOption: `sortingOption=${sortingOption}`,
-  //   dateSingle: `dateSingle=${dateSingle}`,
-  //   dateRange: `dateRange=${JSON.stringify(dateRange)}`,
-  //   offset: `offset=${offset}`
-  // });
-
-  // console.log(`Search Parameters: ${..urlParams}`);
   // Improved date range parser
   function parseDateRange(
     dateRangeStr?: string
@@ -66,30 +51,27 @@ export default async function Page(props: {
   }
 
   // Fetch vehicles data from the repository
-  const { vehicles, newOffset, totalProducts } = repo.getVehicles(
+  const { models, newOffset, totalProducts } = repo.getVehicleModels(
     search,
     offset,
-    sortingOption as keyof Vehicle,
-    sortingDirection,
-    dateSingle,
-    dateRange
+    sortingOption as keyof VehicleModel,
+    sortingDirection
   );
 
-  // console.log(`Search Parameters: ${urlParams}`);
   return (
     <Suspense
       fallback={
         <Loading
           className="py-64"
           variant="card"
-          message="Fetching vehicles..."
+          message="Fetching vehicle models..."
         />
       }
     >
-      <StationFleetView
-        vehicles={vehicles}
+      <VehicleModelList
+        models={models}
         offset={newOffset}
-        totalVehicles={totalProducts}
+        totalModels={totalProducts}
         sortDirection={sortingDirection}
         sortOption={sortingOption}
       />
