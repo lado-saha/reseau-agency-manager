@@ -3,7 +3,6 @@ import { AppSidebar } from 'src/components/app-sidebar';
 import {
   SidebarInset,
   SidebarProvider,
-  SidebarSeparator,
   SidebarTrigger
 } from 'src/components/ui/sidebar';
 import {

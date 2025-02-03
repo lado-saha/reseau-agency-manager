@@ -12,7 +12,8 @@ export const metadata: Metadata = {
   title: 'Station | Vehicle Models'
 };
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const repo = new JsonRepository<VehicleModel>('vehicles-model.json');
   let originalModel: VehicleModel | undefined;
   const isNew = params.id === 'new';

@@ -51,7 +51,7 @@ export function SignupForm({
 
   const onSubmit = async (data: SignupFormValue) => {
     setIsPending(true);
-    // setErrorMessage(null); // Clear any previous error message
+    setErrorMessage(null); // Clear any previous error message
     try {
       const result = await createNewUser(
         data.name,
@@ -86,8 +86,27 @@ export function SignupForm({
             Enter your email and role below to create your account
           </p>
         </div>
-
         <div className="grid gap-6">
+          {/* Email field */}
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input
+                    id="name"
+                    type="name"
+                    placeholder="Parfait Tsinda"
+                    {...field}
+                    className="border"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           {/* Email field */}
           <FormField
             control={form.control}
@@ -149,7 +168,7 @@ export function SignupForm({
           />
 
           {/* Submit Button */}
-          <Button className="w-full" aria-disabled={isPending}>
+          <Button className="w-full" type="submit" aria-disabled={isPending}>
             Signup
           </Button>
 

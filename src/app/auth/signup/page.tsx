@@ -1,7 +1,7 @@
 import { GalleryVerticalEnd } from 'lucide-react';
 
-import { NavActions } from '@/components/app-topbar-actions';
 import { SignupForm } from '@/components/auth/signup-form';
+import { NavActions } from '@/components/app-topbar-actions';
 
 export default function LoginPage() {
   return (

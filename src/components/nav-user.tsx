@@ -26,13 +26,13 @@ import {
   useSidebar
 } from '@/components/ui/sidebar';
 import { User } from '@/lib/models/user';
-import { signOut } from 'next-auth/react';
+import { signOutUser } from '@/lib/actions';
 
 export function NavUser({ user }: { user: User }) {
   const { isMobile } = useSidebar();
 
   const handleLogout = async () => {
-    await signOut();
+    await signOutUser();
   };
 
   return (
@@ -74,8 +74,7 @@ export function NavUser({ user }: { user: User }) {
                     alt={user.name}
                   />
                   <AvatarFallback className="rounded-lg">
-                    {/* {user.name.charAt(0).toUpperCase()} */}
-                    sd
+                    {user.name.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
@@ -112,10 +111,17 @@ export function NavUser({ user }: { user: User }) {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
-              <LogOut className="mr-4 text-red-500" />
-              <span className="text-red-500">Log out</span>
-            </DropdownMenuItem>
+            <form action={handleLogout} method="post">
+              <DropdownMenuItem asChild>
+                <button
+                  type="submit"
+                  className="w-full text-left cursor-pointer"
+                >
+                  <LogOut className="mr-4 text-red-500" />
+                  <span className="text-red-500">Log out</span>
+                </button>
+              </DropdownMenuItem>
+            </form>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

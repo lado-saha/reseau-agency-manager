@@ -5,5 +5,12 @@
     "email": "a@b.com",
     "passwordHash": "$2a$10$zTRSeu7Y1XJ6.NNv4TJGluJwB8bh5yK00FjPslOdLITzcWyoWeUIa",
     "role": "super-admin"
+  },
+  {
+    "id": "2",
+    "name": "LADO SAHA",
+    "email": "lado@gmail.com",
+    "passwordHash": "$2a$10$YA1f38EfLqyLzGayr3R7iOWJEB6SdXsWaOQnhiOEyl2kBKpcuuzzy",
+    "role": "admin"
   }
 ]

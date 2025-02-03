@@ -3,7 +3,6 @@ import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { JsonRepository } from '@/lib/repository/JsonRepository';
 import { User } from '@/lib/models/user';
-// import { ZodError } from 'zod';
 
 const userRepo = new JsonRepository<User>('users.json');
 
@@ -58,12 +57,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return token;
     },
   },
-  session: {
-    strategy: "jwt",
-  },
-
   pages: {
     signIn: '/auth/login',
-    // newUser: '/auth/signup'
+    newUser: '/auth/signup',
   }
 });

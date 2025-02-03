@@ -3,7 +3,7 @@ import { Analytics } from '@vercel/analytics/react';
 import { ThemeProvider } from 'src/components/theme-provider';
 // app/layout.tsx
 import { Montserrat } from 'next/font/google';
-import { SessionProvider, signOut } from 'next-auth/react';
+import { SessionProvider } from 'next-auth/react';
 import { auth } from '@/auth';
 
 const montserrat = Montserrat({

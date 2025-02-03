@@ -4,7 +4,7 @@ import { signIn } from '@/auth';
 import { AuthError } from 'next-auth';
 import { JsonRepository } from './repository/JsonRepository';
 import { User } from './models/user';
-import { signOut } from 'next-auth/react';
+import { signOut } from '@/auth';
 
 export async function authenticateUser(
   redirect: boolean,
@@ -46,8 +46,9 @@ export async function createNewUser(
     return (error instanceof Error) ? error.message : 'Unknown error occurred during user creation.';
   }
 }
-// export async function signOutUser() {
-//   await signOut();
-// }
+export async function signOutUser() {
+  'use server'
+  await signOut();
+}
 
 
