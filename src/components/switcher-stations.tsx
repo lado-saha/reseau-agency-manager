@@ -4,7 +4,7 @@ import * as React from 'react';
 import { ChevronsUpDown, Plus, Search } from 'lucide-react';
 
 /**
- * 
+ *
  * The list view to select the station
  */
 import {
@@ -22,7 +22,7 @@ import {
   SidebarMenuItem,
   useSidebar
 } from 'src/components/ui/sidebar';
-import { SearchInput } from 'src/app/agency/search';
+import { SearchInput } from '@/components/search-bar';
 export function StationSwitcher({
   teams
 }: {
@@ -62,7 +62,8 @@ export function StationSwitcher({
             side={isMobile ? 'bottom' : 'right'}
             sideOffset={4}
           >
-            <SearchInput className="flex  w-full bg-background" />
+            {/* <SearchInput className="flex  w-full bg-background" /> */}
+            <SearchInput />
             <DropdownMenuLabel className="text-xs text-muted-foreground">
               Travel Station
             </DropdownMenuLabel>

@@ -81,7 +81,8 @@ export function SearchInput() {
             </FormItem>
           )}
         />
-        {isPending && <Spinner className="absolute right-2.5 top-[.75rem]" />}
+        {/* {isPending && <Spinner className="absolute right-2.5 top-[.75rem]" />} */}
+        {isPending && <Spinner />}
       </form>
     </Form>
   );
