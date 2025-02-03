@@ -24,7 +24,7 @@ export const URL_PATHS = {
     name: 'Paul Atangana',
     email: 'paul-atang@general.com',
     role: 'Logistics Manager',
-    avatar: '/avatars/shadcn.jpg'
+    // avatar: '/avatars/shadcn.jpg'
   },
   stations: [
     {

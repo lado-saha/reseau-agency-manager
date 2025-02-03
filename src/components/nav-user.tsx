@@ -9,7 +9,7 @@ import {
   Sparkles
 } from 'lucide-react';
 
-import { Avatar, AvatarFallback, AvatarImage } from 'src/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,25 +18,22 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger
-} from 'src/components/ui/dropdown-menu';
+} from '@/components/ui/dropdown-menu';
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar
-} from 'src/components/ui/sidebar';
+} from '@/components/ui/sidebar';
+import { User } from '@/lib/models/user';
+import { signOut } from 'next-auth/react';
 
-export function NavUser({
-  user
-}: {
-  user: {
-    name: string;
-    email: string;
-    role: string;
-    avatar: string;
-  };
-}) {
+export function NavUser({ user }: { user: User }) {
   const { isMobile } = useSidebar();
+
+  const handleLogout = async () => {
+    await signOut();
+  };
 
   return (
     <SidebarMenu>
@@ -49,15 +46,16 @@ export function NavUser({
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage
-                  className="mr-4"
-                  src={user.avatar}
+                  src={`https://api.dicebear.com/7.x/identicon/svg?seed=${user.email}`}
                   alt={user.name}
                 />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                <AvatarFallback className="rounded-lg">P</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">{user.name}</span>
-                <span className="truncate text-xs">{user.email}</span>
+                <span className="truncate text-xs text-muted-foreground">
+                  {user.email}
+                </span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -71,13 +69,23 @@ export function NavUser({
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">PA</AvatarFallback>
+                  <AvatarImage
+                    src={`https://api.dicebear.com/7.x/identicon/svg?seed=${user.email}`}
+                    alt={user.name}
+                  />
+                  <AvatarFallback className="rounded-lg">
+                    {/* {user.name.charAt(0).toUpperCase()} */}
+                    sd
+                  </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-bold">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
-                  <span className="italic truncate font-semibold">{user.role}</span>
+                  <span className="truncate text-xs text-muted-foreground">
+                    {user.email}
+                  </span>
+                  <span className="italic truncate font-semibold text-primary">
+                    {user.role}
+                  </span>
                 </div>
               </div>
             </DropdownMenuLabel>
@@ -104,9 +112,9 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOut className="mr-4" />
-              Log out
+            <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
+              <LogOut className="mr-4 text-red-500" />
+              <span className="text-red-500">Log out</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

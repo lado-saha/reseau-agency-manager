@@ -1,4 +1,3 @@
-import path from 'path';
 import { Vehicle, VehicleModel } from '@/lib/models/resource';
 import { format } from 'date-fns';
 import {
@@ -6,6 +5,7 @@ import {
   sortVehicles,
   sortVehiclesModels
 } from '@/lib/models/helpers';
+import { compare, hash } from 'bcryptjs'
 import { PAGE_OFFSET } from '../utils';
 const vehicleJSON = [
   {
@@ -709,39 +709,41 @@ const vehicleModelsJSON = [
  * Temporary repository for storing classes in json
  */
 export class JsonRepository<T> {
-  private filePath: string;
+  private fileUrl: string;
 
   constructor(fileName: string) {
-    const dirPath = path.resolve('/home/sih/project/tripbook/src/lib/db/json');
-    this.filePath = path.join(dirPath, fileName);
+    this.fileUrl = `${process.env.NEXT_PUBLIC_API_URL}/db/${fileName}`;
+
 
     // Create db file if not exist
     // if (!fs.existsSync(this.filePath)) {
     //   fs.writeFileSync(this.filePath, JSON.stringify([]));
     // }
   }
-  getVehicles(
+  async getVehicles(
     search = '',
     offset = 0,
     sortBy: keyof Vehicle,
     direction: SortingDirection, // asc or desc
     dateSingle: number, // Gotten from Date.getTime()
     dateRange: { from: number; to?: number } | undefined // Same thing here Date.getTime() and exclusive to dateSingle
-  ): {
-    vehicles: Vehicle[];
-    newOffset: number;
-    totalProducts: number;
-  } {
+  ):
+    Promise<{
+      vehicles: Vehicle[];
+      newOffset: number;
+      totalProducts: number
+    }> {
     // Parse and clone the JSON to avoid mutating the original data
-    const vehicles = JSON.parse(JSON.stringify(vehicleJSON)) as Vehicle[];
+    // const vehicles = JSON.parse(JSON.stringify(vehicleJSON)) as Vehicle[];
+    const vehicles = await this.fetchData() as Vehicle[]
 
     // Step 1: Filter records based on the search query (case-insensitive)
     const filteredVehicles = search
       ? vehicles.filter((vehicle) =>
-          Object.values(vehicle).some((value) =>
-            value?.toString().toLowerCase().includes(search.toLowerCase())
-          )
+        Object.values(vehicle).some((value) =>
+          value?.toString().toLowerCase().includes(search.toLowerCase())
         )
+      )
       : vehicles;
 
     // Step 2: Filter based on dateSingle or dateRange
@@ -799,38 +801,40 @@ export class JsonRepository<T> {
       v.id === id;
     });
   }
-  getVehicleModels(
+
+
+  async getVehicleModels(
     search = '',
     offset = 0,
     sortBy: keyof VehicleModel,
     direction: SortingDirection // asc or desc
-  ): {
+  ): Promise<{
     models: VehicleModel[];
     newOffset: number;
     totalProducts: number;
-  } {
+  }> {
     // Parse and clone the JSON to avoid mutating the original data
-    const models = JSON.parse(
-      JSON.stringify(vehicleModelsJSON)
-    ) as VehicleModel[];
+    const models = await this.fetchData() as VehicleModel[]
+
+
 
     // Step 1: Filter records based on the search query (case-insensitive)
     const filteredModels = search
       ? models.filter((vehicle) =>
-          Object.values(vehicle).some((value) =>
-            value?.toString().toLowerCase().includes(search.toLowerCase())
-          )
+        Object.values(vehicle).some((value) =>
+          value?.toString().toLowerCase().includes(search.toLowerCase())
         )
+      )
       : models;
 
     // Step 2: Filter based on dateSingle or dateRange
     const sortedVehicles =
       sortBy && direction
         ? sortVehiclesModels(
-            sortBy,
-            direction,
-            filteredModels as VehicleModel[]
-          )
+          sortBy,
+          direction,
+          filteredModels as VehicleModel[]
+        )
         : filteredModels;
 
     // Step 4: Paginate the records
@@ -848,5 +852,64 @@ export class JsonRepository<T> {
       newOffset,
       totalProducts: filteredModels.length
     };
+  }
+
+  // Fetch JSON data from the public directory
+  private async fetchData(): Promise<T[]> {
+    const response = await fetch(this.fileUrl);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch ${this.fileUrl}`);
+    }
+    return await response.json();
+  }
+
+  // Users
+  // Create a new user
+  async createUser(name: string, email: string, role: string, password: string): Promise<T> {
+    const users = await this.fetchData();
+
+    // Check if the user already exists
+    const existingUser = users.find((user: any) => user.email === email);
+    if (existingUser) {
+      throw new Error('User already exists');
+    }
+
+    // Hash the password
+    const saltRounds = 10;
+    const passwordHash = await hash(password, saltRounds);
+
+    // Create the new user object
+    const newUser = {
+      id: (users.length + 1).toString(),
+      name,
+      email,
+      passwordHash,
+      role
+    };
+
+    // Save the new user via an API route
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newUser)
+    });
+
+    return newUser as T;
+  }
+  async findUserByEmail(email: string): Promise<T | undefined> {
+    const users = await this.fetchData();
+    return users.find((user: any) => user.email === email);
+  }
+
+  async verifyUser(email: string, password: string): Promise<T | null> {
+    const user = await this.findUserByEmail(email);
+
+    if (user && (await compare(password, (user as any).passwordHash))) {
+      return user;
+    }
+
+    return null;
   }
 }

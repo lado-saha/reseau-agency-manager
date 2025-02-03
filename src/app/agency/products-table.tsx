@@ -16,7 +16,7 @@ import {
   CardTitle
 } from 'src/components/ui/card';
 import { Product } from './product';
-import { SelectProduct } from 'src/lib/db';
+import { SelectProduct } from '@/lib/actions';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from 'src/components/ui/button';

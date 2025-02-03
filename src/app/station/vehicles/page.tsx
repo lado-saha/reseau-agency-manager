@@ -66,7 +66,7 @@ export default async function Page(props: {
   }
 
   // Fetch vehicles data from the repository
-  const { vehicles, newOffset, totalProducts } = repo.getVehicles(
+  const { vehicles, newOffset, totalProducts } = await repo.getVehicles(
     search,
     offset,
     sortingOption as keyof Vehicle,
@@ -74,7 +74,6 @@ export default async function Page(props: {
     dateSingle,
     dateRange
   );
-
   // console.log(`Search Parameters: ${urlParams}`);
   return (
     <Suspense

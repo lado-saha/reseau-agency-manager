@@ -18,7 +18,7 @@ export default async function Page(props: {
     direction: SortingDirection;
   }>;
 }) {
-  const repo = new JsonRepository<VehicleModel>('vehicles-model.json');
+  const repo = new JsonRepository<VehicleModel>('vehicle-models.json');
   const urlParams = await props.searchParams;
 
   const search = urlParams?.query || '';
@@ -51,7 +51,7 @@ export default async function Page(props: {
   }
 
   // Fetch vehicles data from the repository
-  const { models, newOffset, totalProducts } = repo.getVehicleModels(
+  const { models, newOffset, totalProducts } = await repo.getVehicleModels(
     search,
     offset,
     sortingOption as keyof VehicleModel,

@@ -1,0 +1,9 @@
+[
+  {
+    "id": "1",
+    "name": "Tsinda Parfait",
+    "email": "a@b.com",
+    "passwordHash": "$2a$10$zTRSeu7Y1XJ6.NNv4TJGluJwB8bh5yK00FjPslOdLITzcWyoWeUIa",
+    "role": "super-admin"
+  }
+]

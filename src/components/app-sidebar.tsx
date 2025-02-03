@@ -1,5 +1,3 @@
-'use client';
-
 import * as React from 'react';
 import { CalendarRangeIcon, ChevronRight } from 'lucide-react';
 
@@ -26,16 +24,17 @@ import {
   CollapsibleContent,
   CollapsibleTrigger
 } from '@/components/ui/collapsible';
-import { usePathname } from 'next/navigation';
 import { mainPaths, URL_PATHS } from '@/lib/paths';
+import { auth } from '@/auth';
+import { User } from '@/lib/models/user';
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   showCalendar: boolean;
+  user: User;
 }
 
-export function AppSidebar({ showCalendar, ...props }: AppSidebarProps) {
-
-
+export function AppSidebar({ showCalendar, user, ...props }: AppSidebarProps) {
+  // const user = (await auth())?.user!!;
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
@@ -76,7 +75,7 @@ export function AppSidebar({ showCalendar, ...props }: AppSidebarProps) {
         <NavMain items={URL_PATHS.navMain} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={URL_PATHS.user} />
+        <NavUser user={user} />
       </SidebarFooter>
     </Sidebar>
   );

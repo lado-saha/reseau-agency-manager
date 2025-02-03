@@ -10,7 +10,7 @@ import {
 } from 'src/components/ui/dropdown-menu';
 import { MoreHorizontal } from 'lucide-react';
 import { TableCell, TableRow } from 'src/components/ui/table';
-import { SelectProduct } from 'src/lib/db';
+import { SelectProduct } from '@/lib/actions';
 import { deleteProduct } from './actions';
 
 export function Product({ product }: { product: SelectProduct }) {

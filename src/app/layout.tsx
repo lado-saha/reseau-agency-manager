@@ -1,11 +1,10 @@
 import './globals.css';
 import { Analytics } from '@vercel/analytics/react';
 import { ThemeProvider } from 'src/components/theme-provider';
-// import { NextIntlClientProvider } from 'next-intl';
-// import { getLocale, getMessages } from 'next-intl/server';
-
 // app/layout.tsx
 import { Montserrat } from 'next/font/google';
+import { SessionProvider, signOut } from 'next-auth/react';
+import { auth } from '@/auth';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -37,16 +36,17 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <body className="flex min-h-screen w-full flex-col">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {/* <NextIntlClientProvider messages={messages}> */}
-          {children}
-          {/* </NextIntlClientProvider> */}
-        </ThemeProvider>
+        <SessionProvider session={await auth()}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+            {/* </NextIntlClientProvider> */}
+          </ThemeProvider>
+        </SessionProvider>
       </body>
       <Analytics />
     </html>

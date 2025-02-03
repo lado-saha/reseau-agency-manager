@@ -1,6 +1,5 @@
 'use client';
 import { AppSidebar } from 'src/components/app-sidebar';
-import { Analytics } from '@vercel/analytics/react';
 import {
   SidebarInset,
   SidebarProvider,
@@ -15,12 +14,13 @@ import {
   BreadcrumbSeparator,
   BreadcrumbPage
 } from 'src/components/ui/breadcrumb';
-import { ThemeProvider } from 'src/components/theme-provider';
 import { Separator } from 'src/components/ui/separator';
 import { NavActions } from 'src/components/app-topbar-actions';
 import { usePathname } from 'next/navigation';
 import { SearchInput } from '@/components/search-bar';
 import { mainPaths, searchablePaths } from '@/lib/paths';
+import { useSession } from 'next-auth/react';
+import Loading from './loading';
 
 export default function StationLayout({
   children
@@ -28,6 +28,12 @@ export default function StationLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const { data: session, status } = useSession();
+  console.log(session);
+
+  if (status === 'loading') {
+    return Loading({ message: 'Getting User info', variant: 'card' }); // You can replace this with a spinner
+  }
 
   // Remove search params (everything after ?)
   const currentPage = pathname.split('?')[0].split('/').pop() || '';
@@ -52,7 +58,16 @@ export default function StationLayout({
   return (
     <SidebarProvider className={'bg-sidebar'}>
       {showSidebar && (
-        <AppSidebar showCalendar={['vehicles'].includes(currentPage)} />
+        <AppSidebar
+          user={{
+            name: session?.user?.name!!,
+            email: session?.user?.email!!,
+            role: session?.user?.role!!,
+            passwordHash: '',
+            id: session?.user?.id!!
+          }}
+          showCalendar={['vehicles'].includes(currentPage)}
+        />
       )}
 
       {/* <AppCalenderSidebar /> */}
