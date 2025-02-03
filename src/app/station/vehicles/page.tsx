@@ -2,7 +2,7 @@ import { JsonRepository } from '@/lib/repository/JsonRepository';
 import { Vehicle } from '@/lib/models/resource';
 import { SortingDirection, TabsVehicle } from '@/lib/models/helpers';
 import { Suspense, useMemo } from 'react';
-import Loading from '../loading';
+import Loading from '../../loading';
 import { Metadata } from 'next';
 import StationFleetView from '@/components/vehicles/fleet-view';
 import { PAGE_OFFSET } from '@/lib/utils';

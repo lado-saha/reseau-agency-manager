@@ -39,20 +39,20 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (isOnAgencyPortal) {
         if (isLoggedIn) return true;
         return false; // Redirect unauthenticated users to login page
-      } else if (isLoggedIn) {
-        return Response.redirect(new URL('/station/vehicles', nextUrl));
       }
       return true;
     },
     async session({ session, user, token }) {
       if (token?.role) {
         session.user.role = token.role; // ✅ Add custom field
+        session.user.photo = token.photo
       }
       return session;
     },
     async jwt({ token, user }) {
       if (user) {
         token.role = user.role; // ✅ Store in JWT
+        token.photo = user.photo
       }
       return token;
     },

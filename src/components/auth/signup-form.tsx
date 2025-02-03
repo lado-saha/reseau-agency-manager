@@ -13,28 +13,57 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/form';
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent
+} from '@/components/ui/popover';
+import {
+  Command,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem
+} from '@/components/ui/command';
+import { Check, ChevronsUpDown, MessageSquareWarningIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { createNewUser } from '@/lib/actions';
-import { MessageSquareWarningIcon } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
-// Define the schema for the login form using zod
+// Define the schema for the signup form using zod
 const signupFormSchema = z.object({
-  name: z.string().nonempty('Please enter your names.'),
+  name: z.string().nonempty('Please enter your name.'),
   email: z
     .string()
     .email({ message: 'Please enter a valid email address.' })
     .nonempty({ message: 'Email is required.' }),
-  role: z.string().nonempty('Please enter the role assigned to you.'),
   password: z
     .string()
-    .min(1, { message: 'Password must be at least 1 characters long.' })
-    .nonempty({ message: 'Password is required.' })
+    .min(6, { message: 'Password must be at least 6 characters long.' })
+    .nonempty({ message: 'Password is required.' }),
+  sex: z.enum(['male', 'female'], { message: 'Pick your sex.' }),
+  role: z.enum(['admin', 'super-admin', 'normal'], {
+    message: 'Select a role.'
+  }),
+  photo: z.string().optional()
 });
 
 type SignupFormValue = z.infer<typeof signupFormSchema>;
+
+const roles = [
+  { value: 'normal', label: 'Normal' },
+  { value: 'admin', label: 'Admin' },
+  { value: 'super-admin', label: 'Super Admin' }
+];
+
+const sexes = [
+  { value: 'male', label: 'Male' },
+  { value: 'female', label: 'Female' }
+];
 
 export function SignupForm({
   className,
@@ -44,35 +73,57 @@ export function SignupForm({
   const callbackUrl = searchParams.get('callbackUrl') || '/auth/login';
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isPending, setIsPending] = useState<boolean>(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [selectedPhoto, setSelectedPhoto] = useState<File | null>(null);
+
   // Set up useForm with zod resolver for validation
   const form = useForm<SignupFormValue>({
-    resolver: zodResolver(signupFormSchema)
+    resolver: zodResolver(signupFormSchema),
+    defaultValues: {
+      sex: 'male',
+      role: 'normal'
+    }
   });
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedPhoto(file);
+      const reader = new FileReader();
+      reader.onload = () => setImagePreview(reader.result as string);
+      reader.readAsDataURL(file);
+      form.setValue('photo', file.name);
+    }
+  };
 
   const onSubmit = async (data: SignupFormValue) => {
     setIsPending(true);
-    setErrorMessage(null); // Clear any previous error message
+    setErrorMessage(null);
+
     try {
-      const result = await createNewUser(
+      if (!selectedPhoto) {
+        throw new Error('Please select a profile picture.');
+      }
+
+      const newUser = await createNewUser(
         data.name,
         data.email,
         data.role,
-        data.password
+        data.password,
+        data.sex,
+        selectedPhoto // Send actual file object
       );
 
-      if (result) {
-        // Handle error message from authenticate
-        setErrorMessage(result);
-      } else {
-        // Successful login, redirect to the callback URL
+      if (newUser) {
         window.location.href = callbackUrl;
       }
     } catch (error) {
-      setErrorMessage(`Something went wrong.${(error as Error).message}`);
+      setErrorMessage(`Something went wrong: ${(error as Error).message}`);
     } finally {
-      setIsPending(false); // Reset the loading state
+      setIsPending(false);
     }
   };
+
   return (
     <Form {...form}>
       <form
@@ -83,11 +134,38 @@ export function SignupForm({
         <div className="flex flex-col items-center gap-2 text-center">
           <h1 className="text-2xl font-bold">Create your account</h1>
           <p className="text-sm text-muted-foreground">
-            Enter your email and role below to create your account
+            Enter your details below to sign up
           </p>
         </div>
+
         <div className="grid gap-6">
-          {/* Email field */}
+          {/* Image Picker */}
+          <div className="flex flex-col items-center gap-4">
+            <label
+              htmlFor="photo-upload"
+              className="relative w-32 h-32 rounded-full border-2 border-gray-300 flex items-center justify-center overflow-hidden cursor-pointer"
+            >
+              {imagePreview ? (
+                <Image
+                  src={imagePreview}
+                  alt="Profile Preview"
+                  layout="fill"
+                  objectFit="cover"
+                />
+              ) : (
+                <span className="text-gray-400 text-sm">Pick Photo</span>
+              )}
+            </label>
+            <input
+              id="photo-upload"
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleImageChange}
+            />
+          </div>
+
+          {/* Name */}
           <FormField
             control={form.control}
             name="name"
@@ -97,8 +175,8 @@ export function SignupForm({
                 <FormControl>
                   <Input
                     id="name"
-                    type="name"
-                    placeholder="Parfait Tsinda"
+                    type="text"
+                    placeholder="John Doe"
                     {...field}
                     className="border"
                   />
@@ -107,7 +185,8 @@ export function SignupForm({
               </FormItem>
             )}
           />
-          {/* Email field */}
+
+          {/* Email */}
           <FormField
             control={form.control}
             name="email"
@@ -118,26 +197,7 @@ export function SignupForm({
                   <Input
                     id="email"
                     type="email"
-                    placeholder="m@example.com"
-                    {...field}
-                    className="border"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="role"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Role</FormLabel>
-                <FormControl>
-                  <Input
-                    id="role"
-                    type="text"
-                    placeholder="Head of Statio"
+                    placeholder="johndoe@example.com"
                     {...field}
                     className="border"
                   />
@@ -147,7 +207,7 @@ export function SignupForm({
             )}
           />
 
-          {/* Password field */}
+          {/* Password */}
           <FormField
             control={form.control}
             name="password"
@@ -167,6 +227,126 @@ export function SignupForm({
             )}
           />
 
+          {/* Sex Selection */}
+          <FormField
+            control={form.control}
+            name="sex"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Sex</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        className={cn(
+                          'w-full justify-between',
+                          !field.value && 'text-muted-foreground'
+                        )}
+                      >
+                        {field.value
+                          ? sexes.find((s) => s.value === field.value)?.label
+                          : 'Select gender'}
+                        <ChevronsUpDown className="opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-full p-0">
+                    <Command>
+                      <CommandInput
+                        placeholder="Search gender..."
+                        className="h-9"
+                      />
+                      <CommandList>
+                        <CommandEmpty>No gender found.</CommandEmpty>
+                        <CommandGroup>
+                          {sexes.map((s) => (
+                            <CommandItem
+                              key={s.value}
+                              onSelect={() => form.setValue('sex', s.value)}
+                            >
+                              {s.label}
+                              <Check
+                                className={cn(
+                                  'ml-auto',
+                                  s.value === field.value
+                                    ? 'opacity-100'
+                                    : 'opacity-0'
+                                )}
+                              />
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Role Selection */}
+          <FormField
+            control={form.control}
+            name="role"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Role</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        className={cn(
+                          'w-full justify-between',
+                          !field.value && 'text-muted-foreground'
+                        )}
+                      >
+                        {field.value
+                          ? roles.find((r) => r.value === field.value)?.label
+                          : 'Select role'}
+                        <ChevronsUpDown className="opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-full p-0">
+                    <Command>
+                      <CommandInput
+                        placeholder="Search role..."
+                        className="h-9"
+                      />
+                      <CommandList>
+                        <CommandEmpty>No role found.</CommandEmpty>
+                        <CommandGroup>
+                          {roles.map((r) => (
+                            <CommandItem
+                              key={r.value}
+                              onSelect={() => form.setValue('role', r.value)}
+                            >
+                              {r.label}
+                              <Check
+                                className={cn(
+                                  'ml-auto',
+                                  r.value === field.value
+                                    ? 'opacity-100'
+                                    : 'opacity-0'
+                                )}
+                              />
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           {/* Submit Button */}
           <Button className="w-full" type="submit" aria-disabled={isPending}>
             Signup
@@ -180,7 +360,7 @@ export function SignupForm({
             </div>
           )}
 
-          {/* No account message */}
+          {/* Already have an account */}
           <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
             <span className="relative z-10 bg-background px-2 text-muted-foreground">
               Already have an account?
@@ -188,7 +368,7 @@ export function SignupForm({
           </div>
         </div>
 
-        {/* Sign-up Button */}
+        {/* Login Button */}
         <Link href="/auth/login">
           <Button
             variant="outline"

@@ -1,36 +1,33 @@
 'use client';
 import { Button } from '@/components/ui/button';
-import { VehicleModel } from '@/lib/models/resource';
 import { useState } from 'react';
-import { useRouter } from 'next/router';
 import {
   DetailViewMode,
-  TabsVehicleModelDetails,
+  TabsAgencyDetails,
   transposeMatrix
 } from '@/lib/models/helpers';
 // import { Tabs, TabsList, TabsTrigger } from '@/componentsreact-tabs';
 import {
   InfoIcon,
-  HammerIcon,
-  BarChartBigIcon,
   SaveIcon,
   Trash2Icon,
   Check,
-  RotateCcwIcon,
-  Rotate3dIcon
+  UserCheckIcon,
+  ScaleIcon,
+  GlobeIcon
 } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { TabsContent } from '@radix-ui/react-tabs';
-import { VehicleModelForm } from './form-vehicle-model';
-import VehicleModelSchemaEditor from './editor-vehicle-model-schema';
+import VehicleModelSchemaEditor from '../vehicles/editor-vehicle-model-schema';
+import { AgencyProfile } from '@/lib/models/agency';
 
-export function VehicleModelDetailView({
-  originalModel
+export function AgencyDetailView({
+  originalAgency
 }: {
-  originalModel: VehicleModel | undefined;
+  originalAgency: AgencyProfile | undefined;
 }) {
   const mode: DetailViewMode =
-    originalModel !== undefined ? 'edit-mode' : 'creation-mode';
+    originalAgency !== undefined ? 'edit-mode' : 'creation-mode';
   const [rows, setRows] = useState(5);
   const [columns, setColumns] = useState(8);
   const [matrix, setMatrix] = useState<number[][]>(
@@ -39,7 +36,7 @@ export function VehicleModelDetailView({
       .map(() => Array(columns).fill(1)) // 1 means seat, initially all are seats
   );
 
-  const [tab, setTab] = useState<TabsVehicleModelDetails>('info');
+  const [tab, setTab] = useState<TabsAgencyDetails>('creator-info');
   // const router = useRouter();
   const handleSaveOrUpdateClick = () => {
     // throw new Error('Function not implemented.');
@@ -56,30 +53,35 @@ export function VehicleModelDetailView({
   return (
     <Tabs
       defaultValue={tab}
-      onValueChange={(value) => setTab(value as TabsVehicleModelDetails)}
+      onValueChange={(value) => setTab(value as TabsAgencyDetails)}
     >
       {/* Tabs for filtering */}
       <div className="flex items-center mt-2 mb-2">
         <TabsList>
           <TabsTrigger value="info" className="items-center">
-            <InfoIcon className="mx-1 w-4 h-4" />
-            <span className="hidden sm:inline">General Info</span>
+            <UserCheckIcon className="mx-1 w-4 h-4" />
+            <span className="hidden sm:inline">Creator's Info</span>
           </TabsTrigger>
 
           <TabsTrigger value="schema" className="items-center">
-            <HammerIcon className="mx-1 w-4 h-4" />
-            <span className="hidden sm:inline">Seats Schema</span>
+            <InfoIcon className="mx-1 w-4 h-4" />
+            <span className="hidden sm:inline">Basic Info</span>
           </TabsTrigger>
 
           <TabsTrigger value="stats" className="items-center">
-            <BarChartBigIcon className="mx-1 w-4 h-4" />
-            <span className="hidden sm:inline">Statistics</span>
+            <ScaleIcon className="mx-1 w-4 h-4" />
+            <span className="hidden sm:inline">Legal Info</span>
+          </TabsTrigger>
+
+          <TabsTrigger value="stats" className="items-center">
+            <GlobeIcon className="mx-1 w-4 h-4" />
+            <span className="hidden sm:inline">Social Media</span>
           </TabsTrigger>
         </TabsList>
 
         <div className="ml-auto flex items-center gap-2 ">
           <>
-            {tab === 'schema' ? (
+            {/* {tab === 'schema' ? (
               <Button
                 size="sm"
                 variant={'outline'}
@@ -92,7 +94,7 @@ export function VehicleModelDetailView({
               </Button>
             ) : (
               <></>
-            )}
+            )} */}
             {mode !== 'creation-mode' ? (
               <Button
                 size="sm"
@@ -101,7 +103,7 @@ export function VehicleModelDetailView({
                 onClick={handleSaveOrUpdateClick}
               >
                 <SaveIcon className="h-3.5 w-3.5" />
-                <span className="hidden md:inline">Save New Model</span>
+                <span className="hidden md:inline">Create Agency</span>
               </Button>
             ) : (
               <>
@@ -112,7 +114,7 @@ export function VehicleModelDetailView({
                   onClick={handleSaveOrUpdateClick}
                 >
                   <Check className="h-3.5 w-3.5" />
-                  <span className="hidden md:inline">Update Model</span>
+                  <span className="hidden md:inline">Update Agency</span>
                 </Button>
 
                 <Button
@@ -131,7 +133,7 @@ export function VehicleModelDetailView({
       </div>
 
       <TabsContent value={tab} className="overflow-x-hidden">
-        {tab === 'info' ? (
+        {tab === 'basic-info' ? (
           <VehicleModelSchemaEditor
             rows={rows}
             columns={columns}

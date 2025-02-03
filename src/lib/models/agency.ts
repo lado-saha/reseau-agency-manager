@@ -40,7 +40,7 @@ export class Agency {
 
 export class Station {
   name: string; // Station name
-  agency: Agency; // Associated agency
+  agency: AgencyInfo; // Associated agency
   auditInfo: AuditInfo; // Station-specific audit information
   location: GeoLocation; // Station's physical location
   photosUrls: string[]; // URLs to photos related to the station
@@ -48,7 +48,7 @@ export class Station {
 
   constructor(
     name: string,
-    agency: Agency,
+    agency: AgencyInfo,
     location: GeoLocation,
     photosUrls: string[],
     settings: { [key: string]: any },
@@ -66,4 +66,53 @@ export class Station {
   updateAuditInfo(updatedBy: string): void {
     this.auditInfo.updateAuditInfo(updatedBy);
   }
+}
+// Interface for the creator's personal details
+export interface CreatorInfo {
+  name: string;
+
+  nationalIDFront: File; // Image file for CNI front
+  nationalIDBack: File;  // Image file for CNI back
+  passportPhoto: File;   // 4x4 photo
+  sex: "Male" | "Female";
+}
+
+// Interface for agency details
+interface AgencyInfo {
+  businessName: string;
+  logo: string;
+  slogan?: string;  // Optional field
+  headquartersAddress: string;
+  legalStructure: "LLC" | "LTD" | "Sole Proprietorship" | "Corporation";
+  contactNumber: string;
+  email: string;
+}
+
+// Interface for legal documents
+export interface LegalDocuments {
+  businessRegistration: File; // Registration certificate
+  taxClearance: File;         // Tax clearance document
+  travelLicense: File;        // Travel agency license
+  insuranceCertificate?: File; // Optional travel insurance
+}
+
+// Interface for social media presence
+export interface SocialMedia {
+  facebook?: string;
+  twitter?: string;
+  instagram?: string;
+  linkedIn?: string;
+  whatsapp?: string;
+  tiktok?: string;
+  youtube?: string;
+  telegram?: string;
+}
+
+// Combined interface for agency creation
+export interface AgencyProfile {
+  id: string
+  creator: CreatorInfo;
+  agency: AgencyInfo;
+  legalDocs: LegalDocuments;
+  socialMedia: SocialMedia;
 }

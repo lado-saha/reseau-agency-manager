@@ -35,7 +35,7 @@ import {
   sortVehicles,
   TabsVehicle
 } from '@/lib/models/helpers';
-import Loading from 'src/app/station/loading';
+import Loading from '@/app/loading';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
 export default function StationFleetView({

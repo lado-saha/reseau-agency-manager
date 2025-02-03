@@ -62,6 +62,8 @@ export class AuditInfo {
 export type TabsVehicle = 'all' | 'incoming' | 'outgoing' | 'stationed';
 export type TabsVehicleModel = 'all' | 'car' | 'bus';
 export type TabsVehicleModelDetails = 'info' | 'schema' | 'stats';
+export type TabsAgencyDetails = 'creator-info' | 'basic-info' | 'legal-info' | 'social-media';
+
 export type StatusVehicle = 'incoming' | 'outgoing' | 'stationed';
 export type TypeVehicleModel = 'car' | 'bus';
 

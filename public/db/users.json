@@ -1,16 +1,11 @@
 [
   {
-    "id": "1",
-    "name": "Tsinda Parfait",
-    "email": "a@b.com",
-    "passwordHash": "$2a$10$zTRSeu7Y1XJ6.NNv4TJGluJwB8bh5yK00FjPslOdLITzcWyoWeUIa",
-    "role": "super-admin"
-  },
-  {
-    "id": "2",
+    "id": "2831d880-1dae-43fb-8403-168a59b748c4",
     "name": "LADO SAHA",
     "email": "lado@gmail.com",
-    "passwordHash": "$2a$10$YA1f38EfLqyLzGayr3R7iOWJEB6SdXsWaOQnhiOEyl2kBKpcuuzzy",
-    "role": "admin"
+    "passwordHash": "$2a$10$aTaUiLAR6kSP7VQPw2ZBU.QbcoGJxOEvRZtCeS2ssYq0Msx2ETfDG",
+    "role": "normal",
+    "sex": "male",
+    "photo": "/storage/1738591589237-what-I-wanter.png"
   }
 ]

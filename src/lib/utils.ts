@@ -11,3 +11,9 @@ export function cn(...inputs: ClassValue[]) {
  */
 export const PAGE_OFFSET = 10;
 
+export function concatUrl(path: string): string {
+
+  const url = `${process.env.NEXT_PUBLIC_API_URL}${path}`;
+  console.log(url)
+  return url
+}

@@ -38,6 +38,7 @@
     "leaflet-defaulticon-compatibility": "^0.1.2",
     "leaflet-geosearch": "^4.1.0",
     "lucide-react": "^0.400.0",
+    "multer": "1.4.5-lts.1",
     "next": "15.0.0-rc.1",
     "next-auth": "5.0.0-beta.19",
     "next-intl": "^3.26.3",
@@ -70,6 +71,7 @@
     }
   },
   "devDependencies": {
-    "@types/bcryptjs": "^2.4.6"
+    "@types/bcryptjs": "^2.4.6",
+    "@types/multer": "^1.4.12"
   }
 }

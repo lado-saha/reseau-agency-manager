@@ -1,30 +1,28 @@
 import { JsonRepository } from '@/lib/repository/JsonRepository';
 import { VehicleModel } from '@/lib/models/resource';
-import { SortingDirection } from '@/lib/models/helpers';
 import { Suspense } from 'react';
 import { Metadata } from 'next';
-import { PAGE_OFFSET } from '@/lib/utils';
-import Loading from '../../../../loading';
-import VehicleModelList from '@/components/vehicles/vehicle-model-list';
 import { notFound } from 'next/navigation';
-import { VehicleModelDetailView } from '@/components/agency/details-agency';
+import { AgencyDetailView } from '@/components/agency/details-agency';
+import Loading from '../../loading';
+import { AgencyProfile } from '@/lib/models/agency';
 export const metadata: Metadata = {
   title: 'Station | Vehicle Models'
 };
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
-  const repo = new JsonRepository<VehicleModel>('vehicles-model.json');
-  let originalModel: VehicleModel | undefined;
+  const repo = new JsonRepository<VehicleModel>('agency.json');
+  let originalModel: AgencyProfile | undefined;
   const isNew = params.id === 'new';
 
   if (!isNew) {
-    originalModel = await repo.getVehicleModelById(params.id);
+    originalModel = await repo.getAgencyById(params.id);
     if (originalModel === undefined) {
       return notFound();
     }
   } else {
-    return <VehicleModelDetailView originalModel={originalModel} />;
+    return <AgencyDetailView originalAgency={originalModel} />;
   }
 
   // Fetch vehicles data from the repository
@@ -38,7 +36,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
         />
       }
     >
-      <VehicleModelDetailView originalModel={originalModel} />
+      <AgencyDetailView originalAgency={originalModel} />
     </Suspense>
   );
 }

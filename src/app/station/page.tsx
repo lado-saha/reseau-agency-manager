@@ -1,5 +1,5 @@
 import { Separator } from 'src/components/ui/separator';
-import Loading from './loading';
+import Loading from '../loading';
 
 export default function SettingsProfilePage() {
   return (

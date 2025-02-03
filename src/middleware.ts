@@ -8,6 +8,6 @@ export { auth as middleware } from '@/auth';
 // const session = await auth();
 export const config = {
   matcher: [
-    '/((?!api/auth|auth|_next/static|_next/image|.*\\.(?:png|jpg|jpeg|gif|webp|svg|avif|ico|bmp|tiff)$).*)',
+    '/((?!api/auth|api/upload|auth|_next/static|_next/image|.*\\.(?:png|jpg|jpeg|gif|webp|svg|avif|ico|bmp|tiff)$).*)',
   ],
 };

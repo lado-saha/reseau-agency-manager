@@ -27,6 +27,8 @@ import {
 } from '@/components/ui/sidebar';
 import { User } from '@/lib/models/user';
 import { signOutUser } from '@/lib/actions';
+import { concatUrl } from '@/lib/utils';
+import Image from 'next/image';
 
 export function NavUser({ user }: { user: User }) {
   const { isMobile } = useSidebar();
@@ -45,11 +47,22 @@ export function NavUser({ user }: { user: User }) {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage
-                  src={`https://api.dicebear.com/7.x/identicon/svg?seed=${user.email}`}
-                  alt={user.name}
-                />
-                <AvatarFallback className="rounded-lg">P</AvatarFallback>
+                {/* Check if the user has a photo */}
+                {user.photo ? (
+                  <Image
+                    src={concatUrl(user.photo)} // Use the concatenated URL if photo exists
+                    alt={user.name}
+                    width={40} // Adjust size as needed
+                    height={40} // Adjust size as needed
+                    className="rounded-full" // Optional: Adjust class for styling
+                  />
+                ) : (
+                  // If no photo exists, use the DiceBear avatar
+                  <AvatarImage
+                    src={` https://api.dicebear.com/7.x/identicon/svg?seed=${user.email}`}
+                    alt={user.name}
+                  />
+                )}
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">{user.name}</span>
@@ -69,13 +82,22 @@ export function NavUser({ user }: { user: User }) {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage
-                    src={`https://api.dicebear.com/7.x/identicon/svg?seed=${user.email}`}
-                    alt={user.name}
-                  />
-                  <AvatarFallback className="rounded-lg">
-                    {user.name.charAt(0).toUpperCase()}
-                  </AvatarFallback>
+                  {/* Check if the user has a photo */}
+                  {user.photo ? (
+                    <Image
+                      src={concatUrl(user.photo)} // Use the concatenated URL if photo exists
+                      alt={user.name}
+                      width={40} // Adjust size as needed
+                      height={40} // Adjust size as needed
+                      className="rounded-full" // Optional: Adjust class for styling
+                    />
+                  ) : (
+                    // If no photo exists, use the DiceBear avatar
+                    <AvatarImage
+                      src={` https://api.dicebear.com/7.x/identicon/svg?seed=${user.email}`}
+                      alt={user.name}
+                    />
+                  )}
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-bold">{user.name}</span>

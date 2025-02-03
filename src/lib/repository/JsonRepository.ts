@@ -6,7 +6,9 @@ import {
   sortVehiclesModels
 } from '@/lib/models/helpers';
 import { compare, hash } from 'bcryptjs'
-import { PAGE_OFFSET } from '../utils';
+import { concatUrl, PAGE_OFFSET } from '@/lib/utils';
+import { AgencyProfile } from '../models/agency';
+import { User } from '@/lib/models/user';
 const vehicleJSON = [
   {
     resource: {
@@ -712,7 +714,7 @@ export class JsonRepository<T> {
   private fileUrl: string;
 
   constructor(fileName: string) {
-    this.fileUrl = `${process.env.NEXT_PUBLIC_API_URL}/db/${fileName}`;
+    this.fileUrl = concatUrl(`/db/${fileName}`);
 
 
     // Create db file if not exist
@@ -793,9 +795,7 @@ export class JsonRepository<T> {
   }
 
   async getVehicleModelById(id = ''): Promise<VehicleModel | undefined> {
-    const models = JSON.parse(
-      JSON.stringify(vehicleModelsJSON)
-    ) as VehicleModel[];
+    const models = await this.fetchData() as VehicleModel[]
 
     return models.find((v) => {
       v.id === id;
@@ -815,9 +815,6 @@ export class JsonRepository<T> {
   }> {
     // Parse and clone the JSON to avoid mutating the original data
     const models = await this.fetchData() as VehicleModel[]
-
-
-
     // Step 1: Filter records based on the search query (case-insensitive)
     const filteredModels = search
       ? models.filter((vehicle) =>
@@ -863,9 +860,14 @@ export class JsonRepository<T> {
     return await response.json();
   }
 
-  // Users
-  // Create a new user
-  async createUser(name: string, email: string, role: string, password: string): Promise<T> {
+  async createUser(
+    name: string,
+    email: string,
+    role: 'admin' | 'super-admin' | 'normal',
+    password: string,
+    sex: 'male' | 'female',
+    photoFile: File
+  ): Promise<T> {
     const users = await this.fetchData();
 
     // Check if the user already exists
@@ -874,17 +876,34 @@ export class JsonRepository<T> {
       throw new Error('User already exists');
     }
 
+    // Upload the photo first
+    const formData = new FormData();
+    formData.append('file', photoFile);
+
+    const uploadResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/upload`, {
+      method: 'POST',
+      body: formData
+    });
+
+    const responseBody = await uploadResponse.json();
+    if (!uploadResponse.ok) {
+      throw new Error(`Failed to upload image ${JSON.stringify(responseBody)}`);
+    }
+
+    const { fileUrl } = responseBody;
     // Hash the password
     const saltRounds = 10;
     const passwordHash = await hash(password, saltRounds);
 
     // Create the new user object
-    const newUser = {
-      id: (users.length + 1).toString(),
+    const newUser: User = {
+      id: crypto.randomUUID(),
       name,
       email,
       passwordHash,
-      role
+      role,
+      sex,
+      photo: fileUrl // Save the stored image URL
     };
 
     // Save the new user via an API route
@@ -898,6 +917,7 @@ export class JsonRepository<T> {
 
     return newUser as T;
   }
+
   async findUserByEmail(email: string): Promise<T | undefined> {
     const users = await this.fetchData();
     return users.find((user: any) => user.email === email);
@@ -911,5 +931,12 @@ export class JsonRepository<T> {
     }
 
     return null;
+  }
+  async getAgencyById(id = ''): Promise<AgencyProfile | undefined> {
+    const profile = await this.fetchData() as AgencyProfile[]
+
+    return profile.find((v) => {
+      v.id === id;
+    });
   }
 }

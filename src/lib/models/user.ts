@@ -4,4 +4,6 @@ export interface User {
   email: string;
   passwordHash: string;
   role: string;
+  sex: 'male' | 'female',
+  photo: string | null;
 }
