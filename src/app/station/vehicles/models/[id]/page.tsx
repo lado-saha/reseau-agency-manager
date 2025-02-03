@@ -4,16 +4,15 @@ import { SortingDirection } from '@/lib/models/helpers';
 import { Suspense } from 'react';
 import { Metadata } from 'next';
 import { PAGE_OFFSET } from '@/lib/utils';
-import Loading from '../../../../loading';
 import VehicleModelList from '@/components/vehicles/vehicle-model-list';
 import { notFound } from 'next/navigation';
-import { VehicleModelDetailView } from '@/components/agency/details-agency';
+import { VehicleModelDetailView } from '@/components/vehicles/details-vehicle-model';
+import Loading from '@/app/loading';
 export const metadata: Metadata = {
   title: 'Station | Vehicle Models'
 };
 
-export default async function Page(props: { params: Promise<{ id: string }> }) {
-  const params = await props.params;
+export default async function Page({ params }: { params: { id: string } }) {
   const repo = new JsonRepository<VehicleModel>('vehicles-model.json');
   let originalModel: VehicleModel | undefined;
   const isNew = params.id === 'new';
