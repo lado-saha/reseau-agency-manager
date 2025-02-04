@@ -1,27 +1,26 @@
-import { JsonRepository } from '@/lib/repository/JsonRepository';
-import { VehicleModel } from '@/lib/models/resource';
+'use server';
+import { AgencyRepository } from '@/lib/repo/agency-repo';
 import { Suspense } from 'react';
-import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { AgencyDetailView } from '@/components/agency/details-agency';
 import Loading from '../../loading';
 import { AgencyProfile } from '@/lib/models/agency';
-export const metadata: Metadata = {
-  title: 'Station | Vehicle Models'
-};
 
-export default async function Page(props: { params: Promise<{ id: string }> }) {
-  const params = await props.params;
-  const repo = new JsonRepository<VehicleModel>('agency.json');
+type Params = Promise<{ id: string }>;
+
+export default async function Page({ params }: { params: Params }) {
+  const { id } = await params;
+  const repo = new AgencyRepository();
   let originalModel: AgencyProfile | undefined;
-  const isNew = params.id === 'new';
+  const isNew = id === 'new';
 
   if (!isNew) {
-    originalModel = await repo.getAgencyById(params.id);
     if (originalModel === undefined) {
       return notFound();
     }
   } else {
+    originalModel = await repo.getById(id);
+
     return <AgencyDetailView originalAgency={originalModel} />;
   }
 

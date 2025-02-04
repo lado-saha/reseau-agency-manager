@@ -2,11 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
 import fs from 'fs/promises';
 
-// // Debugging log function
-// const log = (message: string, data?: any) => {
-//   console.log(`[UPLOAD API] ${message}`, data ?? '');
-// };
-
 // Define upload directory
 const uploadDir = path.join(process.cwd(), 'public/storage/');
 
@@ -47,6 +42,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ fileUrl: fileUrl }, { status: 200 });
   } catch (error: any) {
-    return NextResponse.json({ message: 'File upload failedsd', error: error.message }, { status: 500 });
+    return NextResponse.json({ message: 'File upload failed', error: error.message }, { status: 500 });
   }
 }

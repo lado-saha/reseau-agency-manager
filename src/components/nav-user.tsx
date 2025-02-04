@@ -26,9 +26,9 @@ import {
   useSidebar
 } from '@/components/ui/sidebar';
 import { User } from '@/lib/models/user';
-import { signOutUser } from '@/lib/actions';
 import { concatUrl } from '@/lib/utils';
 import Image from 'next/image';
+import { signOutUser } from '@/lib/actions';
 
 export function NavUser({ user }: { user: User }) {
   const { isMobile } = useSidebar();
@@ -50,7 +50,7 @@ export function NavUser({ user }: { user: User }) {
                 {/* Check if the user has a photo */}
                 {user.photo ? (
                   <Image
-                    src={concatUrl(user.photo)} // Use the concatenated URL if photo exists
+                    src={concatUrl(user.photo as string)} // Use the concatenated URL if photo exists
                     alt={user.name}
                     width={40} // Adjust size as needed
                     height={40} // Adjust size as needed
@@ -85,7 +85,7 @@ export function NavUser({ user }: { user: User }) {
                   {/* Check if the user has a photo */}
                   {user.photo ? (
                     <Image
-                      src={concatUrl(user.photo)} // Use the concatenated URL if photo exists
+                      src={concatUrl(user.photo as string)} // Use the concatenated URL if photo exists
                       alt={user.name}
                       width={40} // Adjust size as needed
                       height={40} // Adjust size as needed

@@ -26,13 +26,20 @@ import {
   CommandGroup,
   CommandItem
 } from '@/components/ui/command';
-import { Check, ChevronsUpDown, MessageSquareWarningIcon } from 'lucide-react';
+import {
+  Check,
+  ChevronsUpDown,
+  EyeIcon,
+  MessageSquareWarningIcon,
+  TrashIcon
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
-import { createNewUser } from '@/lib/actions';
 import Link from 'next/link';
 import Image from 'next/image';
+import { User } from '@/lib/models/user';
+import { createUserAction } from '@/lib/actions';
 
 // Define the schema for the signup form using zod
 const signupFormSchema = z.object({
@@ -68,7 +75,9 @@ const sexes = [
 export function SignupForm({
   className,
   ...props
-}: React.ComponentPropsWithoutRef<'form'>) {
+}: {
+  className?: string;
+} & React.ComponentPropsWithoutRef<'form'>) {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/auth/login';
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -104,21 +113,21 @@ export function SignupForm({
       if (!selectedPhoto) {
         throw new Error('Please select a profile picture.');
       }
-
-      const newUser = await createNewUser(
-        data.name,
-        data.email,
-        data.role,
-        data.password,
-        data.sex,
-        selectedPhoto // Send actual file object
-      );
+      const newUser = await createUserAction({
+        id: 'new',
+        name: data.name,
+        email: data.email,
+        role: data.role,
+        passwordHash: data.password,
+        sex: data.sex,
+        photo: selectedPhoto // Send actual file object
+      });
 
       if (newUser) {
         window.location.href = callbackUrl;
       }
     } catch (error) {
-      setErrorMessage(`Something went wrong: ${(error as Error).message}`);
+      setErrorMessage(`Error! ${(error as Error).stack}`);
     } finally {
       setIsPending(false);
     }
@@ -163,6 +172,32 @@ export function SignupForm({
               className="hidden"
               onChange={handleImageChange}
             />
+            {imagePreview && (
+              <div className="flex flex-row gap-2 items-center">
+                {/* View Button */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => window.open(imagePreview, '_blank')}
+                >
+                  <EyeIcon className="h-4 w-4" />
+                  <span className="hidden md:inline">Preview</span>
+                </Button>
+
+                {/* Delete Button */}
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => {
+                    setImagePreview(null); // Clear the image preview
+                    form.setValue('photo', ''); // Clear the form field value
+                  }}
+                >
+                  <TrashIcon className="h-4 w-4 " />
+                  <span className="hidden md:inline">Remove</span>
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* Name */}

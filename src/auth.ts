@@ -1,10 +1,8 @@
 // src/auth.ts
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
-import { JsonRepository } from '@/lib/repository/JsonRepository';
-import { User } from '@/lib/models/user';
+import { UserRepository } from '@/lib/repo/json-repository';
 
-const userRepo = new JsonRepository<User>('users.json');
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -18,6 +16,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           throw new Error('Email and password are required');
         }
 
+        const userRepo = new UserRepository();
         const user = await userRepo.verifyUser(
           credentials.email as string,
           credentials.password as string

@@ -1,4 +1,4 @@
-import { JsonRepository } from '@/lib/repository/JsonRepository';
+import { VehicleModelRepository } from '@/lib/repo/json-repository';
 import { VehicleModel } from '@/lib/models/resource';
 import { SortingDirection } from '@/lib/models/helpers';
 import { Suspense } from 'react';
@@ -18,7 +18,7 @@ export default async function Page(props: {
     direction: SortingDirection;
   }>;
 }) {
-  const repo = new JsonRepository<VehicleModel>('vehicle-models.json');
+  const repo = new VehicleModelRepository();
   const urlParams = await props.searchParams;
 
   const search = urlParams?.query || '';
@@ -51,7 +51,11 @@ export default async function Page(props: {
   }
 
   // Fetch vehicles data from the repository
-  const { models, newOffset, totalProducts } = await repo.getVehicleModels(
+  const {
+    items: models,
+    newOffset,
+    totalCount
+  } = await repo.getAll(
     search,
     offset,
     sortingOption as keyof VehicleModel,
@@ -71,7 +75,7 @@ export default async function Page(props: {
       <VehicleModelList
         models={models}
         offset={newOffset}
-        totalModels={totalProducts}
+        totalModels={totalCount}
         sortDirection={sortingDirection}
         sortOption={sortingOption}
       />

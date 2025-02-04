@@ -1,10 +1,7 @@
-import { JsonRepository } from '@/lib/repository/JsonRepository';
+import { VehicleModelRepository } from '@/lib/repo/json-repository';
 import { VehicleModel } from '@/lib/models/resource';
-import { SortingDirection } from '@/lib/models/helpers';
 import { Suspense } from 'react';
 import { Metadata } from 'next';
-import { PAGE_OFFSET } from '@/lib/utils';
-import VehicleModelList from '@/components/vehicles/vehicle-model-list';
 import { notFound } from 'next/navigation';
 import { VehicleModelDetailView } from '@/components/vehicles/details-vehicle-model';
 import Loading from '@/app/loading';
@@ -13,12 +10,12 @@ export const metadata: Metadata = {
 };
 
 export default async function Page({ params }: { params: { id: string } }) {
-  const repo = new JsonRepository<VehicleModel>('vehicles-model.json');
+  const repo = new VehicleModelRepository();
   let originalModel: VehicleModel | undefined;
   const isNew = params.id === 'new';
 
   if (!isNew) {
-    originalModel = await repo.getVehicleModelById(params.id);
+    originalModel = await repo.getById(params.id);
     if (originalModel === undefined) {
       return notFound();
     }

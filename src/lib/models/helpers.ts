@@ -65,6 +65,7 @@ export type TabsVehicleModelDetails = 'info' | 'schema' | 'stats';
 export type TabsAgencyDetails = 'creator-info' | 'basic-info' | 'legal-info' | 'social-media';
 
 export type StatusVehicle = 'incoming' | 'outgoing' | 'stationed';
+export type SubmissionStatus = 'pending' | 'success' | 'error';
 export type TypeVehicleModel = 'car' | 'bus';
 
 export type DetailViewMode = 'edit-mode' | 'creation-mode';
@@ -194,4 +195,34 @@ export function matrixToBitmask(matrix: number[][], columns: number): string {
     }
   }
   return bitmask;
+}
+
+
+export function sortEntities<T>(
+  field: keyof T, // Restrict sorting to known keys of T
+  direction: SortingDirection,
+  entities: T[]
+): T[] {
+  return entities.slice().sort((a, b) => {
+    const valueA = a[field];
+    const valueB = b[field];
+
+    // Handle string sorting
+    if (typeof valueA === 'string' && typeof valueB === 'string') {
+      return direction === 'asc' ? valueA.localeCompare(valueB) : valueB.localeCompare(valueA);
+    }
+
+    // Handle number sorting
+    if (typeof valueA === 'number' && typeof valueB === 'number') {
+      return direction === 'asc' ? valueA - valueB : valueB - valueA;
+    }
+
+    // Handle Date fields
+    if (valueA instanceof Date && valueB instanceof Date) {
+      return direction === 'asc' ? valueA.getTime() - valueB.getTime() : valueB.getTime() - valueA.getTime();
+    }
+
+    // If we cannot compare the values, return 0 (meaning no change in order)
+    return 0;
+  });
 }

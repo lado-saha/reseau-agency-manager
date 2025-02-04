@@ -15,13 +15,9 @@ import {
 } from '@/components/ui/form';
 import { cn } from '@/lib/utils';
 import { useSearchParams } from 'next/navigation';
-import { useActionState, useState } from 'react';
-import { authenticateUser } from '@/lib/actions';
+import { useState } from 'react';
 import { MessageSquareWarningIcon } from 'lucide-react';
 import Link from 'next/link';
-import { signIn } from '@/auth';
-import { AuthError } from 'next-auth';
-
 // Define the schema for the login form using zod
 const loginFormSchema = z.object({
   email: z
@@ -38,8 +34,16 @@ type LoginFormValues = z.infer<typeof loginFormSchema>;
 
 export function LoginForm({
   className,
+  verifyUserAction, // function passed as a prop
   ...props
-}: React.ComponentPropsWithoutRef<'form'>) {
+}: {
+  className?: string;
+  verifyUserAction: (
+    redirect: boolean,
+    email: string,
+    password: string
+  ) => Promise<string | void>;
+} & React.ComponentPropsWithoutRef<'form'>) {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/station/vehicles';
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -53,7 +57,7 @@ export function LoginForm({
     setIsPending(true);
     setErrorMessage(null); // Clear any previous error message
     try {
-      const result = await authenticateUser(
+      const result = await verifyUserAction(
         false, // Avoid automatic redirection
         data.email,
         data.password

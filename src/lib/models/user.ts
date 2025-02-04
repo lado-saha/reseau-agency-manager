@@ -5,5 +5,5 @@ export interface User {
   passwordHash: string;
   role: string;
   sex: 'male' | 'female',
-  photo: string | null;
+  photo: string | File;
 }

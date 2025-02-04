@@ -28,7 +28,6 @@ export default function StationLayout({
 }) {
   const pathname = usePathname();
   const { data: session, status } = useSession();
-  console.log(session);
 
   if (status === 'loading') {
     return Loading({ message: 'Getting User info', variant: 'card' }); // You can replace this with a spinner

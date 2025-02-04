@@ -1,7 +1,7 @@
-import { JsonRepository } from '@/lib/repository/JsonRepository';
+import { VehicleRepository } from '@/lib/repo/json-repository';
 import { Vehicle } from '@/lib/models/resource';
-import { SortingDirection, TabsVehicle } from '@/lib/models/helpers';
-import { Suspense, useMemo } from 'react';
+import { SortingDirection } from '@/lib/models/helpers';
+import { Suspense } from 'react';
 import Loading from '../../loading';
 import { Metadata } from 'next';
 import StationFleetView from '@/components/vehicles/fleet-view';
@@ -20,7 +20,7 @@ export default async function Page(props: {
     direction: SortingDirection;
   }>;
 }) {
-  const repo = new JsonRepository<Vehicle>('vehicles.json');
+  const repo = new VehicleRepository();
   const urlParams = await props.searchParams;
 
   const search = urlParams?.query || '';
@@ -66,13 +66,17 @@ export default async function Page(props: {
   }
 
   // Fetch vehicles data from the repository
-  const { vehicles, newOffset, totalProducts } = await repo.getVehicles(
+  const {
+    items: vehicles,
+    newOffset,
+    totalCount
+  } = await repo.getAll(
     search,
     offset,
     sortingOption as keyof Vehicle,
-    sortingDirection,
-    dateSingle,
-    dateRange
+    sortingDirection
+    // dateSingle,
+    // dateRange
   );
   // console.log(`Search Parameters: ${urlParams}`);
   return (
@@ -88,7 +92,7 @@ export default async function Page(props: {
       <StationFleetView
         vehicles={vehicles}
         offset={newOffset}
-        totalVehicles={totalProducts}
+        totalVehicles={totalCount}
         sortDirection={sortingDirection}
         sortOption={sortingOption}
       />

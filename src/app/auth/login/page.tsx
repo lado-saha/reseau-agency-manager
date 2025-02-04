@@ -2,6 +2,7 @@ import { GalleryVerticalEnd } from 'lucide-react';
 
 import { LoginForm } from '@/components/auth/login-form';
 import { NavActions } from '@/components/app-topbar-actions';
+import { authenticateUser } from '@/lib/actions';
 
 export default function LoginPage() {
   return (
@@ -19,7 +20,7 @@ export default function LoginPage() {
 
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
-            <LoginForm />
+            <LoginForm verifyUserAction={authenticateUser} />
           </div>
         </div>
       </div>

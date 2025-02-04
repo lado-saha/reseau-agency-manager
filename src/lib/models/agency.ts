@@ -71,33 +71,36 @@ export class Station {
 export interface CreatorInfo {
   name: string;
 
-  nationalIDFront: File; // Image file for CNI front
-  nationalIDBack: File;  // Image file for CNI back
+  // Image file for CNI back
   passportPhoto: File;   // 4x4 photo
   sex: "Male" | "Female";
 }
 
 // Interface for agency details
-interface AgencyInfo {
+export interface AgencyBasicInfo {
   businessName: string;
-  logo: string;
+  logo: File | string;
   slogan?: string;  // Optional field
   headquartersAddress: string;
-  legalStructure: "LLC" | "LTD" | "Sole Proprietorship" | "Corporation";
-  contactNumber: string;
-  email: string;
+  legalStructure: "llc" | "ltd" | "sole-proprietor" | "corp";
+  phones: string[];
+  emails: string[];
+  physicalCreationDate: Date
 }
 
 // Interface for legal documents
-export interface LegalDocuments {
-  businessRegistration: File; // Registration certificate
-  taxClearance: File;         // Tax clearance document
-  travelLicense: File;        // Travel agency license
-  insuranceCertificate?: File; // Optional travel insurance
+export interface AgencyLegalDocuments {
+  nationalIDFront: File | string;
+  nationalIDBack: File | string;
+  businessRegistration: File | string;
+  taxClearance: File | string;
+  travelLicense: File | string;
+  insuranceCertificate?: File | string;
 }
 
+
 // Interface for social media presence
-export interface SocialMedia {
+export interface AgencySocialMediaInfo {
   facebook?: string;
   twitter?: string;
   instagram?: string;
@@ -111,8 +114,7 @@ export interface SocialMedia {
 // Combined interface for agency creation
 export interface AgencyProfile {
   id: string
-  creator: CreatorInfo;
-  agency: AgencyInfo;
-  legalDocs: LegalDocuments;
-  socialMedia: SocialMedia;
+  basicInfo: AgencyBasicInfo;
+  legalDocs: AgencyLegalDocuments;
+  socialMedia: AgencySocialMediaInfo;
 }
