@@ -131,7 +131,7 @@ export const URL_PATHS = {
   navMain: [
     {
       title: 'Dashboard',
-      url: '#',
+      url: '/station/dashboard',
       icon: LayoutDashboard
     },
 
@@ -239,13 +239,13 @@ export const URL_PATHS = {
       title: 'Settings',
       url: '/station/settings',
       icon: Settings2,
-      items: [
+    /* items: [
         {
           title: 'Station Info',
           url: '#',
           searchable: true
         }
-      ]
+      ]*/
     }
   ],
   navSecondary: [
