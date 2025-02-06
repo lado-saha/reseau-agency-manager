@@ -23,17 +23,10 @@ import {
   useSidebar
 } from 'src/components/ui/sidebar';
 import { SearchInput } from '@/components/search-bar';
-export function StationSwitcher({
-  teams
-}: {
-  teams: {
-    name: string;
-    logo: React.ElementType;
-    plan: string;
-  }[];
-}) {
+import { Choice } from '@/lib/paths';
+export function StationSwitcher({ choices }: { choices: Choice[] }) {
   const { isMobile } = useSidebar();
-  const [activeTeam, setActiveTeam] = React.useState(teams[0]);
+  const [activeChoice, setActiveTeam] = React.useState(choices[0]);
 
   return (
     <SidebarMenu>
@@ -45,13 +38,13 @@ export function StationSwitcher({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                <activeTeam.logo className="size-4" />
+                <activeChoice.logo className="size-4" />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">
-                  {activeTeam.name}
+                  {activeChoice.name}
                 </span>
-                <span className="truncate text-xs">{activeTeam.plan}</span>
+                <span className="truncate text-xs">{activeChoice.plan}</span>
               </div>
               <ChevronsUpDown className="ml-auto" />
             </SidebarMenuButton>
@@ -76,7 +69,7 @@ export function StationSwitcher({
             <DropdownMenuSeparator />
             <DropdownMenuSeparator />
             <div className="overflow-y-auto max-h-64">
-              {teams.map((stations, index) => (
+              {choices.map((stations, index) => (
                 <DropdownMenuItem
                   key={stations.name}
                   onClick={() => setActiveTeam(stations)}

@@ -1,0 +1,200 @@
+[
+  {
+    "id": "1e2f3a4b-5c6d-7890-ab12-cd34ef56gh78",
+    "user": "a1b2c3d4-e5f6-7890-ab12-cd34ef56gh78",
+    "orgId": "a820da8d-be78-48ea-87d8-0a510d241ad7",
+    "role": "manager",
+    "createdOn": "2024-12-10T12:50:09.170Z",
+    "updatedOn": "2024-12-10T12:50:09.170Z",
+    "createdBy": "admin",
+    "updatedBy": "admin",
+    "salary": 800000
+  },
+  {
+    "id": "2f3a4b5c-6d78-9012-ab34-cd56ef78gh90",
+    "user": "b2c3d4e5-f678-9012-ab34-cd56ef78gh90",
+    "orgId": "a820da8d-be78-48ea-87d8-0a510d241ad7",
+    "role": "driver",
+    "createdOn": "2024-12-10T12:50:09.170Z",
+    "updatedOn": "2025-02-06T12:37:19.353Z",
+    "createdBy": "admin",
+    "updatedBy": "2831d880-1dae-43fb-8403-168a59b748c1",
+    "salary": 500000
+  },
+  {
+    "id": "3a4b5c6d-7890-1234-ab56-cd78ef90gh12",
+    "user": "c3d4e5f6-7890-1234-ab56-cd78ef90gh12",
+    "orgId": "a820da8d-be78-48ea-87d8-0a510d241ad7",
+    "role": "station-chief",
+    "createdOn": "2024-12-10T12:50:09.170Z",
+    "updatedOn": "2025-02-06T12:39:54.240Z",
+    "createdBy": "admin",
+    "updatedBy": "2831d880-1dae-43fb-8403-168a59b748c1",
+    "salary": 1000000
+  },
+  {
+    "id": "4b5c6d78-9012-3456-ab78-cd90ef12gh34",
+    "user": "d4e5f678-9012-3456-ab78-cd90ef12gh34",
+    "orgId": "a820da8d-be78-48ea-87d8-0a510d241ad7",
+    "role": "other",
+    "createdOn": "2024-12-10T12:50:09.170Z",
+    "updatedOn": "2024-12-10T12:50:09.170Z",
+    "createdBy": "admin",
+    "updatedBy": "admin",
+    "salary": 400000
+  },
+  {
+    "id": "5c6d7890-1234-5678-ab90-cd12ef34gh56",
+    "user": "e5f67890-1234-5678-ab90-cd12ef34gh56",
+    "orgId": "a820da8d-be78-48ea-87d8-0a510d241ad7",
+    "role": "owner",
+    "createdOn": "2024-12-10T12:50:09.170Z",
+    "updatedOn": "2024-12-10T12:50:09.170Z",
+    "createdBy": "admin",
+    "updatedBy": "admin",
+    "salary": 2000000
+  },
+  {
+    "id": "6c7d8e90-2345-6789-ab12-cd34ef56gh78",
+    "user": "f6789012-3456-7890-ab12-cd34ef56gh78",
+    "orgId": "a820da8d-be78-48ea-87d8-0a510d241ad7",
+    "role": "manager",
+    "createdOn": "2024-12-10T12:50:09.170Z",
+    "updatedOn": "2024-12-10T12:50:09.170Z",
+    "createdBy": "admin",
+    "updatedBy": "admin",
+    "salary": 750000
+  },
+  {
+    "id": "7c8d9e01-3456-7890-ab23-cd45ef67gh89",
+    "user": "g7890123-4567-8901-ab23-cd45ef67gh89",
+    "orgId": "a820da8d-be78-48ea-87d8-0a510d241ad7",
+    "role": "driver",
+    "createdOn": "2024-12-10T12:50:09.170Z",
+    "updatedOn": "2024-12-10T12:50:09.170Z",
+    "createdBy": "admin",
+    "updatedBy": "admin",
+    "salary": 600000
+  },
+  {
+    "id": "8c9d0f12-4567-8901-ab34-cd56ef78gh90",
+    "user": "h8901234-5678-9012-ab34-cd56ef78gh90",
+    "orgId": "a820da8d-be78-48ea-87d8-0a510d241ad7",
+    "role": "station-chief",
+    "createdOn": "2024-12-10T12:50:09.170Z",
+    "updatedOn": "2024-12-10T12:50:09.170Z",
+    "createdBy": "admin",
+    "updatedBy": "admin",
+    "salary": 1100000
+  },
+  {
+    "id": "9d0f1234-5678-9012-ab45-cd67ef89gh01",
+    "user": "i9012345-6789-0123-ab45-cd67ef89gh01",
+    "orgId": "a820da8d-be78-48ea-87d8-0a510d241ad7",
+    "role": "other",
+    "createdOn": "2024-12-10T12:50:09.170Z",
+    "updatedOn": "2024-12-10T12:50:09.170Z",
+    "createdBy": "admin",
+    "updatedBy": "admin",
+    "salary": 450000
+  },
+  {
+    "id": "0e1f2d3c-4567-8901-ab23-cd45ef67gh12",
+    "user": "j0123456-7890-1234-ab56-cd78ef90gh12",
+    "orgId": "a820da8d-be78-48ea-87d8-0a510d241ad7",
+    "role": "manager",
+    "createdOn": "2024-12-10T12:50:09.170Z",
+    "updatedOn": "2024-12-10T12:50:09.170Z",
+    "createdBy": "admin",
+    "updatedBy": "admin",
+    "salary": 800000
+  },
+  {
+    "id": "10e2d3f4-5678-9012-ab56-cd78ef90gh23",
+    "user": "2831d880-1dae-43fb-8403-168a59b748c4",
+    "orgId": "a820da8d-be78-48ea-87d8-0a510d241ad7",
+    "role": "driver",
+    "createdOn": "2024-12-10T12:50:09.170Z",
+    "updatedOn": "2024-12-10T12:50:09.170Z",
+    "createdBy": "admin",
+    "updatedBy": "admin",
+    "salary": 500000
+  },
+  {
+    "id": "11f2e3d4-5678-9012-ab78-cd90ef12gh34",
+    "user": "2831d880-1dae-43fb-8403-168a59b748c1",
+    "orgId": "a820da8d-be78-48ea-87d8-0a510d241ad7",
+    "role": "station-chief",
+    "createdOn": "2024-12-10T12:50:09.170Z",
+    "updatedOn": "2024-12-10T12:50:09.170Z",
+    "createdBy": "admin",
+    "updatedBy": "admin",
+    "salary": 1200000
+  },
+  {
+    "id": "85e3cd82-68d1-4356-a867-a171e5793bb7",
+    "role": "station-chief",
+    "orgId": "a820da8d-be78-48ea-87d8-0a510d241ad7",
+    "salary": 2500000,
+    "user": "2831d880-1dae-43fb-8403-168a59b748c4",
+    "createdOn": "2025-02-06T11:04:16.484Z",
+    "updatedOn": "2025-02-06T11:04:16.484Z",
+    "createdBy": "2831d880-1dae-43fb-8403-168a59b748c1",
+    "updatedBy": "2831d880-1dae-43fb-8403-168a59b748c1"
+  },
+  {
+    "id": "6b77a7a4-9733-41b4-aee3-5d53c85d6550",
+    "role": "driver",
+    "orgId": "a820da8d-be78-48ea-87d8-0a510d241ad7",
+    "salary": 5690,
+    "user": "2831d880-1dae-43fb-8403-168a59b748c4",
+    "createdOn": "2025-02-06T11:11:57.262Z",
+    "updatedOn": "2025-02-06T11:11:57.262Z",
+    "createdBy": "2831d880-1dae-43fb-8403-168a59b748c1",
+    "updatedBy": "2831d880-1dae-43fb-8403-168a59b748c1"
+  },
+  {
+    "id": "c675b1d2-9aea-450e-ba39-84d348b2e777",
+    "role": "driver",
+    "orgId": "a820da8d-be78-48ea-87d8-0a510d241ad7",
+    "salary": 5690,
+    "user": "2831d880-1dae-43fb-8403-168a59b748c4",
+    "createdOn": "2025-02-06T11:16:53.001Z",
+    "updatedOn": "2025-02-06T11:16:53.001Z",
+    "createdBy": "2831d880-1dae-43fb-8403-168a59b748c1",
+    "updatedBy": "2831d880-1dae-43fb-8403-168a59b748c1"
+  },
+  {
+    "id": "150107ef-9ee0-44c5-a1c5-b3e7729edf03",
+    "role": "driver",
+    "orgId": "a820da8d-be78-48ea-87d8-0a510d241ad7",
+    "salary": 5690,
+    "user": "2831d880-1dae-43fb-8403-168a59b748c4",
+    "createdOn": "2025-02-06T11:19:35.608Z",
+    "updatedOn": "2025-02-06T11:19:35.608Z",
+    "createdBy": "2831d880-1dae-43fb-8403-168a59b748c1",
+    "updatedBy": "2831d880-1dae-43fb-8403-168a59b748c1"
+  },
+  {
+    "id": "ddc5523a-ee53-41be-9335-348507d4b969",
+    "role": "driver",
+    "orgId": "a820da8d-be78-48ea-87d8-0a510d241ad7",
+    "salary": 123320,
+    "user": "2831d880-1dae-43fb-8403-168a59b748c4",
+    "createdOn": "2025-02-06T11:19:55.842Z",
+    "updatedOn": "2025-02-06T12:38:20.543Z",
+    "createdBy": "2831d880-1dae-43fb-8403-168a59b748c1",
+    "updatedBy": "2831d880-1dae-43fb-8403-168a59b748c1"
+  },
+  {
+    "id": "b8a09860-e2a3-482c-8813-d5291259f101",
+    "role": "owner",
+    "orgId": "a820da8d-be78-48ea-87d8-0a510d241ad7",
+    "salary": 11111111,
+    "user": "dabfefcc-cbf5-4670-a7a2-4ddeab858b5b",
+    "createdOn": "2025-02-06T12:35:00.746Z",
+    "updatedOn": "2025-02-06T12:35:00.746Z",
+    "createdBy": "2831d880-1dae-43fb-8403-168a59b748c1",
+    "updatedBy": "2831d880-1dae-43fb-8403-168a59b748c1"
+  }
+]

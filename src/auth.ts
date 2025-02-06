@@ -34,7 +34,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
-      const isOnAgencyPortal = nextUrl.pathname.startsWith('/station');
+      const isOnAgencyPortal = nextUrl.pathname.startsWith('/agency');
       if (isOnAgencyPortal) {
         if (isLoggedIn) return true;
         return false; // Redirect unauthenticated users to login page
@@ -43,15 +43,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     async session({ session, user, token }) {
       if (token?.role) {
-        session.user.role = token.role; // ✅ Add custom field
-        session.user.photo = token.photo
+        session.user.role = token.role;
+        session.user.photo = token.photo;
+        session.user.id = token.id;
       }
       return session;
     },
     async jwt({ token, user }) {
       if (user) {
-        token.role = user.role; // ✅ Store in JWT
-        token.photo = user.photo
+        token.role = user.role;
+        token.photo = user.photo;
+        token.id = user.id
       }
       return token;
     },

@@ -5,6 +5,7 @@
 
 import { format } from 'date-fns';
 import { Vehicle, VehicleModel } from './resource';
+import { EmployeeRole } from './employee';
 
 interface GPSPosition {
   latitude: number;
@@ -33,6 +34,25 @@ export class GeoLocation {
   }
 }
 
+export interface Audit {
+  createdOn: Date; // Timestamp when the resource was created
+  updatedOn: Date; // Timestamp when the resource was last updated
+  createdBy: string; // User or system that created the resource
+  updatedBy: string; // User or system that last updated the resource
+}
+
+export const auditCreate = (by: string) => ({
+  createdOn: new Date(),
+  updatedOn: new Date(),
+  createdBy: by,
+  updatedBy: by,
+});
+
+export const auditUpdate = (by: string) => ({
+  updatedOn: new Date(),
+  updatedBy: by,
+});
+
 /**
  * This export class models Audit information and is a memeber of eac export class for tracking and versionning purposes
  */
@@ -54,6 +74,12 @@ export class AuditInfo {
     this.updatedOn = new Date();
     this.updatedBy = updatedBy;
   }
+
+  updatedAuditInfo(updatedBy: string): AuditInfo {
+    this.updatedOn = new Date();
+    this.updatedBy = updatedBy;
+    return this
+  }
 }
 
 /**
@@ -63,6 +89,9 @@ export type TabsVehicle = 'all' | 'incoming' | 'outgoing' | 'stationed';
 export type TabsVehicleModel = 'all' | 'car' | 'bus';
 export type TabsVehicleModelDetails = 'info' | 'schema' | 'stats';
 export type TabsAgencyDetails = 'creator-info' | 'basic-info' | 'legal-info' | 'social-media';
+
+export type TabsEmployee<T extends EmployeeRole> = 'all' | T;
+// export type TabsEmployeesStation= 'janitor' | '' | 'station-chief' | 'other';
 
 export type StatusVehicle = 'incoming' | 'outgoing' | 'stationed';
 export type SubmissionStatus = 'pending' | 'success' | 'error';
@@ -198,14 +227,49 @@ export function matrixToBitmask(matrix: number[][], columns: number): string {
 }
 
 
+// export function sortEntities<T>(
+//   field: keyof T, // Restrict sorting to known keys of T
+//   direction: SortingDirection,
+//   entities: T[]
+// ): T[] {
+//   return entities.slice().sort((a, b) => {
+//     const valueA = a[field];
+//     const valueB = b[field];
+
+//     // Handle string sorting
+//     if (typeof valueA === 'string' && typeof valueB === 'string') {
+//       return direction === 'asc' ? valueA.localeCompare(valueB) : valueB.localeCompare(valueA);
+//     }
+
+//     // Handle number sorting
+//     if (typeof valueA === 'number' && typeof valueB === 'number') {
+//       return direction === 'asc' ? valueA - valueB : valueB - valueA;
+//     }
+
+//     // Handle Date fields
+//     if (valueA instanceof Date && valueB instanceof Date) {
+//       return direction === 'asc' ? valueA.getTime() - valueB.getTime() : valueB.getTime() - valueA.getTime();
+//     }
+
+//     // If we cannot compare the values, return 0 (meaning no change in order)
+//     return 0;
+//   });
+// }
+
 export function sortEntities<T>(
-  field: keyof T, // Restrict sorting to known keys of T
+  field: keyof T | string, // Supports both nested and non-nested fields
   direction: SortingDirection,
   entities: T[]
 ): T[] {
   return entities.slice().sort((a, b) => {
-    const valueA = a[field];
-    const valueB = b[field];
+    let valueA = getNestedValue(a, field);
+    let valueB = getNestedValue(b, field);
+
+    // If nested lookup fails, fall back to direct property lookup
+    if (valueA === undefined || valueB === undefined) {
+      valueA = (a as any)[field];
+      valueB = (b as any)[field];
+    }
 
     // Handle string sorting
     if (typeof valueA === 'string' && typeof valueB === 'string') {
@@ -222,7 +286,16 @@ export function sortEntities<T>(
       return direction === 'asc' ? valueA.getTime() - valueB.getTime() : valueB.getTime() - valueA.getTime();
     }
 
-    // If we cannot compare the values, return 0 (meaning no change in order)
+    // If values are not comparable, return 0 (no change in order)
     return 0;
   });
+}
+
+// Helper function to get nested value safely
+export function getNestedValue(obj: any, fieldPath: string | keyof any): any {
+  if (typeof fieldPath !== 'string' || !fieldPath.includes('.')) {
+    return obj[fieldPath]; // Return direct property if not nested
+  }
+
+  return fieldPath.split('.').reduce((acc, key) => acc?.[key], obj);
 }

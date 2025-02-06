@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useFieldArray, useForm } from 'react-hook-form';
-import { any, z } from 'zod';
+import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -45,7 +45,8 @@ import {
   CardDescription,
   CardContent
 } from '../ui/card';
-import { AgencyBasicInfo } from '@/lib/models/agency';
+import { AgencyBasicInfo, AgencyRoles } from '@/lib/models/agency';
+import { saveAgencyBasicInfoAction } from '@/lib/actions';
 
 // Define the schema for the Agency Info form using Zod
 const agencyInfoSchema = z.object({
@@ -94,11 +95,15 @@ const legalStructures = [
 ];
 
 export function BasicInfoForm({
+  id,
   oldBasicInfo,
-  onSubmitCompleteAction
+  onSubmitCompleteAction,
+  adminId
 }: {
-  oldBasicInfo: AgencyBasicInfo | undefined;
-  onSubmitCompleteAction: (data: AgencyBasicInfo) => void;
+  id: string;
+  oldBasicInfo?: AgencyBasicInfo;
+  onSubmitCompleteAction: (newId: string, data: AgencyBasicInfo) => void;
+  adminId: string;
 }) {
   const [imagePreview, setImagePreview] = useState<string | null>(
     oldBasicInfo?.logo
@@ -170,29 +175,39 @@ export function BasicInfoForm({
     name: 'emails'
   });
 
-  const onSubmit = (data: BasicInfoFormValue) => {
+  const onSubmit = async (data: BasicInfoFormValue) => {
     try {
-      if (!selectedPhoto) {
+      // If selected logo is null, then the image preview must not be
+      if (!selectedLogo && !imagePreview) {
         throw new Error('Please select a profile picture.');
       }
 
-      onSubmitCompleteAction({
-        businessName: data.businessName,
-        emails: data.emails.flatMap((email) => email.value),
-        phones: data.emails.flatMap((phone) => phone.value),
-        headquartersAddress: data.headquartersAddress,
-        legalStructure: data.legalStructure,
-        logo: '',
-        physicalCreationDate: new Date(data.physicalCreationDate),
-        slogan: data.slogan
-      });
+      const newData = await saveAgencyBasicInfoAction(
+        id,
+        {
+          businessName: data.businessName,
+          emails: data.emails.flatMap((email) => email.value),
+          phones: data.phones.flatMap((phone) => phone.value),
+          headquartersAddress: data.headquartersAddress,
+          legalStructure: data.legalStructure,
+          logo: selectedLogo ? selectedLogo : imagePreview!!,
+          physicalCreationDate: new Date(data.physicalCreationDate),
+          slogan: data.slogan
+        },
+        adminId // The current user owns the agency and used only if we're creating
+      );
+      onSubmitCompleteAction(newData.id, newData.basicInfo);
     } catch (error) {
       setErrorMessage(`Error! ${(error as Error).message}`);
     } finally {
       setIsPending(false);
     }
   };
-
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // Disable the default form submission on Enter
+    }
+  };
   return (
     <Card>
       <CardHeader>
@@ -207,6 +222,7 @@ export function BasicInfoForm({
           <form
             className="flex flex-col gap-6"
             onSubmit={form.handleSubmit(onSubmit)}
+            onKeyDown={handleKeyDown}
           >
             <div className="grid gap-6">
               {/* Logo Picker */}
@@ -242,7 +258,10 @@ export function BasicInfoForm({
                     {/* View Button */}
                     <Button
                       variant="outline"
-                      onClick={() => window.open(imagePreview, '_blank')}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        window.open(imagePreview, '_blank');
+                      }}
                     >
                       <EyeIcon className="h-4 w-4" />
                       <span className="hidden md:inline">Preview</span>
@@ -520,7 +539,13 @@ export function BasicInfoForm({
                   </FormItem>
                 )}
               />
-
+              <Button
+                className="mt-4 w-full"
+                type="submit"
+                disabled={isPending}
+              >
+                Save
+              </Button>
               {/* Error Message */}
               {errorMessage && (
                 <div className="flex items-center gap-2 text-sm text-red-500 w-full">

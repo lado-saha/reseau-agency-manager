@@ -1,5 +1,6 @@
 'use client';
 
+import { UrlPath } from '@/lib/paths';
 import { ChevronRight, type LucideIcon } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
@@ -20,21 +21,7 @@ import {
   SidebarMenuSubItem
 } from 'src/components/ui/sidebar';
 
-export function NavMain({
-  items
-}: {
-  items: {
-    title: string;
-    url: string;
-    icon: LucideIcon;
-    isActive?: boolean;
-    items?: {
-      title: string;
-      url: string;
-      isActive?: boolean;
-    }[];
-  }[];
-}) {
+export function NavMain({ items }: { items: UrlPath[] }) {
   const pathname = usePathname(); // Get the current pathname
 
   // Function to determine if the item URL is active

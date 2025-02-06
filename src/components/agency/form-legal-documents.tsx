@@ -25,22 +25,26 @@ import {
 } from '@/components/ui/card';
 import { getBlobURL, MAX_FILE_SIZE } from '@/lib/utils';
 import { AgencyLegalDocuments } from '@/lib/models/agency';
+import { saveAgencyLegalDocumentsAction } from '@/lib/actions';
+const isClient = typeof window !== 'undefined'; // Check if we are in the client
 
 // Define the schema with proper file validation
 const ALLOWED_FILE_TYPES = ['image/jpeg', 'image/png', 'application/pdf'];
 
-const fileSchema = z
-  .instanceof(File, { message: 'A valid file is required.' })
-  .refine((file) => file.size > 0, { message: 'File cannot be empty.' })
-  .refine((file) => file.size <= MAX_FILE_SIZE, {
-    message: 'File size must be 2MB or less.'
-  })
-  .refine((file) => ALLOWED_FILE_TYPES.includes(file.type), {
-    message: 'Only JPEG, PNG, and PDF files are allowed.'
-  })
-  .refine((file) => !!file.name && file.name.trim().length > 0, {
-    message: 'File must have a valid name.'
-  });
+const fileSchema = isClient
+  ? z
+      .instanceof(File, { message: 'A valid file is required.' })
+      .refine((file) => file.size > 0, { message: 'File cannot be empty.' })
+      .refine((file) => file.size <= MAX_FILE_SIZE, {
+        message: 'File size must be 2MB or less.'
+      })
+      .refine((file) => ALLOWED_FILE_TYPES.includes(file.type), {
+        message: 'Only JPEG, PNG, and PDF files are allowed.'
+      })
+      .refine((file) => !!file.name && file.name.trim().length > 0, {
+        message: 'File must have a valid name.'
+      })
+  : z.any();
 
 const legalDocumentsSchema = z.object({
   nationalIDFront: z.optional(fileSchema),
@@ -54,14 +58,17 @@ const legalDocumentsSchema = z.object({
 export type LegalDocumentsFormValue = z.infer<typeof legalDocumentsSchema>;
 
 export function LegalDocumentsForm({
+  id,
   oldLegalInfo,
   onSubmitCompleteAction
 }: {
-  oldLegalInfo: AgencyLegalDocuments | null;
+  id: string;
+  oldLegalInfo?: AgencyLegalDocuments;
   onSubmitCompleteAction: (data: AgencyLegalDocuments) => void;
 }) {
   const [filePreviews, setFilePreviews] = useState<Record<string, string>>({});
   const [errorMessage, setErrorMessage] = useState('');
+  const [isPending, setIsPending] = useState(false);
 
   const form = useForm<LegalDocumentsFormValue>({
     resolver: zodResolver(legalDocumentsSchema),
@@ -76,8 +83,29 @@ export function LegalDocumentsForm({
     }
   });
 
-  const onSubmit = async (data: LegalDocumentsFormValue) => {};
-
+  const onSubmit = async (data: LegalDocumentsFormValue) => {
+    // if()
+    try {
+      const newData = await saveAgencyLegalDocumentsAction(id, {
+        businessRegistration: data.businessRegistration,
+        nationalIDBack: data.nationalIDBack,
+        nationalIDFront: data.nationalIDFront,
+        taxClearance: data.taxClearance,
+        travelLicense: data.travelLicense,
+        insuranceCertificate: data.insuranceCertificate
+      });
+      onSubmitCompleteAction(newData);
+    } catch (error) {
+      setErrorMessage(`Error! ${(error as Error).message}`);
+    } finally {
+      setIsPending(false);
+    }
+  };
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // Disable the default form submission on Enter
+    }
+  };
   const handleFileChange = (
     event: React.ChangeEvent<HTMLInputElement>,
     name: keyof LegalDocumentsFormValue
@@ -122,6 +150,7 @@ export function LegalDocumentsForm({
                     <Button
                       variant="outline"
                       onClick={async (e) => {
+                        e.preventDefault();
                         const url = await getBlobURL(filePreviews[name]);
                         url && window.open(url, '_blank');
                       }}
@@ -201,6 +230,7 @@ export function LegalDocumentsForm({
             className="flex flex-col gap-6"
             onSubmit={form.handleSubmit(onSubmit)}
             // onKeyDown={(key) => {key.}}
+            onKeyDown={handleKeyDown}
           >
             <div className="grid gap-6">
               {renderFileInput(
@@ -239,7 +269,14 @@ export function LegalDocumentsForm({
                 'Provide an insurance certificate if applicable.',
                 'application/pdf, image/*'
               )}
-
+              {/* Submit Button */}
+              <Button
+                className="mt-4 w-full"
+                type="submit"
+                disabled={isPending}
+              >
+                Save
+              </Button>
               {/* Error Message */}
               {errorMessage && (
                 <div className="flex items-center gap-2 text-sm text-red-500 w-full">

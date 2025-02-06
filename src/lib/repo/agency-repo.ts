@@ -1,20 +1,21 @@
-import { AgencyProfile, AgencyLegalDocuments, AgencyBasicInfo, AgencySocialMediaInfo } from "@/lib/models/agency";
+import { AgencyProfile, AgencyLegalDocuments, AgencyBasicInfo, AgencySocialMediaInfo, AgencyEmployee } from "@/lib/models/agency";
 import { JsonRepository } from "@/lib/repo/json-repository";
 import { API_URL } from "@/lib/utils";
+import { strict } from "assert";
 
 export class AgencyRepository extends JsonRepository<AgencyProfile> {
   constructor() {
-    super('vehicles.json');
+    super('agencies.json');
   }
 
   async uploadLegalDocuments(docs: AgencyLegalDocuments): Promise<AgencyLegalDocuments> {
-    
+
     const uploadedDocs: Partial<AgencyLegalDocuments> = {};
 
     for (const key in docs) {
       const fileOrUrl = docs[key as keyof AgencyLegalDocuments];
 
-      if (fileOrUrl instanceof File) {
+      if (typeof fileOrUrl !== 'string') {
         const formData = new FormData();
         formData.append('file', fileOrUrl);
 
@@ -32,12 +33,12 @@ export class AgencyRepository extends JsonRepository<AgencyProfile> {
 
   async saveAgencyBasicInfo(
     agencyId: string = "new",
-    newBasicInfo: AgencyBasicInfo
-  ): Promise<AgencyBasicInfo> {
+    newBasicInfo: AgencyBasicInfo,
+    adminId?: string
+  ): Promise<{ id: string, basicInfo: AgencyBasicInfo }> {
     const agencies = await this.fetchData();
 
     if (agencyId === "new") {
-      // We are creating a new agency
       if (
         agencies.some(
           (agency) => agency.basicInfo.businessName === newBasicInfo.businessName
@@ -45,19 +46,29 @@ export class AgencyRepository extends JsonRepository<AgencyProfile> {
       ) {
         throw new Error("Agency with similar name already exists.");
       }
+      // Notice that logo is a File when we have changed else it remains a string
+      if (typeof newBasicInfo.logo !== 'string') {
+        const formData = new FormData();
+        formData.append('file', newBasicInfo.logo);
+        const uploadResponse = await fetch(`${API_URL}/api/upload`, { method: 'POST', body: formData });
+        const { fileUrl } = await uploadResponse.json();
+        newBasicInfo.logo = fileUrl
+      }
 
-      const newAgency = {
+      let newAgency = {
         id: crypto.randomUUID(),
+        ownerId: adminId,
         basicInfo: newBasicInfo,
-      };
+      } satisfies Partial<AgencyProfile>;
 
-      await fetch(`${API_URL}/api/agency`, {
+      await fetch(`${API_URL}/api/data/agencies`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newAgency),
       });
 
-      return newAgency.basicInfo;
+      // return [newAgency.id, newAgency.basicInfo]
+      return { id: newAgency.id, basicInfo: newAgency.basicInfo };
     } else {
       // We are updating an existing agency
       const agencyIndex = agencies.findIndex((agency) => agency.id === agencyId);
@@ -68,21 +79,23 @@ export class AgencyRepository extends JsonRepository<AgencyProfile> {
 
       agencies[agencyIndex].basicInfo = newBasicInfo;
 
-      await fetch("api/agency", {
+      await fetch(`${API_URL}/api/data/agencies`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id: agencyId, basicInfo: newBasicInfo } satisfies Partial<AgencyProfile>),
       });
 
-      return newBasicInfo;
+      return { id: agencyId, basicInfo: newBasicInfo };
     }
   }
 
   async saveAgencyLegalDocuments(
-    agencyId: string = 'new',
+    agencyId: string,
     newLegalDocs: AgencyLegalDocuments,
-
   ): Promise<AgencyLegalDocuments> {
+    if (agencyId === 'new') {
+      throw Error("You must save the Basic Info first")
+    }
     const agencies = await this.fetchData();
     const agencyIndex = agencies.findIndex((agency) => agency.id === agencyId);
     if (agencyIndex === -1) {
@@ -92,7 +105,7 @@ export class AgencyRepository extends JsonRepository<AgencyProfile> {
     const newDocs = await this.uploadLegalDocuments(newLegalDocs)
     agencies[agencyIndex].legalDocs = newDocs;
 
-    await fetch("api/agency", {
+    await fetch(`${API_URL}/api/data/agencies`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: agencyId, 'legalDocs': newDocs } satisfies Partial<AgencyProfile>),
@@ -101,11 +114,14 @@ export class AgencyRepository extends JsonRepository<AgencyProfile> {
     return newLegalDocs
   }
 
-
-  async saveAgencyLegalSocial(
-    agencyId: string = 'new',
+  async saveAgencySocialInfo(
+    agencyId: string,
     newSocialInfo: AgencySocialMediaInfo,
   ): Promise<AgencySocialMediaInfo> {
+
+    if (agencyId === 'new') {
+      throw Error("You must save the Basic Info first.")
+    }
     const agencies = await this.fetchData();
     const agencyIndex = agencies.findIndex((agency) => agency.id === agencyId);
     if (agencyIndex === -1) {
@@ -114,7 +130,7 @@ export class AgencyRepository extends JsonRepository<AgencyProfile> {
 
     agencies[agencyIndex].socialMedia = newSocialInfo;
 
-    await fetch(`${API_URL}/api/agency`, {
+    await fetch(`${API_URL}/api/data/agencies`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: agencyId, socialMedia: newSocialInfo } satisfies Partial<AgencyProfile>),
@@ -122,5 +138,9 @@ export class AgencyRepository extends JsonRepository<AgencyProfile> {
 
     return newSocialInfo
   }
+
+  // ============= Employee ==================
+  async saveEmployee(employeeId: string = 'new', employee: AgencyEmployee) { }
+  async deleteEmployee(employee: AgencyEmployee) { }
 }
 

@@ -34,6 +34,7 @@
     "cmdk": "1.0.0",
     "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.5.2",
+    "google-libphonenumber": "^3.2.40",
     "leaflet": "^1.9.4",
     "leaflet-defaulticon-compatibility": "^0.1.2",
     "leaflet-geosearch": "^4.1.0",
@@ -72,6 +73,7 @@
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
+    "@types/google-libphonenumber": "^7.4.30",
     "@types/multer": "^1.4.12"
   }
 }

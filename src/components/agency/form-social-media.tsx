@@ -24,6 +24,7 @@ import {
 import { EyeIcon, MessageSquareWarningIcon } from 'lucide-react';
 import { AgencySocialMediaInfo } from '@/lib/models/agency';
 import { useEffect, useState } from 'react';
+import { saveAgencySocialInfoAction } from '@/lib/actions';
 
 // Define the schema for the SocialMedia form using Zod
 const socialMediaSchema = z.object({
@@ -40,12 +41,15 @@ const socialMediaSchema = z.object({
 export type SocialMediaFormValue = z.infer<typeof socialMediaSchema>;
 
 export function SocialMediaForm({
+  id,
   oldSocialInfo,
   onSubmitCompleteAction
 }: {
-  oldSocialInfo: AgencySocialMediaInfo | null;
+  id: string;
+  oldSocialInfo?: AgencySocialMediaInfo;
   onSubmitCompleteAction: (data: AgencySocialMediaInfo) => void;
 }) {
+  const [isPending, setIsPending] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const form = useForm<SocialMediaFormValue>({
     resolver: zodResolver(socialMediaSchema),
@@ -61,7 +65,25 @@ export function SocialMediaForm({
     }
   });
 
-  const onSubmit = async (data: SocialMediaFormValue) => {};
+  const onSubmit = async (data: SocialMediaFormValue) => {
+    try {
+      const newData = await saveAgencySocialInfoAction(id, {
+        facebook: data.facebook,
+        twitter: data.twitter,
+        instagram: data.instagram,
+        linkedIn: data.linkedIn,
+        whatsapp: data.whatsapp,
+        tiktok: data.tiktok,
+        youtube: data.youtube,
+        telegram: data.telegram
+      });
+      onSubmitCompleteAction(newData);
+    } catch (error) {
+      setErrorMessage(`Error! ${(error as Error).message}`);
+    } finally {
+      setIsPending(false);
+    }
+  };
 
   // Trigger form submission whenever isSubmitting is true
 
@@ -89,7 +111,11 @@ export function SocialMediaForm({
         return '';
     }
   };
-
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // Disable the default form submission on Enter
+    }
+  };
   return (
     <Card>
       <CardHeader>
@@ -103,6 +129,7 @@ export function SocialMediaForm({
           <form
             className="flex flex-col gap-6"
             onSubmit={form.handleSubmit(onSubmit)}
+            onKeyDown={handleKeyDown}
           >
             <div className="grid gap-6">
               {/* Facebook */}
@@ -123,7 +150,8 @@ export function SocialMediaForm({
                         {field.value && (
                           <Button
                             variant="outline"
-                            onClick={() => {
+                            onClick={(e) => {
+                              e.preventDefault();
                               window.open(
                                 generatePreviewLink('facebook', field.value),
                                 '_blank'
@@ -159,12 +187,13 @@ export function SocialMediaForm({
                         {field.value && (
                           <Button
                             variant="outline"
-                            onClick={() =>
+                            onClick={(e) => {
+                              e.preventDefault();
                               window.open(
                                 generatePreviewLink('twitter', field.value),
                                 '_blank'
-                              )
-                            }
+                              );
+                            }}
                           >
                             <EyeIcon className="h-3.5 w-3.5" />
                             <span className="hidden md:inline">Preview</span>
@@ -195,12 +224,13 @@ export function SocialMediaForm({
                         {field.value && (
                           <Button
                             variant="outline"
-                            onClick={() =>
+                            onClick={(e) => {
+                              e.preventDefault();
                               window.open(
                                 generatePreviewLink('instagram', field.value),
                                 '_blank'
-                              )
-                            }
+                              );
+                            }}
                           >
                             <EyeIcon className="h-3.5 w-3.5" />
                             <span className="hidden md:inline">Preview</span>
@@ -231,12 +261,13 @@ export function SocialMediaForm({
                         {field.value && (
                           <Button
                             variant="outline"
-                            onClick={() =>
+                            onClick={(e) => {
+                              e.preventDefault();
                               window.open(
                                 generatePreviewLink('linkedIn', field.value),
                                 '_blank'
-                              )
-                            }
+                              );
+                            }}
                           >
                             <EyeIcon className="h-3.5 w-3.5" />
                             <span className="hidden md:inline">Preview</span>
@@ -267,12 +298,13 @@ export function SocialMediaForm({
                         {field.value && (
                           <Button
                             variant="outline"
-                            onClick={() =>
+                            onClick={(e) => {
+                              e.preventDefault();
                               window.open(
                                 generatePreviewLink('whatsapp', field.value),
                                 '_blank'
-                              )
-                            }
+                              );
+                            }}
                           >
                             <EyeIcon className="h-3.5 w-3.5" />
                             <span className="hidden md:inline">Preview</span>
@@ -303,12 +335,13 @@ export function SocialMediaForm({
                         {field.value && (
                           <Button
                             variant="outline"
-                            onClick={() =>
+                            onClick={(e) => {
+                              e.preventDefault();
                               window.open(
                                 generatePreviewLink('tiktok', field.value),
                                 '_blank'
-                              )
-                            }
+                              );
+                            }}
                           >
                             <EyeIcon className="h-3.5 w-3.5" />
                             <span className="hidden md:inline">Preview</span>
@@ -339,12 +372,13 @@ export function SocialMediaForm({
                         {field.value && (
                           <Button
                             variant="outline"
-                            onClick={() =>
+                            onClick={(e) => {
+                              e.preventDefault();
                               window.open(
                                 generatePreviewLink('youtube', field.value),
                                 '_blank'
-                              )
-                            }
+                              );
+                            }}
                           >
                             <EyeIcon className="h-3.5 w-3.5" />
                             <span className="hidden md:inline">Preview</span>
@@ -375,12 +409,13 @@ export function SocialMediaForm({
                         {field.value && (
                           <Button
                             variant="outline"
-                            onClick={() =>
+                            onClick={(e) => {
+                              e.preventDefault();
                               window.open(
                                 generatePreviewLink('telegram', field.value),
                                 '_blank'
-                              )
-                            }
+                              );
+                            }}
                           >
                             <EyeIcon className="h-3.5 w-3.5" />
                             <span className="hidden md:inline">Preview</span>
@@ -394,6 +429,13 @@ export function SocialMediaForm({
               />
 
               {/* Submit Button */}
+              <Button
+                className="mt-4 w-full"
+                type="submit"
+                disabled={isPending}
+              >
+                Save
+              </Button>
               {errorMessage && (
                 <div className="flex items-center gap-2 text-sm text-red-500">
                   <MessageSquareWarningIcon className="h-5 w-5" />

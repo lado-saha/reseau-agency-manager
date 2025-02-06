@@ -40,6 +40,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { User } from '@/lib/models/user';
 import { createUserAction } from '@/lib/actions';
+import { phoneNumberValidator } from '@/lib/mobile-validation';
 
 // Define the schema for the signup form using zod
 const signupFormSchema = z.object({
@@ -56,7 +57,8 @@ const signupFormSchema = z.object({
   role: z.enum(['admin', 'super-admin', 'normal'], {
     message: 'Select a role.'
   }),
-  photo: z.string().optional()
+  photo: z.string().optional(),
+  phone: phoneNumberValidator
 });
 
 type SignupFormValue = z.infer<typeof signupFormSchema>;
@@ -90,7 +92,8 @@ export function SignupForm({
     resolver: zodResolver(signupFormSchema),
     defaultValues: {
       sex: 'male',
-      role: 'normal'
+      role: 'normal',
+      phone: { mobile: '' }
     }
   });
 
@@ -120,7 +123,8 @@ export function SignupForm({
         role: data.role,
         passwordHash: data.password,
         sex: data.sex,
-        photo: selectedPhoto // Send actual file object
+        photo: selectedPhoto, // Send actual file object
+        phone: data.phone.mobile.replaceAll(' ', '').replace('-', '')
       });
 
       if (newUser) {
@@ -233,6 +237,27 @@ export function SignupForm({
                     id="email"
                     type="email"
                     placeholder="johndoe@example.com"
+                    {...field}
+                    className="border"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Phone */}
+          <FormField
+            control={form.control}
+            name={`phone.mobile`}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Phone</FormLabel>
+                <FormControl>
+                  <Input
+                    id="phone"
+                    placeholder="+237 6 77 77 77 77"
+                    // type=""
                     {...field}
                     className="border"
                   />
@@ -410,7 +435,7 @@ export function SignupForm({
             className="w-full"
             aria-disabled={isPending}
           >
-            Login
+            Login Instead
           </Button>
         </Link>
       </form>

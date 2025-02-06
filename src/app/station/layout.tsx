@@ -17,9 +17,10 @@ import { Separator } from 'src/components/ui/separator';
 import { NavActions } from 'src/components/app-topbar-actions';
 import { usePathname } from 'next/navigation';
 import { SearchInput } from '@/components/search-bar';
-import { mainPaths, searchablePaths } from '@/lib/paths';
+import { mainPaths, searchablePathsStation } from '@/lib/paths';
 import { useSession } from 'next-auth/react';
-import Loading from '../loading';
+import Loading from '../agency/loading';
+import { PersonStandingIcon } from 'lucide-react';
 
 export default function StationLayout({
   children
@@ -40,7 +41,7 @@ export default function StationLayout({
   // Define all valid paths by flattening navMain, navSecondary, and customerRelations
   // Check if the current path is in the valid paths
   const showSidebar = mainPaths.includes(pathname);
-  const showSearchbar = searchablePaths.includes(pathname);
+  const showSearchbar = searchablePathsStation.includes(pathname);
 
   const breadcrumbItems = pathname
     .split('/')
@@ -66,6 +67,8 @@ export default function StationLayout({
             id: session?.user?.id!!
           }}
           showCalendar={['vehicles'].includes(currentPage)}
+          urlPaths={[]}
+          choices={[{ logo: PersonStandingIcon, name: 'Joe', plan: 'jsd' }]}
         />
       )}
 

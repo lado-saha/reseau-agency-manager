@@ -1,7 +1,6 @@
 /**
  * This definition file will contain all definitions relative to an agency
  */
-
 import { AuditInfo, GeoLocation } from '@/lib/models/helpers';
 
 // Agency export class with audit information
@@ -117,4 +116,43 @@ export interface AgencyProfile {
   basicInfo: AgencyBasicInfo;
   legalDocs: AgencyLegalDocuments;
   socialMedia: AgencySocialMediaInfo;
+  ownerId: string; // Instead of embedding the entire user object
+  adminIds: string[]; // Only store user IDs
 }
+
+
+export const emptyAgencyProfile: AgencyProfile = {
+  id: "",
+  ownerId: "",
+  adminIds: [""],
+  basicInfo: {
+    businessName: "",
+    logo: "", // Empty string since File cannot be instantiated without user input
+    slogan: undefined,
+    headquartersAddress: "",
+    legalStructure: "llc", // Defaulting to one of the options
+    phones: [],
+    emails: [],
+    physicalCreationDate: new Date(0), // Epoch time as a placeholder
+  },
+  legalDocs: {
+    nationalIDFront: "",
+    nationalIDBack: "",
+    businessRegistration: "",
+    taxClearance: "",
+    travelLicense: "",
+    insuranceCertificate: undefined,
+  },
+  socialMedia: {
+    facebook: undefined,
+    twitter: undefined,
+    instagram: undefined,
+    linkedIn: undefined,
+    whatsapp: undefined,
+    tiktok: undefined,
+    youtube: undefined,
+    telegram: undefined,
+  }
+};
+
+export type AgencyRoles = 'admin' | 'owner'

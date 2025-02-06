@@ -160,7 +160,7 @@ export function LoginForm({
             className="w-full"
             aria-disabled={isPending}
           >
-            Sign Up
+            Signup Instead
           </Button>
         </Link>
       </form>

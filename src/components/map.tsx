@@ -17,11 +17,8 @@ import 'leaflet-defaulticon-compatibility';
 
 import { LatLngExpression, LatLngTuple } from 'leaflet';
 import { PropsVehicles } from '@/components/vehicles/table-vehicles';
-import {
-  VehicleGridItem,
-  VehicleMapTooltip,
-  VehicleTableItem
-} from '@/components/vehicles/item-vehicle';
+import { VehicleGridItem, VehicleMapTooltip } from './vehicles/item-vehicle';
+
 
 export interface MapProps {
   posix: LatLngExpression | LatLngTuple;

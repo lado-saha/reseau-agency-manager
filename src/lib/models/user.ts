@@ -6,4 +6,5 @@ export interface User {
   role: string;
   sex: 'male' | 'female',
   photo: string | File;
+  phone: string
 }

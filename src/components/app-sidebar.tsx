@@ -24,21 +24,28 @@ import {
   CollapsibleContent,
   CollapsibleTrigger
 } from '@/components/ui/collapsible';
-import { mainPaths, URL_PATHS } from '@/lib/paths';
-import { auth } from '@/auth';
 import { User } from '@/lib/models/user';
+import { Choice, UrlPath } from '@/lib/paths';
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   showCalendar: boolean;
   user: User;
+  urlPaths: UrlPath[];
+  choices: Choice[];
 }
 
-export function AppSidebar({ showCalendar, user, ...props }: AppSidebarProps) {
+export function AppSidebar({
+  showCalendar,
+  user,
+  urlPaths,
+  choices,
+  ...props
+}: AppSidebarProps) {
   // const user = (await auth())?.user!!;
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
-        <StationSwitcher teams={URL_PATHS.stations} />
+        <StationSwitcher choices={choices} />
       </SidebarHeader>
       <SidebarContent className="overflow-x-hidden">
         {showCalendar && (
@@ -72,7 +79,7 @@ export function AppSidebar({ showCalendar, user, ...props }: AppSidebarProps) {
             <SidebarSeparator />
           </>
         )}
-        <NavMain items={URL_PATHS.navMain} />
+        <NavMain items={urlPaths} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={user} />

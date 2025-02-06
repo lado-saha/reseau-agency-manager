@@ -44,3 +44,7 @@ export async function getBlobURL(filePath: string) {
     });
 }
 export const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+
+// Compares 2 arrays are exact in valu
+export const areArraysEqual = (arr1: any[], arr2: any[]) =>
+  arr1.length === arr2.length && !arr1.some((val, index) => val !== arr2[index]);
