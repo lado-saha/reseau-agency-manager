@@ -1,0 +1,32 @@
+[
+  {
+    "road": "Kop",
+    "suburb": "Ndamvout",
+    "city": "Communauté urbaine de Yaoundé",
+    "state": "Centre",
+    "country": "Cameroun",
+    "latitude": "3.8450901898731735",
+    "longitude": "11.51522420205153",
+    "id": "249837c4-b9b5-4eff-8442-aa0e180eac3c"
+  },
+  {
+    "road": "Avenue de Biyeme Assi",
+    "suburb": "Biyem-Assi",
+    "city": "Communauté urbaine de Yaoundé",
+    "state": "Centre",
+    "country": "Cameroun",
+    "latitude": "3.8450584",
+    "longitude": "11.492106224039158",
+    "id": "8cdf5350-2cd1-45d3-b7fa-95d4fd072fcc"
+  },
+  {
+    "road": "Rue Tsoungui Akoa",
+    "suburb": "Mvolye",
+    "city": "Communauté urbaine de Yaoundé",
+    "state": "Centre",
+    "country": "Cameroun",
+    "latitude": "3.846975121946703",
+    "longitude": "11.502635527683898",
+    "id": "4e2368cf-9f1b-4fff-ad82-8adbe80a3464"
+  }
+]

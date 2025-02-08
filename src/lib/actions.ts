@@ -7,20 +7,24 @@ import { User } from './models/user';
 import { UserRepository } from '@/lib/repo/json-repository';
 import { AgencyRepository } from './repo/agency-repo';
 import { AgencyBasicInfo, AgencyLegalDocuments, AgencySocialMediaInfo } from './models/agency';
-import { AgencyEmployee, AgencyEmployeeRole, agencyEmplRoles, Employee, EmployeeRole, isAgencyEmployeeRole, isStationEmployeeRole, StationEmployee, StationEmployeeRole, stationEmplRoles } from './models/employee';
+import { AgencyEmployeeRole, agencyEmplRoles, Employee, EmployeeRole, StationEmployeeRole } from './models/employee';
 import { AgencyEmployeeRepository, StationEmployeeRepository } from './repo/employee-repo';
 import { areArraysEqual } from './utils';
+import { Station } from './models/station';
+import { StationRepository } from './repo/station-repo';
+import { PlaceAddress } from './repo/osm-place-repo';
 
 const agencyRepo = new AgencyRepository()
+const stationRepo = new StationRepository()
 const userRepo = new UserRepository()
 const agencyEmpRepo = new AgencyEmployeeRepository()
 const stationEmpRepo = new StationEmployeeRepository()
 
 // Agency actions
-export async function saveAgencyBasicInfoAction(agencyId: string, basicInfo: AgencyBasicInfo, ownerId?: string,): Promise<{ id: string, basicInfo: AgencyBasicInfo }> {
+export async function saveAgencyBasicInfo(agencyId: string, basicInfo: AgencyBasicInfo, ownerId?: string,): Promise<{ id: string, basicInfo: AgencyBasicInfo }> {
   return await agencyRepo.saveAgencyBasicInfo(agencyId, basicInfo, ownerId,)
 }
-export async function saveAgencyLegalDocumentsAction(agencyId: string, legalDocs: AgencyLegalDocuments): Promise<AgencyLegalDocuments> {
+export async function saveAgencyLegalDocuments(agencyId: string, legalDocs: AgencyLegalDocuments): Promise<AgencyLegalDocuments> {
   return await agencyRepo.saveAgencyLegalDocuments(agencyId, legalDocs)
 }
 
@@ -28,9 +32,21 @@ export async function searchUserByEmail(email: string): Promise<User | undefined
   return await userRepo.getByEmail(email)
 }
 
-export async function saveAgencySocialInfoAction(agencyId: string, socialInfo: AgencySocialMediaInfo): Promise<AgencySocialMediaInfo> {
+export async function saveAgencySocialInfo(agencyId: string, socialInfo: AgencySocialMediaInfo): Promise<AgencySocialMediaInfo> {
   return await agencyRepo.saveAgencySocialInfo(agencyId, socialInfo)
 }
+
+//stations action
+export async function saveStationBasicInfo(stationId: string, station: Partial<Station>, adminId: string,): Promise<Partial<Station>> {
+  return await stationRepo.saveStationBasicInfo(stationId, station, adminId)
+}
+
+export async function saveStationGeoInfo(stationId: string, place: PlaceAddress, adminId: string,): Promise<Station> {
+  return await stationRepo.saveStationGeoInfo(stationId, place, adminId)
+}
+
+
+
 // User actions
 export async function authenticateUser(
   redirect: boolean,
@@ -87,3 +103,32 @@ export async function saveEmployee<T extends EmployeeRole>(
   }
 
 }
+
+export async function searchEmployeeByEmail<T extends EmployeeRole>(orgId: string, email: string, roles: T[]): Promise<Employee<T>> {
+  if (areArraysEqual(roles, agencyEmplRoles)) {
+    // If the role is an Agency role, call the appropriate repository
+    return await agencyEmpRepo.getByUserEmail<AgencyEmployeeRole>(
+      email, orgId
+    );
+  } else {
+    return await stationEmpRepo.getByUserEmail<StationEmployeeRole>(
+      email, orgId
+    );
+  }
+}
+
+export async function deleteEmployee<T extends EmployeeRole>(
+  id: string,
+  roles: T[], // Added roles as parameter
+): Promise<boolean> {
+  // Check if the roles list includes any Agency roles or Station roles
+  if (areArraysEqual(roles, agencyEmplRoles)) {
+    // If the role is an Agency role, call the appropriate repository
+    return await agencyEmpRepo.deleteEmployee(id);
+  } else {
+    return await stationEmpRepo.deleteEmployee(id);
+  }
+
+}
+
+

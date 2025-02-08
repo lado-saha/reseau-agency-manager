@@ -16,7 +16,7 @@ import { TabsContent } from '@radix-ui/react-tabs';
 import {
   AgencyProfile,
   AgencyRoles,
-  emptyAgencyProfile
+  AGENCY_EMPTY
 } from '@/lib/models/agency';
 import { LegalDocumentsForm } from './form-legal-documents';
 import { BasicInfoForm } from './form-basic-info';
@@ -138,7 +138,7 @@ export function AgencyDetailView({
               onSubmitCompleteAction={(newId, data) => {
                 if (!agency) {
                   setAgency({
-                    ...emptyAgencyProfile,
+                    ...AGENCY_EMPTY,
                     id: newId,
                     basicInfo: data
                   });

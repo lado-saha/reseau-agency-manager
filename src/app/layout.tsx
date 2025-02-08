@@ -14,9 +14,9 @@ const montserrat = Montserrat({
 });
 
 export const metadata = {
-  title: 'Next.js App Router + NextAuth + Tailwind CSS',
+  title: 'Tripbook',
   description:
-    'A user admin dashboard configured with Next.js, Postgres, NextAuth, Tailwind CSS, TypeScript, and Prettier.'
+    'Trip paradise'
 };
 
 export default async function RootLayout({

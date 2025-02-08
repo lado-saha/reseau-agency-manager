@@ -48,6 +48,7 @@ import { User } from '@/lib/models/user';
 import { Employee, EmployeeRole, roleLabels } from '@/lib/models/employee';
 import { saveEmployee, searchUserByEmail } from '@/lib/actions';
 import { auditCreate } from '@/lib/models/helpers';
+import { ErrorDialog } from '../dialogs/dialog-error';
 
 // Fix the schema to dynamically select the correct one based on the provided roles
 const getRoleSchema = <T extends EmployeeRole>(roles: T[]) => {
@@ -110,6 +111,7 @@ export function EmployeeForm<T extends EmployeeRole>({
   const searchUser = async () => {
     const isValid = await form.trigger('email');
     if (isValid) {
+      setIsPending(true)
       const email = form.getValues('email');
       const newUser = await searchUserByEmail(email);
       if (!newUser) {
@@ -119,13 +121,13 @@ export function EmployeeForm<T extends EmployeeRole>({
         setUser(newUser);
         setErrorMessage('');
       }
+      setIsPending(false)
     }
   };
 
   const onSubmit = async (data: EmployeeFormValue<T>) => {
     setIsPending(true);
     try {
-      // Handle form submission
       if (user) {
         const newEmpl = await saveEmployee<T>(
           {
@@ -254,8 +256,8 @@ export function EmployeeForm<T extends EmployeeRole>({
                           >
                             {field.value
                               ? roleMap(roles).find(
-                                  (ls) => ls.value === field.value
-                                )?.label
+                                (ls) => ls.value === field.value
+                              )?.label
                               : 'Select a role'}
                             <ChevronsUpDown className="opacity-50" />
                           </Button>
@@ -323,12 +325,18 @@ export function EmployeeForm<T extends EmployeeRole>({
               <Button type="submit" disabled={isPending}>
                 Save Employee
               </Button>
-              {errorMessage && (
+              <ErrorDialog
+                isOpen={errorMessage !== ''}
+                onCloseAction={() => setErrorMessage('')}
+                title="Error Occurred"
+                description={errorMessage}
+              />
+              {/* {errorMessage && (
                 <div className="text-red-500 text-sm flex items-center gap-2">
                   <MessageSquareWarningIcon className="h-5 w-5" />
                   <p>{errorMessage}</p>
                 </div>
-              )}
+              )} */}
             </div>
           </form>
         </Form>

@@ -7,11 +7,19 @@ import { format } from 'date-fns';
 import { Vehicle, VehicleModel } from './resource';
 import { EmployeeRole } from './employee';
 
-interface GPSPosition {
+export interface GPSPosition {
   latitude: number;
   longitude: number;
 }
 
+// export interface PlaceAddress extends GPSPosition, Audit {
+//   id: string;
+//   road: string;
+//   suburb: string;
+//   city: string;
+//   state: string;
+//   country: string;
+// }
 export class GeoLocation {
   country: string;
   region: string;
@@ -39,6 +47,9 @@ export interface Audit {
   updatedOn: Date; // Timestamp when the resource was last updated
   createdBy: string; // User or system that created the resource
   updatedBy: string; // User or system that last updated the resource
+}
+export const AUDIT_EMPTY: Audit = {
+  createdBy: '', createdOn: new Date(), updatedBy: '', updatedOn: new Date()
 }
 
 export const auditCreate = (by: string) => ({

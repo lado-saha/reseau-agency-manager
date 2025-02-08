@@ -63,11 +63,10 @@ export function NavMain({ items }: { items: UrlPath[] }) {
                           <SidebarMenuSubButton asChild>
                             <a
                               href={subItem.url}
-                              className={` ${
-                                isChildActive(subItem.url)
+                              className={` ${isChildActive(subItem.url)
                                   ? 'font-bold bg-sidebar-accent' // Active: White text, shadow, and background for contrast
                                   : 'hover:font-bold hover:bg-primary' // Hover: White text, shadow, and background on hover
-                              }`}
+                                }`}
                             >
                               <span>{subItem.title}</span>
                             </a>

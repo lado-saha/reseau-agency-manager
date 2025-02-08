@@ -1,18 +1,13 @@
-import { SortingDirection, TabsEmployee } from '@/lib/models/helpers';
+import { SortingDirection } from '@/lib/models/helpers';
 import { Suspense } from 'react';
 import { Metadata } from 'next';
 import { PAGE_OFFSET } from '@/lib/utils';
-import { AgencyEmployeeRepository } from '@/lib/repo/employee-repo';
-import EmployeeListView from '@/components/employee/list-employees';
 import Loading from '../../loading';
-import {
-  AgencyEmployee,
-  AgencyEmployeeRole,
-  Employee
-} from '@/lib/models/employee';
+import { StationRepository } from '@/lib/repo/station-repo';
+import StationListView from '@/components/station/list-station';
 
 export const metadata: Metadata = {
-  title: 'Station | Employees'
+  title: 'Station'
 };
 
 export default async function Page(props: {
@@ -20,12 +15,10 @@ export default async function Page(props: {
     query: string;
     page: string;
     sortBy: string;
-    tabF: keyof AgencyEmployee;
-    tabV: TabsEmployee<AgencyEmployeeRole>;
     direction: SortingDirection;
   }>;
 }) {
-  const repo = new AgencyEmployeeRepository();
+  const repo = new StationRepository();
   const urlParams = await props.searchParams;
 
   const search = urlParams?.query || '';
@@ -36,28 +29,27 @@ export default async function Page(props: {
 
   // Fetch employees data from the repository
   const {
-    items: employees,
+    items: stations,
     newOffset,
     totalCount
   } = await repo.getAll(search, offset, sortingOption, sortingDirection);
-  // console.log(`Search Parameters: ${urlParams}`);
+  // console.log(`Search Parameters: ${JSON.stringify(stations[0])}`);
   return (
     <Suspense
       fallback={
         <Loading
           className="py-64"
           variant="card"
-          message="Fetching employees..."
+          message="Fetching stations..."
         />
       }
     >
-      <EmployeeListView
-        employees={employees}
+      <StationListView
+        stations={stations}
         offset={newOffset}
-        totalEmployees={totalCount}
+        totalStations={totalCount}
         sortDirection={sortingDirection}
         sortOption={sortingOption}
-        roles={['driver', 'manager', 'owner', 'station-chief', 'other']}
       />
     </Suspense>
   );

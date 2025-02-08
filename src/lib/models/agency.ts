@@ -2,6 +2,7 @@
  * This definition file will contain all definitions relative to an agency
  */
 import { AuditInfo, GeoLocation } from '@/lib/models/helpers';
+import { LucideFastForward } from 'lucide-react';
 
 // Agency export class with audit information
 export class Agency {
@@ -121,7 +122,7 @@ export interface AgencyProfile {
 }
 
 
-export const emptyAgencyProfile: AgencyProfile = {
+export const AGENCY_EMPTY: AgencyProfile = {
   id: "",
   ownerId: "",
   adminIds: [""],

@@ -12,13 +12,14 @@ type Params = Promise<{ id: string }>;
 export default async function Page({ params }: { params: Params }) {
   const { id } = await params;
   const repo = new AgencyRepository();
-  let originalModel: AgencyProfile | undefined;
+  let original: AgencyProfile | undefined;
   const isNew = id === 'new';
 
   const session = await auth(); // Implement this function
 
   // session?.user?.id
   console.log(session);
+  console.log(id)
 
   if (!session || !session?.user?.id) {
     redirect('/auth/login'); // Redirect unauthorized users
@@ -35,14 +36,14 @@ export default async function Page({ params }: { params: Params }) {
     );
   }
 
-  originalModel = await repo.getById(id);
-  if (originalModel === undefined) {
+  original = await repo.getById(id);
+  if (original === undefined) {
     return notFound();
   }
   const role: AgencyRoles | undefined =
-    userId === originalModel.ownerId
+    userId === original.ownerId
       ? 'owner'
-      : (originalModel.adminIds && originalModel.adminIds.includes(userId))
+      : (original.adminIds && original.adminIds.includes(userId))
         ? 'admin'
         : undefined;
 
@@ -63,7 +64,7 @@ export default async function Page({ params }: { params: Params }) {
       }
     >
       <AgencyDetailView
-        originalAgency={originalModel}
+        originalAgency={original}
         adminId={userId}
         role={role}
       />

@@ -46,7 +46,7 @@ import {
   CardContent
 } from '../ui/card';
 import { AgencyBasicInfo, AgencyRoles } from '@/lib/models/agency';
-import { saveAgencyBasicInfoAction } from '@/lib/actions';
+import { saveAgencyBasicInfo } from '@/lib/actions';
 
 // Define the schema for the Agency Info form using Zod
 const agencyInfoSchema = z.object({
@@ -85,7 +85,7 @@ const agencyInfoSchema = z.object({
   )
 });
 
-export type BasicInfoFormValue = z.infer<typeof agencyInfoSchema>;
+type BasicInfoFormValue = z.infer<typeof agencyInfoSchema>;
 
 const legalStructures = [
   { value: 'llc', label: 'LLC' },
@@ -128,8 +128,8 @@ export function BasicInfoForm({
       legalStructure: oldBasicInfo?.legalStructure ?? 'ltd',
       physicalCreationDate: oldBasicInfo?.physicalCreationDate
         ? new Date(oldBasicInfo.physicalCreationDate)
-            .toISOString()
-            .split('T')[0] // Format as YYYY-MM-DD
+          .toISOString()
+          .split('T')[0] // Format as YYYY-MM-DD
         : ''
     }
   });
@@ -179,10 +179,11 @@ export function BasicInfoForm({
     try {
       // If selected logo is null, then the image preview must not be
       if (!selectedLogo && !imagePreview) {
-        throw new Error('Please select a profile picture.');
+        setErrorMessage('Please select a profile picture.');
+        return
       }
 
-      const newData = await saveAgencyBasicInfoAction(
+      const newData = await saveAgencyBasicInfo(
         id,
         {
           businessName: data.businessName,
@@ -264,7 +265,7 @@ export function BasicInfoForm({
                       }}
                     >
                       <EyeIcon className="h-4 w-4" />
-                      <span className="hidden md:inline">Preview</span>
+                      <span className="hidden md:inline">View Full logo</span>
                     </Button>
 
                     {/* Delete Button */}
@@ -371,8 +372,8 @@ export function BasicInfoForm({
                           >
                             {field.value
                               ? legalStructures.find(
-                                  (ls) => ls.value === field.value
-                                )?.label
+                                (ls) => ls.value === field.value
+                              )?.label
                               : 'Select Legal Structure'}
                             <ChevronsUpDown className="opacity-50" />
                           </Button>

@@ -19,6 +19,15 @@
     "photo": "/storage/1738591589237-what-I-wanter.png"
   },
   {
+    "id": "2831d880-1dae-43fb-8403-168a59b748fg",
+    "name": "Jean Jacques",
+    "email": "jj@gmail.com",
+    "passwordHash": "$2a$10$aTaUiLAR6kSP7VQPw2ZBU.QbcoGJxOEvRZtCeS2ssYq0Msx2ETfDG",
+    "role": "normal",
+    "sex": "female",
+    "photo": "/storage/1738739678314-equity_vs_equality_phase1.png"
+  },
+  {
     "id": "dabfefcc-cbf5-4670-a7a2-4ddeab858b5b",
     "name": "sdfsa",
     "email": "sd@gmai.com",
@@ -127,5 +136,15 @@
     "sex": "male",
     "photo": "/storage/user10.png",
     "phone": "+237 6 59 59 59 59"
+  },
+  {
+    "id": "afd35be5-6642-4c68-87d4-3230ca9d2e4b",
+    "name": "Jean tabi",
+    "email": "jeantabi@gmail.com",
+    "role": "normal",
+    "passwordHash": "$2a$10$3HT1XPyo7Bz5IYuWqHrOfOHVFVXO3ij5OGXyjPKB5pkqzDE3iGcyy",
+    "sex": "male",
+    "photo": "/storage/1738941073869-avis_recherche.jpeg",
+    "phone": "+237670709393"
   }
 ]

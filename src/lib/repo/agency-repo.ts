@@ -1,7 +1,6 @@
-import { AgencyProfile, AgencyLegalDocuments, AgencyBasicInfo, AgencySocialMediaInfo, AgencyEmployee } from "@/lib/models/agency";
+import { AgencyProfile, AgencyLegalDocuments, AgencyBasicInfo, AgencySocialMediaInfo } from "@/lib/models/agency";
 import { JsonRepository } from "@/lib/repo/json-repository";
 import { API_URL } from "@/lib/utils";
-import { strict } from "assert";
 
 export class AgencyRepository extends JsonRepository<AgencyProfile> {
   constructor() {
@@ -138,9 +137,5 @@ export class AgencyRepository extends JsonRepository<AgencyProfile> {
 
     return newSocialInfo
   }
-
-  // ============= Employee ==================
-  async saveEmployee(employeeId: string = 'new', employee: AgencyEmployee) { }
-  async deleteEmployee(employee: AgencyEmployee) { }
 }
 

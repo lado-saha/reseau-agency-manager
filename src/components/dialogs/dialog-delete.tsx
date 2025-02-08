@@ -10,25 +10,31 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog';
+import { Trash2Icon } from 'lucide-react';
 import { useRef } from 'react';
 
 interface DeleteDialogProps {
   onDeleteAction: () => void;
   title: string;
   description: string;
+  triggerText: string;
 }
 
 export function DeleteDialog({
   onDeleteAction,
   title,
-  description
+  description,
+  triggerText
 }: DeleteDialogProps) {
   const dialogCloseRef = useRef<HTMLButtonElement>(null); // Ref to close the dialog
 
   return (
     <Dialog>
       <DialogTrigger>
-        <Button variant="destructive">Fire Employee</Button>
+        <Button variant="destructive">
+          <span className="hidden md:inline">{triggerText}</span>
+          <Trash2Icon className="h-3.5 w-3.5" />
+        </Button>
       </DialogTrigger>
       {/* DialogTrigger button will now open the dialog */}
       <DialogContent className="sm:max-w-md">
@@ -40,11 +46,12 @@ export function DeleteDialog({
           <DialogClose ref={dialogCloseRef} asChild>
             <Button variant="secondary">Cancel</Button>
           </DialogClose>
+
           <Button
             variant="destructive"
             onClick={() => {
               dialogCloseRef.current?.click();
-              onDeleteAction()
+              onDeleteAction();
             }}
           >
             Yes, Delete

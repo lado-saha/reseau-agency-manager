@@ -24,7 +24,7 @@ import {
 import { EyeIcon, MessageSquareWarningIcon } from 'lucide-react';
 import { AgencySocialMediaInfo } from '@/lib/models/agency';
 import { useEffect, useState } from 'react';
-import { saveAgencySocialInfoAction } from '@/lib/actions';
+import { saveAgencySocialInfo } from '@/lib/actions';
 
 // Define the schema for the SocialMedia form using Zod
 const socialMediaSchema = z.object({
@@ -67,7 +67,7 @@ export function SocialMediaForm({
 
   const onSubmit = async (data: SocialMediaFormValue) => {
     try {
-      const newData = await saveAgencySocialInfoAction(id, {
+      const newData = await saveAgencySocialInfo(id, {
         facebook: data.facebook,
         twitter: data.twitter,
         instagram: data.instagram,

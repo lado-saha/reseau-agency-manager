@@ -118,17 +118,17 @@ export default function AgencyLayout({
       >
         <header className="sticky top-0 z-30 flex h-14 items-center gap-5 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6 ">
           <div className="flex items-center gap-2">
-            {flattenedPathsAgency.includes(pathname) && (
-              <>
-                <SidebarTrigger className="-ml-1" />
-                <Separator orientation="vertical" className="mr-2 h-4" />
-              </>
-            )}
+            {/* {flattenedPathsAgency.includes(pathname) && ( */}
+            <>
+              <SidebarTrigger className="-ml-1" />
+              <Separator orientation="vertical" className="mr-2 h-4" />
+            </>
+            {/* )} */}
             <Breadcrumb>
               <BreadcrumbList>
                 {pathname
                   .split('/').slice(2)
-                  .filter((segment) => {segment})
+                  .filter((segment) => { segment })
                   .map((segment, index, arr) => {
                     const href = '/' + arr.slice(0, index + 1).join('/');
                     return (
@@ -155,11 +155,11 @@ export default function AgencyLayout({
             </Breadcrumb>
           </div>
           <div className="ml-auto flex">
-            {searchablePathsAgency.includes(pathname) && (
-              <div className="mb-2">
-                <SearchInput />
-              </div>
-            )}
+            {/* {searchablePathsAgency.includes(pathname) && ( */}
+            <div className="mb-2">
+              <SearchInput />
+            </div>
+            {/* )} */}
             <NavActions />
           </div>
         </header>

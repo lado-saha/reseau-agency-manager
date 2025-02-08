@@ -117,15 +117,17 @@ export function DropdownMenuEmployee<T extends EmployeeRole>(
   return (
     <DropdownMenuContent align="end">
       <DropdownMenuLabel>Actions</DropdownMenuLabel>
-      <DropdownMenuItem>
-        <button type="button" onClick={() => navToDetails(employee.id)}>
-          Details
-        </button>
+      <DropdownMenuItem
+        className="cursor-pointer h-8 my-1"
+        onClick={() => navToDetails(employee.id)}
+      >
+        <span className="w-full h-full text-start my-2">Details</span>
       </DropdownMenuItem>
 
       <DeleteDialog
         title="Fire Employee"
-        description={`Are you sure you want to fire ${employee?.user.name}? This action cannot be undone.`}
+        triggerText='Fire Employee'
+        description={`Are you sure you want to fire ${(employee?.user as User).name}? This action cannot be undone.`}
         onDeleteAction={() => {
           deleteAction(employee.id);
         }}

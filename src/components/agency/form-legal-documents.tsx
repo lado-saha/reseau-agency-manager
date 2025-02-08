@@ -25,7 +25,7 @@ import {
 } from '@/components/ui/card';
 import { getBlobURL, MAX_FILE_SIZE } from '@/lib/utils';
 import { AgencyLegalDocuments } from '@/lib/models/agency';
-import { saveAgencyLegalDocumentsAction } from '@/lib/actions';
+import { saveAgencyLegalDocuments } from '@/lib/actions';
 const isClient = typeof window !== 'undefined'; // Check if we are in the client
 
 // Define the schema with proper file validation
@@ -86,7 +86,7 @@ export function LegalDocumentsForm({
   const onSubmit = async (data: LegalDocumentsFormValue) => {
     // if()
     try {
-      const newData = await saveAgencyLegalDocumentsAction(id, {
+      const newData = await saveAgencyLegalDocuments(id, {
         businessRegistration: data.businessRegistration,
         nationalIDBack: data.nationalIDBack,
         nationalIDFront: data.nationalIDFront,
@@ -156,7 +156,7 @@ export function LegalDocumentsForm({
                       }}
                     >
                       <EyeIcon className="h-3.5 w-3.5" />
-                      <span className="hidden md:inline">Preview</span>
+                      <span className="hidden md:inline">View Doc</span>
                     </Button>
 
                     {/* Delete File */}

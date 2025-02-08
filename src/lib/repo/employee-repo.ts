@@ -1,10 +1,7 @@
-import { AgencyEmployee, Employee, AgencyEmployeeRole, StationEmployeeRole, StationEmployee, EmployeeRole } from "@/lib/models/employee";
+import { AgencyEmployee, Employee, StationEmployee, EmployeeRole } from "@/lib/models/employee";
 import { JsonRepository, UserRepository } from "@/lib/repo/json-repository";
 import { API_URL } from "@/lib/utils";
-import { strict } from "assert";
-import { auditCreate, AuditInfo, auditUpdate, SortingDirection } from "../models/helpers";
-import { User } from "../models/user";
-
+import { auditCreate, auditUpdate, SortingDirection } from "../models/helpers";
 
 // Generalized Base Employee Repository
 export class EmployeeRepository<T extends Employee<EmployeeRole>> extends JsonRepository<T> {
@@ -15,7 +12,7 @@ export class EmployeeRepository<T extends Employee<EmployeeRole>> extends JsonRe
     this.entityName = fileName.split('.')[0]
   }
 
-  
+
   async getAll(search?: string, offset?: number, sortBy?: string | keyof T | undefined, direction?: SortingDirection): Promise<{ items: T[]; newOffset: number; totalCount: number; }> {
     // Fetch employees using the base method
     const employees = await super.getAll(search, offset, sortBy, direction);
@@ -49,6 +46,37 @@ export class EmployeeRepository<T extends Employee<EmployeeRole>> extends JsonRe
 
   }
 
+  async getByUserId<T extends EmployeeRole>(
+    userId: string, orgId: string
+  ): Promise<Employee<T>> {
+    const employees = await this.fetchData();
+
+    const employee = employees.find((empl) => empl.user == userId && empl.orgId == orgId)
+    if (!employee) {
+      throw new Error('This user is not currently employed')
+    }
+    return employee
+  }
+
+  async getByUserEmail<T extends EmployeeRole>(
+    email: string,
+    orgId: string
+  ): Promise<Employee<T>> {
+    const user = await this.userRepo.getByEmail(email)
+    if (!user) {
+      throw new Error('No user found with this email')
+    }
+    const employees = await this.fetchData();
+
+    const empl = employees.find((empl) => empl.user == user?.id && empl.orgId == orgId)
+    if (!empl) {
+      throw new Error('This user is not currently employed')
+    }
+    empl.user = user
+    return empl
+  }
+
+
   // Add Employee
   async addEmployee(
     employee: T,
@@ -64,7 +92,6 @@ export class EmployeeRepository<T extends Employee<EmployeeRole>> extends JsonRe
       ) {
         throw new Error("You cannot employ the same person twice.");
       }
-
       const newEmpl: T = { ...employee, id: crypto.randomUUID(), ...auditCreate(adminId) };
 
       // Assuming you will post it to the API endpoint
@@ -81,7 +108,7 @@ export class EmployeeRepository<T extends Employee<EmployeeRole>> extends JsonRe
         throw new Error(`Employee with id ${employee.id} not found.`);
       }
 
-      const newEmpl = { ...employees[index], ...auditUpdate(adminId) }
+      const newEmpl = { ...employees[index], ...employee, ...auditUpdate(adminId) }
 
       await fetch(`${API_URL}/api/data/${this.entityName}`, {
         method: "PUT",
@@ -108,14 +135,14 @@ export class EmployeeRepository<T extends Employee<EmployeeRole>> extends JsonRe
       throw new Error("Employee not found.");
     }
 
-    employees[employeeIndex] = { ...newEmployee, ...auditUpdate(currentUserId) };
+    const newEmpl = { ...employees[employeeIndex], ...newEmployee, ...auditUpdate(currentUserId) };
     await fetch(`${API_URL}/api/data/${this.entityName}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(employees[employeeIndex]),
+      body: JSON.stringify(newEmpl)
     });
 
-    return employees[employeeIndex];
+    return newEmpl;
   }
 
   // Delete Employee

@@ -243,20 +243,20 @@ export default function StationFleetView({
             viewOnMap={() => {}}
             posix={[mapCenter[0], mapCenter[1]]}
             zoom={mapZoom}
-            vehicles={vehicles}
+            stations={vehicles}
             offset={0}
-            totalVehicles={2}
+            totalVehicles={totalVehicles}
             currentTab={tab}
-            onCenterChange={(lat: number, lon: number) => {
+            onCenterChangeAction={(lat: number, lon: number) => {
               setMapCenter([lat, lon]);
             }}
-            onZoomChange={(zoom: SetStateAction<number>) => {
+            onZoomChangeAction={(zoom: SetStateAction<number>) => {
               setMapZoom(zoom);
             }}
           />
         ) : currentView === 'tableview' ? (
           <TableVehicles
-            vehicles={vehicles}
+            stations={vehicles}
             totalVehicles={totalVehicles}
             offset={offset}
             currentTab={tab}
@@ -264,7 +264,7 @@ export default function StationFleetView({
           />
         ) : (
           <GridVehicles
-            vehicles={vehicles}
+            stations={vehicles}
             totalVehicles={totalVehicles}
             offset={offset}
             currentTab={tab}

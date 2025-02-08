@@ -40,6 +40,7 @@ export abstract class JsonRepository<T> implements IRepository<T> {
 
   ): Promise<{ items: T[]; newOffset: number; totalCount: number }> {
     const data = await this.fetchData();
+    
 
     // Filtering
     const filteredData = search
@@ -71,6 +72,7 @@ export abstract class JsonRepository<T> implements IRepository<T> {
     direction?: SortingDirection
   ): Promise<{ items: T[]; newOffset: number; totalCount: number }> {
     const data = await this.fetchData();
+    console.log(data)
 
     // Filtering
     const filteredData = search
@@ -104,7 +106,7 @@ export class VehicleRepository extends JsonRepository<Vehicle> {
 }
 export class VehicleModelRepository extends JsonRepository<VehicleModel> {
   constructor() {
-    super('vehicleModels.json');
+    super('vehicle-models.json');
   }
 }
 

@@ -1,0 +1,38 @@
+[
+  {
+    "id": "b8d84407-0636-4576-8f8f-58ff38dba399",
+    "name": "Avenir Voyages",
+    "chief": "2831d880-1dae-43fb-8403-168a59b748fg",
+    "agency": "a820da8d-be78-48ea-87d8-0a510d241ad7",
+    "entrancePhoto": "/storage/1738931433253-predictions.png",
+    "createdOn": "2025-02-07T12:30:33.292Z",
+    "updatedOn": "2025-02-07T12:40:33.993Z",
+    "createdBy": "2831d880-1dae-43fb-8403-168a59b748c1",
+    "updatedBy": "2831d880-1dae-43fb-8403-168a59b748c1",
+    "address": "249837c4-b9b5-4eff-8442-aa0e180eac3c"
+  },
+  {
+    "id": "db4c5fb1-7d4a-4ba9-92b2-b3bf6e570746",
+    "name": "General Terminus",
+    "chief": "2831d880-1dae-43fb-8403-168a59b748c4",
+    "agency": "a820da8d-be78-48ea-87d8-0a510d241ad7",
+    "entrancePhoto": "/storage/1738937205417-what-I-wanter.png",
+    "createdOn": "2025-02-07T14:06:45.458Z",
+    "updatedOn": "2025-02-07T14:07:04.074Z",
+    "createdBy": "2831d880-1dae-43fb-8403-168a59b748c1",
+    "updatedBy": "2831d880-1dae-43fb-8403-168a59b748c1",
+    "address": "8cdf5350-2cd1-45d3-b7fa-95d4fd072fcc"
+  },
+  {
+    "id": "865d99ac-3696-4e75-911f-341ad70585a4",
+    "name": "General Melen",
+    "chief": "afd35be5-6642-4c68-87d4-3230ca9d2e4b",
+    "agency": "a820da8d-be78-48ea-87d8-0a510d241ad7",
+    "entrancePhoto": "/storage/1738943130875-what-I-wanter.png",
+    "createdOn": "2025-02-07T15:45:30.927Z",
+    "updatedOn": "2025-02-07T15:45:54.243Z",
+    "createdBy": "afd35be5-6642-4c68-87d4-3230ca9d2e4b",
+    "updatedBy": "afd35be5-6642-4c68-87d4-3230ca9d2e4b",
+    "address": "4e2368cf-9f1b-4fff-ad82-8adbe80a3464"
+  }
+]

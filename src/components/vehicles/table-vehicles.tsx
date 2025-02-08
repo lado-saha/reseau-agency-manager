@@ -31,7 +31,7 @@ import { PAGE_OFFSET } from '@/lib/utils';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
 export interface PropsVehicles {
-  vehicles: Vehicle[];
+  stations: Vehicle[];
   offset: number;
   totalVehicles: number;
   currentTab: TabsVehicle;
@@ -189,7 +189,7 @@ function RenderTableHeaders(currentTab: TabsVehicle) {
 }
 
 export function TableVehicles({
-  vehicles,
+  stations: vehicles,
   offset,
   totalVehicles,
   currentTab,
@@ -239,7 +239,7 @@ export function TableVehicles({
 }
 
 export function GridVehicles({
-  vehicles,
+  stations: vehicles,
   offset,
   totalVehicles,
   currentTab,
