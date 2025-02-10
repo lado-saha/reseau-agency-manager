@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -34,66 +35,72 @@ import {
   TrashIcon
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { User } from '@/lib/models/user';
 import { createUserAction } from '@/lib/actions';
 import { phoneNumberValidator } from '@/lib/mobile-validation';
+import { Switch } from '../ui/switch';
+import { ErrorDialog } from '../dialogs/dialog-error';
 
 // Define the schema for the signup form using zod
-const signupFormSchema = z.object({
+const schema = z.object({
   name: z.string().nonempty('Please enter your name.'),
   email: z
     .string()
     .email({ message: 'Please enter a valid email address.' })
     .nonempty({ message: 'Email is required.' }),
+  recruitable: z.boolean({ message: 'Empty' }), // Ensuring it defaults to fals
   password: z
     .string()
     .min(6, { message: 'Password must be at least 6 characters long.' })
     .nonempty({ message: 'Password is required.' }),
   sex: z.enum(['male', 'female'], { message: 'Pick your sex.' }),
-  role: z.enum(['admin', 'super-admin', 'normal'], {
-    message: 'Select a role.'
-  }),
+
   photo: z.string().optional(),
-  phone: phoneNumberValidator
+  phone: phoneNumberValidator,
 });
 
-type SignupFormValue = z.infer<typeof signupFormSchema>;
-
-const roles = [
-  { value: 'normal', label: 'Normal' },
-  { value: 'admin', label: 'Admin' },
-  { value: 'super-admin', label: 'Super Admin' }
-];
+type CreateUserFormValue = z.infer<typeof schema>;
 
 const sexes = [
   { value: 'male', label: 'Male' },
   { value: 'female', label: 'Female' }
 ];
 
-export function SignupForm({
+/**
+ * Signup mode means the user is actually signing-up while the create means someone is creating his account for him
+ */
+export type NewUserFormMode = 'signup' | 'create';
+export function NewUserForm({
   className,
+  mode,
+  newEmail,
+  callbackUrl,
   ...props
 }: {
   className?: string;
+  mode: NewUserFormMode,
+  newEmail: string,
+  callbackUrl: string
+  // mode: UserCreationMode
 } & React.ComponentPropsWithoutRef<'form'>) {
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || '/auth/login';
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string>('');
   const [isPending, setIsPending] = useState<boolean>(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [selectedPhoto, setSelectedPhoto] = useState<File | null>(null);
 
+  const router = useRouter()
   // Set up useForm with zod resolver for validation
-  const form = useForm<SignupFormValue>({
-    resolver: zodResolver(signupFormSchema),
+  const form = useForm<CreateUserFormValue>({
+    resolver: zodResolver(schema),
     defaultValues: {
       sex: 'male',
-      role: 'normal',
-      phone: { mobile: '' }
+      phone: { mobile: '' },
+      recruitable: mode === 'create',
+      email: mode === 'create' ? newEmail : ''
     }
   });
 
@@ -108,30 +115,39 @@ export function SignupForm({
     }
   };
 
-  const onSubmit = async (data: SignupFormValue) => {
+  const onSubmit = async (data: CreateUserFormValue) => {
     setIsPending(true);
-    setErrorMessage(null);
-
     try {
-      if (!selectedPhoto) {
-        throw new Error('Please select a profile picture.');
+      if (!selectedPhoto && mode === 'signup') {
+        setErrorMessage('Please select a profile picture');
+        return
       }
+      console.log("Was called")
       const newUser = await createUserAction({
         id: 'new',
         name: data.name,
         email: data.email,
-        role: data.role,
         passwordHash: data.password,
         sex: data.sex,
-        photo: selectedPhoto, // Send actual file object
-        phone: data.phone.mobile.replaceAll(' ', '').replace('-', '')
+        photo: selectedPhoto ?? '', // Send actual file object
+        phone: data.phone.mobile.replaceAll(' ', '').replace('-', ''),
+        signupComplete: mode === 'signup',
+        recruitable: data.recruitable
       });
+      console.log(newUser)
 
       if (newUser) {
-        window.location.href = callbackUrl;
+        if (mode === 'signup')
+          router.push(callbackUrl); // Navigates to the callback URL without a full page reload
+        else {
+          const url = new URL(callbackUrl, window.location.origin);
+          const params = new URLSearchParams(url.search);
+          params.set('email', data.email); // Append or update the email parameter
+          router.replace(`${url.pathname}?${params.toString()}`);
+        }
       }
     } catch (error) {
-      setErrorMessage(`Error! ${(error as Error).stack}`);
+      setErrorMessage(`${(error as Error).message}`);
     } finally {
       setIsPending(false);
     }
@@ -185,7 +201,7 @@ export function SignupForm({
                   onClick={() => window.open(imagePreview, '_blank')}
                 >
                   <EyeIcon className="h-4 w-4" />
-                  <span className="hidden md:inline">Preview</span>
+                  <span className="hidden md:inline">View Full Photo</span>
                 </Button>
 
                 {/* Delete Button */}
@@ -229,6 +245,7 @@ export function SignupForm({
           <FormField
             control={form.control}
             name="email"
+            disabled={mode === 'create'}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Email</FormLabel>
@@ -324,7 +341,7 @@ export function SignupForm({
                           {sexes.map((s) => (
                             <CommandItem
                               key={s.value}
-                              onSelect={() => form.setValue('sex', s.value)}
+                              onSelect={() => form.setValue('sex', s.value as 'male' | 'female')}
                             >
                               {s.label}
                               <Check
@@ -347,97 +364,60 @@ export function SignupForm({
             )}
           />
 
-          {/* Role Selection */}
           <FormField
             control={form.control}
-            name="role"
+            name="recruitable"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Role</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        className={cn(
-                          'w-full justify-between',
-                          !field.value && 'text-muted-foreground'
-                        )}
-                      >
-                        {field.value
-                          ? roles.find((r) => r.value === field.value)?.label
-                          : 'Select role'}
-                        <ChevronsUpDown className="opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-full p-0">
-                    <Command>
-                      <CommandInput
-                        placeholder="Search role..."
-                        className="h-9"
-                      />
-                      <CommandList>
-                        <CommandEmpty>No role found.</CommandEmpty>
-                        <CommandGroup>
-                          {roles.map((r) => (
-                            <CommandItem
-                              key={r.value}
-                              onSelect={() => form.setValue('role', r.value)}
-                            >
-                              {r.label}
-                              <Check
-                                className={cn(
-                                  'ml-auto',
-                                  r.value === field.value
-                                    ? 'opacity-100'
-                                    : 'opacity-0'
-                                )}
-                              />
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-                <FormMessage />
+              <FormItem className="flex flex-row items-center justify-between rounded-lg py-2 ">
+                <div className="space-y-0.5">
+                  <FormLabel className="text-base">Can be Recruited?</FormLabel>
+                  <FormDescription>
+                    Enable to make your profile visible to travel agencies for recruiting opportunities.
+                    This can be updated later in your account settings.
+                  </FormDescription>
+                </div>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
               </FormItem>
             )}
           />
-
           {/* Submit Button */}
           <Button className="w-full" type="submit" aria-disabled={isPending}>
-            Signup
+            {mode === 'signup' ? "Signup" : "Create User"}
           </Button>
 
           {/* Error Message */}
-          {errorMessage && (
-            <div className="flex items-center gap-2 text-sm text-red-500">
-              <MessageSquareWarningIcon className="h-5 w-5" />
-              <p>{errorMessage}</p>
-            </div>
-          )}
+          <ErrorDialog
+            isOpen={errorMessage !== ''}
+            onCloseAction={() => setErrorMessage('')}
+            title="Error Occurred"
+            description={errorMessage}
+          />
 
           {/* Already have an account */}
-          <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
-            <span className="relative z-10 bg-background px-2 text-muted-foreground">
-              Already have an account?
-            </span>
-          </div>
-        </div>
+          {mode === 'signup' && (
+            <>
+              <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
+                <span className="relative z-10 bg-background px-2 text-muted-foreground">
+                  Already have an account?
+                </span>
+              </div>
 
-        {/* Login Button */}
-        <Link href="/auth/login">
-          <Button
-            variant="outline"
-            className="w-full"
-            aria-disabled={isPending}
-          >
-            Login Instead
-          </Button>
-        </Link>
+              <Link href="/auth/login">
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  aria-disabled={isPending}
+                >
+                  Login Instead
+                </Button>
+              </Link></>
+          )}
+        </div>
       </form>
     </Form>
   );

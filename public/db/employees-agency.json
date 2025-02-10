@@ -152,5 +152,16 @@
     "updatedOn": "2025-02-07T15:39:00.403Z",
     "createdBy": "afd35be5-6642-4c68-87d4-3230ca9d2e4b",
     "updatedBy": "afd35be5-6642-4c68-87d4-3230ca9d2e4b"
+  },
+  {
+    "id": "a32dd9a6-a6a7-41ee-afdf-707df211384e",
+    "role": "station-chief",
+    "orgId": "a820da8d-be78-48ea-87d8-0a510d241ad7",
+    "salary": 2000,
+    "user": "4ad76243-6652-49bc-97d1-e19c9061105b",
+    "createdOn": "2025-02-09T04:50:23.362Z",
+    "updatedOn": "2025-02-09T04:50:23.362Z",
+    "createdBy": "afd35be5-6642-4c68-87d4-3230ca9d2e4b",
+    "updatedBy": "afd35be5-6642-4c68-87d4-3230ca9d2e4b"
   }
 ]

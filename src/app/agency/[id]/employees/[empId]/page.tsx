@@ -12,10 +12,15 @@ import { AgencyEmployeeRepository } from '@/lib/repo/employee-repo';
 import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
-type Params = Promise<{ empId: string; id: string }>;
+type Params = Promise<{ empId: string; id: string; email?: string }>;
+type SearchParams = Promise<{ email?: string }>
 
-export default async function Page({ params }: { params: Params }) {
+
+export default async function Page({ params, searchParams }: { params: Params, searchParams: SearchParams }) {
+  console.log(await params)
   const { empId: id, id: agencyId } = await params;
+  const { email } = await searchParams;
+
   const repo = new AgencyEmployeeRepository();
   let originalModel: Employee<AgencyEmployeeRole> | undefined;
   const isNew = id === 'new';
@@ -34,6 +39,7 @@ export default async function Page({ params }: { params: Params }) {
         orgId={agencyId}
         originalEmployee={undefined}
         adminId={userId}
+        emailParam={email}
       />
     );
   }
@@ -59,6 +65,7 @@ export default async function Page({ params }: { params: Params }) {
         originalEmployee={originalModel}
         adminId={userId}
         orgId={agencyId}
+        emailParam={email}
       />
     </Suspense>
   );

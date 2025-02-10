@@ -93,6 +93,7 @@ export default function EmployeeListView<T extends EmployeeRole>({
   return (
     <Tabs
       defaultValue={tab}
+      orientation='vertical'
       onValueChange={(value) => setTab(value as TabsEmployee<T>)}
     >
       {/* Tabs for filtering */}
@@ -106,7 +107,7 @@ export default function EmployeeListView<T extends EmployeeRole>({
               {roleIcons[role] && (
                 <span className="mr-0">{roleIcons[role]}</span>
               )}
-              <span>{getRoleLabel(role)}</span>
+              <span className='hidden md:inline'>{getRoleLabel(role)}</span>
             </TabsTrigger>
           ))}
         </TabsList>
@@ -114,10 +115,9 @@ export default function EmployeeListView<T extends EmployeeRole>({
         <div className="ml-auto flex items-center gap-2">
           <Button size="sm" className="h-8 gap-1" onClick={handleNewClick}>
             <PlusIcon className="h-3.5 w-3.5" />
-            <span className="sr-only sm:not-sr-only">Add Employee</span>
+            <span className="hidden md:inline">Add Employee</span>
           </Button>
           <DropdownMenu>
-
             <DropdownMenuTrigger asChild>
               <Button size="sm" className="h-8 gap-1">
                 {sortDirection == 'asc' ? (
@@ -125,7 +125,7 @@ export default function EmployeeListView<T extends EmployeeRole>({
                 ) : (
                   <SortDescIcon className="h-3.5 w-3.5" />
                 )}
-                <span className="sr-only sm:not-sr-only">Sort</span>
+                <span className="hidden md:inline">Sort</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -178,13 +178,13 @@ export default function EmployeeListView<T extends EmployeeRole>({
                 {currentView === 'tableview' && (
                   <>
                     <TableIcon className="h-3.5 w-3.5" />
-                    <span className="sr-only sm:not-sr-only">Table View</span>
+                    <span className="hidden md:inline">Table View</span>
                   </>
                 )}
                 {currentView === 'gridview' && (
                   <>
                     <LayoutGrid className="h-3.5 w-3.5" />
-                    <span className="sr-only sm:not-sr-only">Grid View</span>
+                    <span className="hidden md:inline">Grid View</span>
                   </>
                 )}
               </Button>
@@ -233,6 +233,6 @@ export default function EmployeeListView<T extends EmployeeRole>({
           />
         )}
       </TabsContent>
-    </Tabs>
+    </Tabs >
   );
 }

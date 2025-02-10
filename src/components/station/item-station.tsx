@@ -99,9 +99,9 @@ function DropdownMenuStation({
         <span className='w-full h-full text-start my-2'>Details</span>
       </DropdownMenuItem>
       <DeleteDialog
-        title="DANGER!!!! Delete Station"
-        triggerText='Delete'
-        description={`Are you sure you want to delete the station ${station.name}? This action cannot be undone.`}
+        title="DANGER!!!! Archive Station"
+        triggerText='Archive'
+        description={`Are you sure you want to station the station ${station.name}? This action can be undone later.`}
         onDeleteAction={() => {
           deleteAction(station.id);
         }}
@@ -185,7 +185,7 @@ export function StationMapTooltip({ station, deleteAction, navToDetails }: Stati
     <Card className="flex flex-col items-center text-center stroke-none border-none p-1">
       <span className="text-sm">{station.name}</span>
       <div className="text-sm text-muted-foreground">{(station.chief as User).name}</div>
-      <div className="text-sm text-muted-foreground">{formatAddress(station.address as PlaceAddress)}</div>
+      {/* <div className="text-sm text-muted-foreground">{formatAddress(station.address as PlaceAddress)}</div> */}
     </Card>
   );
 }

@@ -59,13 +59,13 @@ export function StationDetailView({
           <div className="ml-auto flex items-center gap-2">
             {mode === 'edit-mode' && (
               <DeleteDialog
-                title="Delete Station"
-                triggerText="Delete Station"
-                description={`Are you sure you want to delete this station? All associated trips will be cancelled, and this action cannot be undone.`}
+                title="Archive Station"
+                triggerText="Archive Station"
+                description={`Are you sure you want to archive this station? All associated trips will be cancelled, and this action can be undone later.`}
                 onDeleteAction={() => {
                   // Future delete action logic can be implemented here
                 }}
-              />
+                mode={'archive'} />
             )}
           </div>
         </div>

@@ -1,4 +1,5 @@
 'use client';
+
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -10,33 +11,52 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog';
-import { Trash2Icon } from 'lucide-react';
+import { ArchiveIcon, Trash2Icon } from 'lucide-react';
 import { useRef } from 'react';
+
+export type DeletionMode = 'archive' | 'delete';
 
 interface DeleteDialogProps {
   onDeleteAction: () => void;
   title: string;
   description: string;
   triggerText: string;
+  mode: DeletionMode;
 }
 
 export function DeleteDialog({
   onDeleteAction,
   title,
   description,
-  triggerText
+  triggerText,
+  mode = 'archive'
 }: DeleteDialogProps) {
-  const dialogCloseRef = useRef<HTMLButtonElement>(null); // Ref to close the dialog
+  const dialogCloseRef = useRef<HTMLButtonElement>(null);
+
+  const getButtonVariant = () => {
+    return 'destructive'
+  };
+
+  const getIcon = () => {
+    return mode === 'delete' ? (
+      <Trash2Icon className="h-3.5 w-3.5" />
+    ) : (
+      <ArchiveIcon className="h-3.5 w-3.5" />
+    );
+  };
+
+  const getActionButtonText = () => {
+    return mode === 'delete' ? 'Yes, Delete' : 'Yes, Archive';
+  };
 
   return (
     <Dialog>
       <DialogTrigger>
-        <Button variant="destructive">
+        <Button variant={getButtonVariant()}>
           <span className="hidden md:inline">{triggerText}</span>
-          <Trash2Icon className="h-3.5 w-3.5" />
+          {getIcon()}
         </Button>
       </DialogTrigger>
-      {/* DialogTrigger button will now open the dialog */}
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
@@ -46,7 +66,6 @@ export function DeleteDialog({
           <DialogClose ref={dialogCloseRef} asChild>
             <Button variant="secondary">Cancel</Button>
           </DialogClose>
-
           <Button
             variant="destructive"
             onClick={() => {
@@ -54,7 +73,7 @@ export function DeleteDialog({
               onDeleteAction();
             }}
           >
-            Yes, Delete
+            {getActionButtonText()}
           </Button>
         </DialogFooter>
       </DialogContent>

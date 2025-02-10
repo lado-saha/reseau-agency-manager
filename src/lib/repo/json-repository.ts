@@ -8,6 +8,7 @@ import {
 import { compare, hash } from 'bcryptjs'
 import { API_URL, concatUrl, PAGE_OFFSET } from '@/lib/utils';
 import { User } from '@/lib/models/user';
+import { NewUserFormMode } from '@/components/auth/new-user-form';
 
 const fuelTypes = ['Gasoline', 'Diesel', 'Electric', 'Hybrid'];
 fuelTypes[Math.floor(Math.random() * fuelTypes.length)];
@@ -40,7 +41,7 @@ export abstract class JsonRepository<T> implements IRepository<T> {
 
   ): Promise<{ items: T[]; newOffset: number; totalCount: number }> {
     const data = await this.fetchData();
-    
+
 
     // Filtering
     const filteredData = search
@@ -158,30 +159,67 @@ export class UserRepository extends JsonRepository<User> {
 
 
   async createUser(newUser: User): Promise<User> {
+    // Fetch existing users
     const users = await this.fetchData();
+
+    // Check if a user with the same email already exists
     if (users.some(user => user.email === newUser.email)) {
-      throw new Error('User already exists');
+      throw new Error('User with the same email already exists');
     }
 
-    console.log("Arrived here")
-    // Upload photo
-    const formData = new FormData();
-    formData.append('file', newUser.photo as File);
-    console.log("Arrived here")
-    const uploadResponse = await fetch(`${API_URL}/api/upload`, { method: 'POST', body: formData });
+    let fileUrl = '';
 
-    const { fileUrl } = await uploadResponse.json();
+    // Upload photo if provided
+    if (newUser.photo && typeof newUser.photo !== 'string') {
+      const formData = new FormData();
+      formData.append('file', newUser.photo as File);
 
-    // Hash password. Nb at thos point the apassword is not yet hashed
+      try {
+        const uploadResponse = await fetch(`${API_URL}/api/upload`, {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!uploadResponse.ok) {
+          throw new Error('Failed to upload photo');
+        }
+
+        const uploadResult = await uploadResponse.json();
+        fileUrl = uploadResult.fileUrl || '';
+      } catch (error) {
+        console.error('Error uploading photo:', error);
+        throw new Error('Photo upload failed');
+      }
+    }
+
+    // Hash the password
     const passwordHash = await hash(newUser.passwordHash, 10);
 
-    // Create new user
-    newUser = { ...newUser, id: crypto.randomUUID(), photo: fileUrl, passwordHash }
+    // Create new user object with updated fields
+    const updatedUser: User = {
+      ...newUser,
+      id: crypto.randomUUID(),
+      photo: fileUrl || newUser.photo, // Use the uploaded photo URL or the existing one
+      passwordHash,
+    };
 
-    // Save user via API
-    await fetch(`${API_URL}/api/data/users`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(newUser) });
+    // Save the new user via API
+    try {
+      const saveResponse = await fetch(`${API_URL}/api/data/users`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedUser),
+      });
 
-    return newUser;
+      if (!saveResponse.ok) {
+        throw new Error('Failed to save user');
+      }
+
+      return updatedUser;
+    } catch (error) {
+      console.error('Error saving user:', error);
+      throw new Error('User creation failed');
+    }
   }
 
   async findUserByEmail(email: string): Promise<User | undefined> {

@@ -154,7 +154,7 @@ export function LoginForm({
         </div>
 
         {/* Sign-up Button */}
-        <Link href="/auth/signup">
+        <Link href="/auth/new-user?mode=signup">
           <Button
             variant="outline"
             className="w-full"

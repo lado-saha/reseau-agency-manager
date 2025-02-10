@@ -146,5 +146,27 @@
     "sex": "male",
     "photo": "/storage/1738941073869-avis_recherche.jpeg",
     "phone": "+237670709393"
+  },
+  {
+    "id": "bcc468d1-08c9-4a7c-b135-1d56fe380f98",
+    "name": "s",
+    "email": "saha@gmail.com",
+    "passwordHash": "$2a$10$UsTL.Ox9JllWXGm8I9eeNup/q9Ln5cNQ3GKMvXTpwbU3gPgkF7Tzy",
+    "sex": "male",
+    "photo": "",
+    "phone": "+237670709391",
+    "signupComplete": false,
+    "recruitable": true
+  },
+  {
+    "id": "4ad76243-6652-49bc-97d1-e19c9061105b",
+    "name": "Armel",
+    "email": "armel@gmail.com",
+    "passwordHash": "$2a$10$rc6/ctfEmMOFxxLJ0CLYR.5SOuFAkAVsJMtXG9XpqM0D1NaIRfh5e",
+    "sex": "male",
+    "photo": "",
+    "phone": "+237670709391",
+    "signupComplete": false,
+    "recruitable": true
   }
 ]

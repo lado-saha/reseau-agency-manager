@@ -10,12 +10,14 @@ export function EmployeeDetailView<T extends EmployeeRole>({
   originalEmployee,
   adminId,
   roles,
-  orgId
+  orgId,
+  emailParam
 }: {
   originalEmployee: Employee<T> | undefined;
   adminId: string;
   roles: T[];
   orgId: string;
+  emailParam?: string
 }) {
   const mode: 'edit-mode' | 'creation-mode' =
     originalEmployee !== undefined ? 'edit-mode' : 'creation-mode';
@@ -36,8 +38,7 @@ export function EmployeeDetailView<T extends EmployeeRole>({
               description={`Are you sure you want to fire ${(employee?.user as User | undefined)?.name}? This action cannot be undone.`}
               onDeleteAction={() => {
                 // deleteAction(employee.id);
-              }}
-            />
+              }} mode={'archive'} />
           )}
         </div>
       </div>
@@ -45,6 +46,7 @@ export function EmployeeDetailView<T extends EmployeeRole>({
       <EmployeeForm<T>
         orgId={orgId}
         roles={roles}
+        emailParam={emailParam}
         id={employee?.id || 'new'}
         adminId={adminId}
         oldEmployee={originalEmployee}

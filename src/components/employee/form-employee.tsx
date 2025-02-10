@@ -31,7 +31,7 @@ import {
   Check,
   ChevronsUpDown,
   EyeIcon,
-  MessageSquareWarningIcon,
+  PlusIcon,
   SearchIcon
 } from 'lucide-react';
 import { useState } from 'react';
@@ -49,6 +49,7 @@ import { Employee, EmployeeRole, roleLabels } from '@/lib/models/employee';
 import { saveEmployee, searchUserByEmail } from '@/lib/actions';
 import { auditCreate } from '@/lib/models/helpers';
 import { ErrorDialog } from '../dialogs/dialog-error';
+import { usePathname, useRouter } from 'next/navigation';
 
 // Fix the schema to dynamically select the correct one based on the provided roles
 const getRoleSchema = <T extends EmployeeRole>(roles: T[]) => {
@@ -83,12 +84,14 @@ export function EmployeeForm<T extends EmployeeRole>({
   onSubmitCompleteAction,
   orgId,
   adminId,
+  emailParam,
   roles // Dynamic roles passed as prop
 }: {
   id: string;
   oldEmployee?: Employee<T>;
   onSubmitCompleteAction: (newId: string, data: Employee<T>) => void;
   adminId: string;
+  emailParam?: string;
   orgId: string;
   roles: T[]; // This will be either agencyEmplRoles or stationEmplRoles
 }) {
@@ -97,13 +100,14 @@ export function EmployeeForm<T extends EmployeeRole>({
   );
   const [errorMessage, setErrorMessage] = useState('');
   const [isPending, setIsPending] = useState<boolean>(false);
-
+  const router = useRouter()
+  const pathname = usePathname(); // Get the current pathname
   const form = useForm<EmployeeFormValue<T>>({
     resolver: zodResolver(employeeSchema(roles)), // Dynamically use the roles array for schema
     mode: 'all',
     defaultValues: {
       role: oldEmployee?.role ?? roles[0], // Set default role to the first role in the list
-      email: user?.email,
+      email: emailParam || user?.email,
       salary: oldEmployee?.salary
     }
   });
@@ -122,6 +126,15 @@ export function EmployeeForm<T extends EmployeeRole>({
         setErrorMessage('');
       }
       setIsPending(false)
+    }
+  };
+
+  const navToCreateUser = async () => {
+    const isValid = await form.trigger('email');
+    if (isValid) {
+      const email = form.getValues('email');
+      const newUserUrl = `/auth/new-user?mode=create&email=${encodeURIComponent(email)}&callbackUrl=${encodeURIComponent(pathname)}`;
+      router.push(newUserUrl)
     }
   };
 
@@ -222,19 +235,30 @@ export function EmployeeForm<T extends EmployeeRole>({
                           placeholder="Enter employee's email"
                           {...field}
                         />
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={searchUser}
-                        >
-                          <SearchIcon className="h-4 w-4" />
-                          <span className="hidden md:inline">Search</span>
-                        </Button>
+                        {(!user || user?.email !== form.getValues('email')) && <>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={navToCreateUser}
+                          >
+                            <PlusIcon className="h-4 w-4" />
+                            <span className="hidden md:inline">Create</span>
+                          </Button>
+
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={searchUser}
+                          >
+                            <SearchIcon className="h-4 w-4" />
+                            <span className="hidden md:inline">Search</span>
+                          </Button>
+                        </>}
                       </div>
                     </FormControl>
                     <FormDescription>
                       Enter a valid email address and click "Search" to find an
-                      existing employee.
+                      existing employee or "Create" to register the employee before searching
                     </FormDescription>
                     <FormMessage />
                   </FormItem>

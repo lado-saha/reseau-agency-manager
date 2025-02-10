@@ -31,6 +31,7 @@ import { Station } from '@/lib/models/station';
 import { SortingDirection } from '@/lib/models/helpers';
 import { GridStations, stationTableSortingOptions, TableStations } from './table-station';
 import { PlaceAddress } from '@/lib/repo/osm-place-repo';
+import MapStations from '../maps-station';
 
 export default function StationListView({
   stations,
@@ -45,20 +46,20 @@ export default function StationListView({
   sortDirection: SortingDirection;
   sortOption: string;
 }) {
-  const MyMapStations = useMemo(
-    () =>
-      dynamic(() => import('@/components/maps-station'), {
-        loading: () => (
-          <Loading
-            className="py-64"
-            variant="inline"
-            message="Loading Map..."
-          />
-        ),
-        ssr: false
-      }),
-    []
-  );
+  // const MyMapStations = useMemo(
+  //   () =>
+  //     dynamic(() => import('@/components/maps-station'), {
+  //       loading: () => (
+  //         <Loading
+  //           className="py-64"
+  //           variant="inline"
+  //           message="Loading Map..."
+  //         />
+  //       ),
+  //       ssr: false
+  //     }),
+  //   []
+  // );
   const [currentView, setCurrentView] = useState<
     'mapview' | 'tableview' | 'gridview'
   >('tableview');
@@ -214,7 +215,7 @@ export default function StationListView({
       {/* Content */}
       <div>
         {currentView === 'mapview' ? (
-          <MyMapStations
+          <MapStations
             posix={[mapCenter[0], mapCenter[1]]}
             zoom={mapZoom}
             stations={stations}

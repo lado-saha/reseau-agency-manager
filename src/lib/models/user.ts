@@ -3,8 +3,9 @@ export interface User {
   name: string,
   email: string;
   passwordHash: string;
-  role: string;
   sex: 'male' | 'female',
   photo: string | File;
-  phone: string
+  phone: string;
+  signupComplete: boolean;
+  recruitable: boolean
 }
