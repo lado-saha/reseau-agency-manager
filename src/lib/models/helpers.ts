@@ -1,25 +1,29 @@
 /*
+ *
  * Definition file contains helper export classes and types
  */
 // Location export class to represent the physical location of a Station
 
-import { format } from 'date-fns';
 import { Vehicle, VehicleModel } from './resource';
 import { EmployeeRole } from './employee';
+import { object } from 'zod';
+
+export interface Audit {
+  createdOn: Date; // Timestamp when the resource was created
+  updatedOn: Date; // Timestamp when the resource was last updated
+  createdBy: string; // User or system that created the resource
+  updatedBy: string; // User or system that last updated the resource
+}
+
+export function auditUpdOrNew(adminId: string, obj?: Audit): Audit {
+  return obj === undefined ? auditCreate(adminId) : { ...auditUpdate(adminId), createdBy: obj.createdBy, createdOn: obj.createdOn } satisfies Audit
+}
 
 export interface GPSPosition {
   latitude: number;
   longitude: number;
 }
 
-// export interface PlaceAddress extends GPSPosition, Audit {
-//   id: string;
-//   road: string;
-//   suburb: string;
-//   city: string;
-//   state: string;
-//   country: string;
-// }
 export class GeoLocation {
   country: string;
   region: string;
@@ -42,12 +46,8 @@ export class GeoLocation {
   }
 }
 
-export interface Audit {
-  createdOn: Date; // Timestamp when the resource was created
-  updatedOn: Date; // Timestamp when the resource was last updated
-  createdBy: string; // User or system that created the resource
-  updatedBy: string; // User or system that last updated the resource
-}
+
+
 export const AUDIT_EMPTY: Audit = {
   createdBy: '', createdOn: new Date(), updatedBy: '', updatedOn: new Date()
 }
@@ -65,40 +65,11 @@ export const auditUpdate = (by: string) => ({
 });
 
 /**
- * This export class models Audit information and is a memeber of eac export class for tracking and versionning purposes
- */
-export class AuditInfo {
-  createdOn: Date; // Timestamp when the resource was created
-  updatedOn: Date; // Timestamp when the resource was last updated
-  createdBy: string; // User or system that created the resource
-  updatedBy: string; // User or system that last updated the resource
-
-  constructor(createdBy: string) {
-    this.createdOn = new Date();
-    this.updatedOn = new Date();
-    this.createdBy = createdBy;
-    this.updatedBy = createdBy;
-  }
-
-  // Method to update the audit info
-  updateAuditInfo(updatedBy: string): void {
-    this.updatedOn = new Date();
-    this.updatedBy = updatedBy;
-  }
-
-  updatedAuditInfo(updatedBy: string): AuditInfo {
-    this.updatedOn = new Date();
-    this.updatedBy = updatedBy;
-    return this
-  }
-}
-
-/**
  * The different tabs under which we can view a  bus. The all tab shows everything
  */
 export type TabsVehicle = 'all' | 'incoming' | 'outgoing' | 'stationed';
-export type TabsVehicleModel = 'all' | 'car' | 'bus';
-export type TabsVehicleModelDetails = 'info' | 'schema' | 'stats';
+export type TabsVehicleModel = 'all' | 'car' | 'bus' | 'coaster';
+export type TabsVehicleModelDetails = 'info' | 'layout' | 'stats';
 export type TabsAgencyDetails = 'creator-info' | 'basic-info' | 'legal-info' | 'social-media';
 
 export type TabsEmployee<T extends EmployeeRole> = 'all' | T;

@@ -47,7 +47,7 @@ import {
 import { User } from '@/lib/models/user';
 import { Employee, EmployeeRole, roleLabels } from '@/lib/models/employee';
 import { saveEmployee, searchUserByEmail } from '@/lib/actions';
-import { Audit, auditCreate, auditUpdate } from '@/lib/models/helpers';
+import { auditCreate } from '@/lib/models/helpers';
 import { ErrorDialog } from '../dialogs/dialog-error';
 import { usePathname, useRouter } from 'next/navigation';
 
@@ -143,15 +143,14 @@ export function EmployeeForm<T extends EmployeeRole>({
     setIsPending(true);
     try {
       if (user) {
-        const audit = id === 'new' ? auditCreate(adminId) : { ...auditUpdate(adminId), createdBy: oldEmployee!!.createdBy, createdOn: oldEmployee!!.createdOn } satisfies Audit
-
         const newEmpl = await saveEmployee<T>(
           {
             id: id,
             role: data.role as T,
             orgId: orgId,
             salary: data.salary,
-            user: user.id, ...audit
+            user: user.id,
+            ...auditCreate(adminId)
           },
           roles,
           adminId

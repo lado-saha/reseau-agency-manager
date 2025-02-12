@@ -22,12 +22,13 @@ import {
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { TabsContent } from '@radix-ui/react-tabs';
 import { VehicleModelForm } from './form-vehicle-model';
-import VehicleModelSchemaEditor from './editor-vehicle-model-schema';
+import VehicleModelLayoutEditor from './editor-vehicle-model-schema';
 
 export function VehicleModelDetailView({
-  originalModel
+  id, originalModel, adminId, agencyId
 }: {
-  originalModel: VehicleModel | undefined;
+  id: string, originalModel: VehicleModel | undefined;
+  adminId: string, agencyId: string
 }) {
   const mode: DetailViewMode =
     originalModel !== undefined ? 'edit-mode' : 'creation-mode';
@@ -79,7 +80,7 @@ export function VehicleModelDetailView({
 
         <div className="ml-auto flex items-center gap-2 ">
           <>
-            {tab === 'schema' ? (
+            {tab === 'layout' ? (
               <Button
                 size="sm"
                 variant={'outline'}
@@ -132,23 +133,9 @@ export function VehicleModelDetailView({
 
       <TabsContent value={tab} className="overflow-x-hidden">
         {tab === 'info' ? (
-          <VehicleModelSchemaEditor
-            rows={rows}
-            columns={columns}
-            matrix={matrix}
-            setMatrixChange={setMatrix}
-            setColumnsChange={setColumns}
-            setRowsChange={setRows}
-          />
+          <VehicleModelForm id={id}agencyId={agencyId} adminId={adminId} onSubmitCompleteAction={() => { }} originalModel={originalModel} />
         ) : (
-          <VehicleModelSchemaEditor
-            rows={rows}
-            columns={columns}
-            matrix={matrix}
-            setMatrixChange={setMatrix}
-            setColumnsChange={setColumns}
-            setRowsChange={setRows}
-          />
+          <></>
         )}
       </TabsContent>
     </Tabs>

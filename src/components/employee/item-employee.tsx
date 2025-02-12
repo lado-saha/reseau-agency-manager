@@ -36,7 +36,7 @@ import { DeleteDialog } from '@/components/dialogs/dialog-delete';
 interface EmployeeItemProps<T extends EmployeeRole> {
   employee: Employee<T>;
   currentTab: TabsEmployee<T>;
-  navToDetails: (id: string) => void;
+  detailsAction: (id: string) => void;
   deleteAction: (id: string) => void;
 }
 export const roleIcons: Record<EmployeeRole, JSX.Element> = {
@@ -64,7 +64,7 @@ const renderRoleBadge = (role: EmployeeRole) => {
 export function EmployeeTableItem<T extends EmployeeRole>({
   employee,
   currentTab,
-  navToDetails,
+  detailsAction,
   deleteAction
 }: EmployeeItemProps<T>) {
   const user = employee.user as User;
@@ -102,7 +102,7 @@ export function EmployeeTableItem<T extends EmployeeRole>({
               <span className="sr-only">Toggle menu</span>
             </Button>
           </DropdownMenuTrigger>
-          {DropdownMenuEmployee(employee, navToDetails, deleteAction)}
+          {DropdownMenuEmployee(employee, detailsAction, deleteAction)}
         </DropdownMenu>
       </TableCell>
     </TableRow>
@@ -111,7 +111,7 @@ export function EmployeeTableItem<T extends EmployeeRole>({
 
 export function DropdownMenuEmployee<T extends EmployeeRole>(
   employee: Employee<T>,
-  navToDetails: (id: string) => void,
+  detailsAction: (id: string) => void,
   deleteAction: (id: string) => void
 ) {
   return (
@@ -119,7 +119,7 @@ export function DropdownMenuEmployee<T extends EmployeeRole>(
       <DropdownMenuLabel>Actions</DropdownMenuLabel>
       <DropdownMenuItem
         className="cursor-pointer h-8 my-1"
-        onClick={() => navToDetails(employee.id)}
+        onClick={() => detailsAction(employee.id)}
       >
         <span className="w-full h-full text-start my-2">Details</span>
       </DropdownMenuItem>
@@ -139,7 +139,7 @@ export function DropdownMenuEmployee<T extends EmployeeRole>(
 export function EmployeeGridItem<T extends EmployeeRole>({
   employee,
   currentTab,
-  navToDetails,
+  detailsAction,
   deleteAction
 }: EmployeeItemProps<T>) {
   const user = employee.user as User;
@@ -156,7 +156,7 @@ export function EmployeeGridItem<T extends EmployeeRole>({
             <MoreVertical className="h-5 w-5" />
           </Button>
         </DropdownMenuTrigger>
-        {DropdownMenuEmployee<T>(employee, navToDetails, deleteAction)}
+        {DropdownMenuEmployee<T>(employee, detailsAction, deleteAction)}
       </DropdownMenu>
 
       {/* Employee Image */}

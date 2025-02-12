@@ -29,7 +29,7 @@ export interface PropsEmployees<T extends EmployeeRole> {
   offset: number;
   totalEmployees: number;
   currentTab: TabsEmployee<T>;
-  navToDetails: (id: string) => void;
+  detailsAction: (id: string) => void;
   deleteAction: (id: string) => void;
 }
 
@@ -130,7 +130,7 @@ export function TableEmployees<T extends EmployeeRole>({
   offset,
   totalEmployees,
   currentTab,
-  navToDetails,
+  detailsAction,
   deleteAction
 }: PropsEmployees<T>) {
   return (
@@ -162,7 +162,7 @@ export function TableEmployees<T extends EmployeeRole>({
           <TableBody>
             {employees.map((employee) => (
               <EmployeeTableItem
-                navToDetails={navToDetails}
+                detailsAction={detailsAction}
                 key={employee.id}
                 employee={employee}
                 currentTab={currentTab}
@@ -182,7 +182,7 @@ export function GridEmployees<T extends EmployeeRole>({
   offset,
   totalEmployees,
   currentTab,
-  navToDetails,
+  detailsAction,
   deleteAction
 }: PropsEmployees<T>) {
   return (
@@ -197,7 +197,7 @@ export function GridEmployees<T extends EmployeeRole>({
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {employees.map((employee) => (
             <EmployeeGridItem
-              navToDetails={navToDetails}
+              detailsAction={detailsAction}
               key={employee.id}
               employee={employee}
               deleteAction={deleteAction}

@@ -10,33 +10,42 @@ import {
 } from '@/components/ui/dropdown-menu';
 import {
   BusFrontIcon,
+  BusIcon,
   CarTaxiFront,
   MoreHorizontal,
   MoreVertical
 } from 'lucide-react';
 import { TableCell, TableRow } from '@/components/ui/table';
-import { VehicleModel } from '@/lib/models/resource';
 import { TabsVehicleModel } from '@/lib/models/helpers';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { format } from 'date-fns';
+import { VehicleModel } from '@/lib/models/resource';
+import { DeleteDialog } from '../dialogs/dialog-delete';
 
 interface VehicleModelItemProps {
   model: VehicleModel;
-  currentTab: TabsVehicleModel;
+  tab: TabsVehicleModel;
+  archiveAction: (id: string) => void;
+  detailsAction: (id: string) => void,
 }
 
 /** Bus or Car */
 function renderTypeBadge(model: VehicleModel) {
   return (
     <Badge variant="default" className="items-center bg-gray-500 text-white">
-      {model.numberSeats < 8 ? (
+      {model.seatCount < 8 ? (
         <>
           <CarTaxiFront className="mr-2 h-4 w-4" />
           <span className="text-sm">Car</span>
         </>
-      ) : (
+      ) : model.seatCount < 50 ? (
         <>
           <BusFrontIcon className="mr-2 h-4 w-4" />
+          <span className="text-sm">Coaster</span>
+        </>
+      ) : (
+        <>
+          <BusIcon className="mr-2 h-4 w-4" />
           <span className="text-sm">Bus</span>
         </>
       )}
@@ -46,7 +55,8 @@ function renderTypeBadge(model: VehicleModel) {
 
 export function VehicleModelTableItem({
   model,
-  currentTab
+  tab,
+  archiveAction, detailsAction
 }: VehicleModelItemProps) {
   return (
     <TableRow>
@@ -62,14 +72,12 @@ export function VehicleModelTableItem({
       </TableCell>
 
       {/* Vehicle Details */}
-      <TableCell className="font-medium">{model.modelName}</TableCell>
-      <TableCell>{model.numberSeats}</TableCell>
-      {currentTab === 'all' && <TableCell>{renderTypeBadge(model)}</TableCell>}
-
-      <TableCell>{model.manufacturer}</TableCell>
+      <TableCell className="font-medium">{model.name}</TableCell>
+      <TableCell>{model.seatCount}</TableCell>
+      {tab === 'all' && <TableCell>{renderTypeBadge(model)}</TableCell>}
       <TableCell>{model.fuelType}</TableCell>
-      <TableCell>{format(model.auditInfo.createdOn, 'Pp')}</TableCell>
-      <TableCell>{format(model.auditInfo.updatedOn, 'Pp')}</TableCell>
+      <TableCell>{model.luggageSpace}</TableCell>
+      <TableCell>{format(model.createdOn, 'PP')}</TableCell>
 
       {/* Action Menu */}
       <TableCell>
@@ -80,38 +88,39 @@ export function VehicleModelTableItem({
               <span className="sr-only">Toggle menu</span>
             </Button>
           </DropdownMenuTrigger>
-          {DropdownMenuVehicleModel(model)}
+          {DropdownMenuVehicleModel({model, detailsAction, tab, archiveAction})}
         </DropdownMenu>
       </TableCell>
     </TableRow>
   );
 }
 
-function DropdownMenuVehicleModel(model: VehicleModel) {
+function DropdownMenuVehicleModel({ model, detailsAction, tab, archiveAction }: VehicleModelItemProps) {
   return (
     <DropdownMenuContent align="end">
       <DropdownMenuLabel>Actions</DropdownMenuLabel>
-      <DropdownMenuItem>
-        <button
-          type="submit"
-          onClick={
-            () => {}
-            // viewOnMap(
-            //   vehicle.positionGps.latitude,
-            //   vehicle.positionGps.longitude
-            // )
-          }
-        >
-          View Details
-        </button>
+      <DropdownMenuItem className='cursor-pointer h-8 my-1' onClick={() =>
+        detailsAction(model.id)
+      }>
+        <span className='w-full h-full text-start my-2'>View Details</span>
       </DropdownMenuItem>
+
+      <DeleteDialog
+        title="DANGER!!!! Archive Vehicle Model"
+        triggerText='Archive'
+        description={`Are you sure you want to archive the vehicle model: ${model.name}? This action can be undone later, yet all vehicles of this model will be archived too and no booking will be possible on them`}
+        onDeleteAction={() => {
+          archiveAction(model.id);
+        }} mode='archive'
+      />
+
     </DropdownMenuContent>
   );
 }
 
 export function VehicleModelGridItem({
   model,
-  currentTab
+  tab, detailsAction, archiveAction
 }: VehicleModelItemProps) {
   return (
     <Card className="relative overflow-hidden shadow-md">
@@ -126,14 +135,14 @@ export function VehicleModelGridItem({
             <MoreVertical className="h-5 w-5" />
           </Button>
         </DropdownMenuTrigger>
-        {DropdownMenuVehicleModel(model)}
+        {DropdownMenuVehicleModel({model, detailsAction, tab, archiveAction})}
       </DropdownMenu>
 
       {/* Vehicle Image */}
       <div className="relative w-full h-32">
         <Image
           src={'' || '/placeholder.svg'}
-          alt="Vehicle image"
+          alt="Vehicle Model image"
           fill
           className="object-cover"
         />
@@ -142,21 +151,20 @@ export function VehicleModelGridItem({
       {/* Card Content */}
       <CardContent className="flex flex-col items-center space-y-0 text-center">
         <div className="py-2">
-          {currentTab === 'all' ? renderTypeBadge(model) : null}
+          {tab === 'all' ? renderTypeBadge(model) : null}
         </div>
 
         {/* Vehicle Details */}
-        <CardTitle>{model.modelName}</CardTitle>
+        <CardTitle>{model.name}</CardTitle>
         <div className="text-md text-muted-foreground py-1">
-          <span>By</span>
-          <span className="font-semibold ml-1">{model.manufacturer}</span>
+          <span className="font-semibold ml-1">{model.seatCount} Seats</span>
         </div>
 
         {/* Additional Info */}
         <div className="grid grid-cols-2 gap-4 items-center text-sm mt-3 w-full">
           <div>
-            <span className="block text-muted-foreground">Seats</span>
-            <span>{model.numberSeats}</span>
+            <span className="block text-muted-foreground">Luggage</span>
+            <span>{model.luggageSpace}</span>
           </div>
 
           <div>
@@ -169,13 +177,13 @@ export function VehicleModelGridItem({
       {/* Footer Metadata */}
       <div className="border-t mt-1 py-2 text-xs  flex flex-col px-4 ">
         <div className="flex justify-between text-muted-foreground">
-          <span>Added On</span>
+          <span>Created On</span>
           <span>Last Updated On</span>
         </div>
         <div className="flex justify-between">
-          <span>{format(model.auditInfo.createdOn, 'Pp')}</span>
+          <span>{format(model.createdOn, 'PP')}</span>
           <span className="text-end">
-            {format(model.auditInfo.updatedOn, 'Pp')}
+            {format(model.updatedOn, 'Pp')}
           </span>
         </div>
       </div>

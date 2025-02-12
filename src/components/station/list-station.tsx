@@ -100,12 +100,12 @@ export default function StationListView({
   function deleteAction(id: string): void {
   }
 
-  function navToDetails(id: string): void {
+  function detailsAction(id: string): void {
     router.push(`${pathname}/${id}`);
   }
 
   function handleNewClick(): void {
-    navToDetails('new')
+    detailsAction('new')
   }
 
   return (
@@ -227,7 +227,7 @@ export default function StationListView({
             onZoomChangeAction={(zoom: SetStateAction<number>) => {
               setMapZoom(zoom);
             }}
-            deleteAction={deleteAction} navToDetailsAction={navToDetails}
+            deleteAction={deleteAction} detailsAction={detailsAction}
             viewOnMapAction={() => { }}
           />
         ) : currentView === 'tableview' ? (
@@ -235,14 +235,14 @@ export default function StationListView({
             stations={stations}
             totalStations={totalStations}
             offset={offset}
-            viewOnMapAction={viewStationOnMap} deleteAction={deleteAction} navToDetailsAction={navToDetails}
+            viewOnMapAction={viewStationOnMap} deleteAction={deleteAction} detailsAction={detailsAction}
           />
         ) : (
           <GridStations
             stations={stations}
             totalStations={totalStations}
             offset={offset}
-            viewOnMapAction={viewStationOnMap} deleteAction={deleteAction} navToDetailsAction={navToDetails}
+            viewOnMapAction={viewStationOnMap} deleteAction={deleteAction} detailsAction={detailsAction}
           />
         )}
       </div>

@@ -27,14 +27,14 @@ interface StationItemProps {
   station: Station;
   viewOnMap: (lat: number, lon: number) => void;
   deleteAction: (id: string) => void;
-  navToDetails: (id: string) => void,
+  detailsAction: (id: string) => void,
 }
 
 
 
 export function StationTableItem({
   station,
-  viewOnMap, deleteAction, navToDetails
+  viewOnMap, deleteAction, detailsAction
 }: StationItemProps) {
   return (
     <TableRow>
@@ -67,7 +67,7 @@ export function StationTableItem({
               <span className="sr-only">Toggle menu</span>
             </Button>
           </DropdownMenuTrigger>
-          {DropdownMenuStation({ station, viewOnMap, deleteAction, navToDetails })}
+          {DropdownMenuStation({ station, viewOnMap, deleteAction, detailsAction })}
         </DropdownMenu>
       </TableCell>
     </TableRow>
@@ -78,7 +78,7 @@ function DropdownMenuStation({
   station,
   viewOnMap,
   deleteAction,
-  navToDetails
+  detailsAction
 }: StationItemProps
 ) {
   return (
@@ -93,7 +93,7 @@ function DropdownMenuStation({
         <span className='w-full h-full text-start my-2'>See on Map</span>
       </DropdownMenuItem>
       <DropdownMenuItem className='cursor-pointer h-8 my-1' onClick={() =>
-        navToDetails(station.id)
+        detailsAction(station.id)
       }>
 
         <span className='w-full h-full text-start my-2'>Details</span>
@@ -104,7 +104,7 @@ function DropdownMenuStation({
         description={`Are you sure you want to station the station ${station.name}? This action can be undone later.`}
         onDeleteAction={() => {
           deleteAction(station.id);
-        }}
+        }} mode='archive'
       />
     </DropdownMenuContent>
   )
@@ -114,7 +114,7 @@ export function StationGridItem({
   station,
   viewOnMap,
   deleteAction,
-  navToDetails
+  detailsAction
 }: StationItemProps) {
   return (
     <Card className="relative overflow-hidden shadow-md">
@@ -129,7 +129,7 @@ export function StationGridItem({
             <MoreVertical className="h-5 w-5" />
           </Button>
         </DropdownMenuTrigger>
-        {DropdownMenuStation({ station, viewOnMap, deleteAction, navToDetails })}
+        {DropdownMenuStation({ station, viewOnMap, deleteAction, detailsAction })}
       </DropdownMenu>
 
       {/* Station Image */}
@@ -180,7 +180,7 @@ export function StationGridItem({
   );
 }
 
-export function StationMapTooltip({ station, deleteAction, navToDetails }: StationItemProps) {
+export function StationMapTooltip({ station, deleteAction, detailsAction }: StationItemProps) {
   return (
     <Card className="flex flex-col items-center text-center stroke-none border-none p-1">
       <span className="text-sm">{station.name}</span>

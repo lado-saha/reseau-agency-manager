@@ -22,27 +22,28 @@ import { PAGE_OFFSET } from '@/lib/utils';
 import {
   VehicleModelGridItem,
   VehicleModelTableItem
-} from '@/components/vehicles/item-vehicle-model';
+} from '@/components/vehicle/item-vehicle-model';
 
 export interface PropsVehicleModels {
   models: VehicleModel[];
   offset: number;
   totalModels: number;
-  currentTab: TabsVehicleModel;
+  tab: TabsVehicleModel;
+  archiveAction: (id: string) => void;
+  detailsAction: (id: string) => void,
 }
 
 // export const columns: ColumnDef<Payment>[] = []
 
-export function vehicleModelSortingOptions(currentTab: string) {
+export function vehicleModelSortingOptions() {
   // Default options for 'all' tab
   const defaultOptions = [
-    { displayName: 'Name', fieldName: 'modelName' },
-    { displayName: 'Seat Count', fieldName: 'numberSeats' },
+    { displayName: 'Name', fieldName: 'name' },
+    { displayName: 'Seat Count', fieldName: 'seatCount' },
     { display: 'Type', fieldname: 'type' },
-    { displayName: 'Manufacturer', fieldName: 'manufacturer' },
     { displayName: 'Fuel Type', fieldName: 'fuelType' },
-    { displayName: 'Added On', fieldName: 'auditInfo.addedOn' },
-    { displayName: 'Updated On', fieldName: 'auditInfo.updatedOn' }
+    { displayName: 'Luggage Space', fieldName: 'luggageSpace' },
+    { displayName: 'Created On', fieldName: 'createdOn' },
   ];
 
   // Additional options for specific tabs
@@ -129,14 +130,14 @@ export function TableVehicleModels({
   models,
   offset,
   totalModels,
-  currentTab
+  tab, archiveAction, detailsAction
 }: PropsVehicleModels) {
   return (
     <Card>
       <CardHeader>
         <CardTitle>Vehicle Models</CardTitle>
         <CardDescription>
-          Add reusable models for your vehicles.
+          Add reusable models with seat layouts for your vehicles.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -148,14 +149,11 @@ export function TableVehicleModels({
               </TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Seat Count</TableHead>
-              {currentTab === 'all' && <TableHead>Type</TableHead>}
-              <TableHead>Manufacturer</TableHead>
+              {tab === 'all' && <TableHead>Type</TableHead>}
               <TableHead>Fuel Type</TableHead>
+              <TableHead>Luggage Space</TableHead>
               <TableHead>
-                <span className="italic">Added On</span>
-              </TableHead>
-              <TableHead>
-                <span className="italic">Updated On</span>
+                Created On
               </TableHead>
               <TableHead>
                 <span className="sr-only">Actions</span>
@@ -167,7 +165,8 @@ export function TableVehicleModels({
               <VehicleModelTableItem
                 key={model.id}
                 model={model}
-                currentTab={currentTab}
+                tab={tab}
+                archiveAction={archiveAction} detailsAction={detailsAction}
               />
             ))}
           </TableBody>
@@ -182,7 +181,7 @@ export function GridVehicleModels({
   models,
   offset,
   totalModels,
-  currentTab
+  tab, detailsAction, archiveAction
 }: PropsVehicleModels) {
   return (
     <Card>
@@ -198,7 +197,8 @@ export function GridVehicleModels({
             <VehicleModelGridItem
               key={model.id}
               model={model}
-              currentTab={currentTab}
+              tab={tab}
+              archiveAction={archiveAction} detailsAction={detailsAction}
             />
           ))}
         </div>

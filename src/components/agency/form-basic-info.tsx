@@ -47,6 +47,7 @@ import {
 } from '../ui/card';
 import { AgencyBasicInfo, AgencyRoles } from '@/lib/models/agency';
 import { saveAgencyBasicInfo } from '@/lib/actions';
+import { ErrorDialog } from '../dialogs/dialog-error';
 
 // Define the schema for the Agency Info form using Zod
 const agencyInfoSchema = z.object({
@@ -548,13 +549,13 @@ export function BasicInfoForm({
                 Save
               </Button>
               {/* Error Message */}
-              {errorMessage && (
-                <div className="flex items-center gap-2 text-sm text-red-500 w-full">
-                  <MessageSquareWarningIcon className="h-5 w-5" />
-                  <p>{errorMessage}</p>
-                </div>
-              )}
-            </div>
+              <ErrorDialog
+                isOpen={errorMessage !== ''}
+                onCloseAction={() => setErrorMessage('')}
+                title="Error Occurred"
+                description={errorMessage}
+              />
+
           </form>
         </Form>
       </CardContent>

@@ -1,4 +1,4 @@
-import { Audit, AuditInfo } from '@/lib/models/helpers'
+import { Audit } from '@/lib/models/helpers'
 import { User } from '@/lib/models/user';
 
 export const roleLabels: Record<AgencyEmployeeRole | StationEmployeeRole, string> = {

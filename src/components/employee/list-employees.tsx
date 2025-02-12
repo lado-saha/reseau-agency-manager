@@ -215,7 +215,7 @@ export default function EmployeeListView<T extends EmployeeRole>({
             totalEmployees={totalEmployees}
             offset={offset}
             currentTab={tab}
-            navToDetails={navToDetailView}
+            detailsAction={navToDetailView}
             deleteAction={() => { }}
           />
         ) : (
@@ -228,7 +228,7 @@ export default function EmployeeListView<T extends EmployeeRole>({
             totalEmployees={totalEmployees}
             offset={offset}
             currentTab={tab}
-            navToDetails={navToDetailView}
+            detailsAction={navToDetailView}
             deleteAction={() => { }}
           />
         )}

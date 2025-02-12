@@ -37,7 +37,7 @@ function MapStationsComponent({
   onCenterChangeAction: onCenterChange,
   onZoomChangeAction: onZoomChange,
   deleteAction,
-  navToDetailsAction
+  detailsAction
 }: PropsStations & MapProps) {
   return (
     <div className="w-full h-[calc(100vh-64px)]">
@@ -71,7 +71,7 @@ function MapStationsComponent({
                   station={station}
                   viewOnMap={() => { }}
                   deleteAction={deleteAction}
-                  navToDetails={navToDetailsAction}
+                  detailsAction={detailsAction}
                 />
               </Tooltip>
               <Popup keepInView={true} closeButton={false} autoPan={true}>
@@ -79,7 +79,7 @@ function MapStationsComponent({
                   viewOnMap={() => { }}
                   station={station}
                   deleteAction={deleteAction}
-                  navToDetails={navToDetailsAction}
+                  detailsAction={detailsAction}
                 />
               </Popup>
             </Marker>

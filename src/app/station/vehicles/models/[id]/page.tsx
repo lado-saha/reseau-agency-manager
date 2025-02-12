@@ -1,10 +1,10 @@
-import { VehicleModelRepository } from '@/lib/repo/json-repository';
 import { VehicleModel } from '@/lib/models/resource';
 import { Suspense } from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { VehicleModelDetailView } from '@/components/vehicles/details-vehicle-model';
 import Loading from '@/app/agency/loading';
+import { VehicleModelDetailView } from '@/components/vehicle/details-vehicle-model';
+import { VehicleModelRepository } from '@/lib/repo/vechicle-model-repo';
 export const metadata: Metadata = {
   title: 'Station | Vehicle Models'
 };

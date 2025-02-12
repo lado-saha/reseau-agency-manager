@@ -14,7 +14,6 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import {
-  ReadonlyURLSearchParams,
   usePathname,
   useRouter,
   useSearchParams
@@ -32,7 +31,7 @@ export interface PropsStations {
   totalStations: number;
   viewOnMapAction: (lat: number, lon: number) => void;
   deleteAction: (id: string) => void;
-  navToDetailsAction: (id: string) => void,
+  detailsAction: (id: string) => void,
 }
 
 export function stationTableSortingOptions() {
@@ -42,7 +41,7 @@ export function stationTableSortingOptions() {
     { displayName: 'Chief Name', fieldName: 'chief.name' },
     { displayName: 'Chief Email', fieldName: 'chief.email' },
     { displayName: 'Address', fieldName: 'address' },
-    { displayName: 'Created On', fieldName: 'createOn' }
+    { displayName: 'Created On', fieldName: 'createdOn' }
   ];
 
   // Combine the default options with the additional ones
@@ -130,7 +129,7 @@ export function TableStations({
   stations,
   offset,
   totalStations,
-  viewOnMapAction: viewOnMap, deleteAction, navToDetailsAction: navToDetails
+  viewOnMapAction: viewOnMap, deleteAction, detailsAction: detailsAction
 }: PropsStations) {
   return (
     <Card>
@@ -162,7 +161,7 @@ export function TableStations({
               <StationTableItem
                 viewOnMap={viewOnMap}
                 key={station.id}
-                station={station} deleteAction={deleteAction} navToDetails={navToDetails} />
+                station={station} deleteAction={deleteAction} detailsAction={detailsAction} />
             ))}
           </TableBody>
         </Table>
@@ -176,7 +175,7 @@ export function GridStations({
   stations,
   offset,
   totalStations,
-  viewOnMapAction: viewOnMap, deleteAction, navToDetailsAction: navToDetails
+  viewOnMapAction: viewOnMap, deleteAction, detailsAction: detailsAction
 }: PropsStations) {
   return (
     <Card>
@@ -193,7 +192,7 @@ export function GridStations({
               viewOnMap={viewOnMap}
               key={station.id}
               station={station}
-              deleteAction={deleteAction} navToDetails={navToDetails}
+              deleteAction={deleteAction} detailsAction={detailsAction}
             />
           ))}
         </div>

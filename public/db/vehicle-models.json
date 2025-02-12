@@ -1,122 +1,123 @@
 [
   {
     "id": "1",
-    "manufacturer": "Manufacturer Name",
-    "modelName": "Tesla",
-    "seatBitmask": "101111",
-    "numberSeats": 5,
-    "matrix": null,
+    "name": "Tesla",
+    "seatLayout": "101111",
+    "seatCount": 5,
+    "fuelType": "Petrol",
+    "luggageSpace": true,
     "columns": 3,
-    "auditInfo": {
-      "createdOn": "2025-01-16T09:35:51+01:00",
-      "createdBy": "admin",
-      "updatedBy": "admin",
-      "updatedOn": "2025-01-16T09:35:51+01:00"
-    }
+    "createdOn": "2025-01-16T09:35:51+01:00",
+    "createdBy": "admin",
+    "updatedBy": "admin",
+    "updatedOn": "2025-01-16T09:35:51+01:00"
   },
   {
     "id": "2",
-    "manufacturer": "Toyota",
-    "modelName": "Bus Model X",
-    "seatBitmask": "000011111011111011111000111011111011111011111011111011111011111011111000111011111011111111",
-    "numberSeats": 69,
-    "matrix": null,
+    "name": "Bus Model X",
+    "seatLayout": "000011111011111011111000111011111011111011111011111011111011111011111000111011111011111111",
+    "seatCount": 69,
+    "fuelType": "Petrol",
+    "luggageSpace": true,
     "columns": 6,
-    "auditInfo": {
-      "createdOn": "2025-01-16T09:38:09+01:00",
-      "createdBy": "admin",
-      "updatedBy": "admin",
-      "updatedOn": "2025-01-16T09:38:09+01:00"
-    }
+    "createdOn": "2025-01-16T09:38:09+01:00",
+    "createdBy": "admin",
+    "updatedBy": "admin",
+    "updatedOn": "2025-01-16T09:38:09+01:00"
   },
   {
     "id": "3",
-    "manufacturer": "Ferari",
-    "modelName": "Bus Model X",
-    "seatBitmask": "000001101111011110111101111011110111101111011110111101111011110111101111111",
-    "numberSeats": 57,
-    "matrix": null,
+    "name": "Bus Model X",
+    "seatLayout": "000001101111011110111101111011110111101111011110111101111011110111101111111",
+    "seatCount": 57,
+    "fuelType": "Petrol",
+    "luggageSpace": true,
     "columns": 5,
-    "auditInfo": {
-      "createdOn": "2025-01-16T09:39:10+01:00",
-      "createdBy": "admin",
-      "updatedBy": "admin",
-      "updatedOn": "2025-01-16T09:39:10+01:00"
-    }
+    "createdOn": "2025-01-16T09:39:10+01:00",
+    "createdBy": "admin",
+    "updatedBy": "admin",
+    "updatedOn": "2025-01-16T09:39:10+01:00"
   },
   {
     "id": "4",
-    "manufacturer": "Mercedes",
-    "modelName": "Bus Model Y",
-    "seatBitmask": "111000111111111000000000111000111111111000111111111111110000111111111000111111111111111",
-    "numberSeats": 45,
-    "matrix": null,
+    "name": "Bus Model Y",
+    "seatLayout": "111000111111111000000000111000111111111000111111111111110000111111111000111111111111111",
+    "seatCount": 45,
+    "fuelType": "Petrol",
+    "luggageSpace": true,
     "columns": 4,
-    "auditInfo": {
-      "createdOn": "2025-01-16T09:45:00+01:00",
-      "createdBy": "admin",
-      "updatedBy": "admin",
-      "updatedOn": "2025-01-16T09:45:00+01:00"
-    }
+    "createdOn": "2025-01-16T09:45:00+01:00",
+    "createdBy": "admin",
+    "updatedBy": "admin",
+    "updatedOn": "2025-01-16T09:45:00+01:00"
   },
   {
     "id": "10",
-    "manufacturer": "Nissan",
-    "modelName": "Altima",
-    "seatBitmask": "11111",
-    "numberSeats": 5,
-    "matrix": null,
+    "name": "Altima",
+    "seatLayout": "11111",
+    "seatCount": 5,
+    "fuelType": "Petrol",
+    "luggageSpace": true,
     "columns": 3,
-    "auditInfo": {
-      "createdOn": "2025-01-16T10:35:10+01:00",
-      "createdBy": "admin",
-      "updatedBy": "admin",
-      "updatedOn": "2025-01-16T10:35:10+01:00"
-    }
+    "createdOn": "2025-01-16T10:35:10+01:00",
+    "createdBy": "admin",
+    "updatedBy": "admin",
+    "updatedOn": "2025-01-16T10:35:10+01:00"
   },
   {
     "id": "11",
-    "manufacturer": "Hyundai",
-    "modelName": "Sonata",
-    "seatBitmask": "111100000011110000000000",
-    "numberSeats": 6,
-    "matrix": null,
+    "name": "Sonata",
+    "seatLayout": "111100000011110000000000",
+    "seatCount": 6,
+    "fuelType": "Petrol",
+    "luggageSpace": true,
     "columns": 3,
-    "auditInfo": {
-      "createdOn": "2025-01-16T10:40:00+01:00",
-      "createdBy": "admin",
-      "updatedBy": "admin",
-      "updatedOn": "2025-01-16T10:40:00+01:00"
-    }
+    "createdOn": "2025-01-16T10:40:00+01:00",
+    "createdBy": "admin",
+    "updatedBy": "admin",
+    "updatedOn": "2025-01-16T10:40:00+01:00"
   },
   {
     "id": "12",
-    "manufacturer": "Kia",
-    "modelName": "Sorento",
-    "seatBitmask": "1111111",
-    "numberSeats": 7,
-    "matrix": null,
+    "name": "Sorento",
+    "seatLayout": "1111111",
+    "seatCount": 7,
+    "fuelType": "Petrol",
+    "luggageSpace": true,
     "columns": 4,
-    "auditInfo": {
-      "createdOn": "2025-01-16T10:45:30+01:00",
-      "createdBy": "admin",
-      "updatedBy": "admin",
-      "updatedOn": "2025-01-16T10:45:30+01:00"
-    }
+    "createdOn": "2025-01-16T10:45:30+01:00",
+    "createdBy": "admin",
+    "updatedBy": "admin",
+    "updatedOn": "2025-01-16T10:45:30+01:00"
   },
   {
     "id": "13",
-    "manufacturer": "Mazda",
-    "modelName": "CX-5",
-    "seatBitmask": "111110100000",
-    "numberSeats": 6,
-    "matrix": null,
+    "name": "CX-5",
+    "seatLayout": "111110100000",
+    "seatCount": 6,
+    "fuelType": "Petrol",
+    "luggageSpace": true,
     "columns": 3,
-    "auditInfo": {
-      "createdOn": "2025-01-16T10:50:20+01:00",
-      "createdBy": "admin",
-      "updatedBy": "admin",
-      "updatedOn": "2025-01-16T10:50:20+01:00"
-    }
+    "createdOn": "2025-01-16T10:50:20+01:00",
+    "createdBy": "admin",
+    "updatedBy": "admin",
+    "updatedOn": "2025-01-16T10:50:20+01:00"
+  },
+  {
+    "id": "98f59a7f-a487-4487-9a4a-2f1dea27aaa7",
+    "seatCount": 18,
+    "name": "asdf",
+    "seatLayout": "01011011111111",
+    "agencyId": "a820da8d-be78-48ea-87d8-0a510d241ad7",
+    "columns": 7,
+    "fuelType": "diesel",
+    "luggageSpaces": [
+      "inside",
+      "bottom"
+    ],
+    "createdBy": "",
+    "createdOn": "2025-02-12T13:34:34.773Z",
+    "updatedBy": "afd35be5-6642-4c68-87d4-3230ca9d2e4b",
+    "updatedOn": "2025-02-12T14:00:22.651Z"
   }
 ]

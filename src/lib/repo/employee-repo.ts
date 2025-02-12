@@ -55,7 +55,7 @@ export class EmployeeRepository<T extends Employee<EmployeeRole>> extends JsonRe
     if (!employee) {
       throw new Error('This user is not currently employed')
     }
-    return employee
+    return employee;
   }
 
   async getByUserEmail<T extends EmployeeRole>(

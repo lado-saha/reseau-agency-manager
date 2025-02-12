@@ -1,11 +1,11 @@
 import { Station } from '@/lib/models/agency';
-import { AuditInfo } from '@/lib/models/helpers';
+import { Audit } from '@/lib/models/helpers';
 
 export class Trip {
   tripId: string; // Unique identifier for the trip
   fromStation: Station; // Origin station
   toStation: Station; // Destination station
-  auditInfo: AuditInfo; // Trip-specific audit information
+  auditInfo: Audit; // Trip-specific audit information
   vehicles: string[]; // List of vehicles assigned to the trip
   departureDateTime: Date; // Scheduled departure date and time
   arrivalDateTime?: Date; // Optional: Expected arrival date and time
@@ -29,7 +29,7 @@ export class Trip {
     this.tripId = tripId;
     this.fromStation = fromStation;
     this.toStation = toStation;
-    this.auditInfo = new AuditInfo(createdBy);
+    this.auditInfo = new Audit(createdBy);
     this.vehicles = vehicles;
     this.departureDateTime = departureDateTime;
     this.passengersCount = passengersCount;

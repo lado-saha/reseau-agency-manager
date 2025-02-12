@@ -25,7 +25,7 @@ import { Vehicle } from '@/lib/models/resource';
 import {
   VehicleGridItem,
   VehicleTableItem
-} from '@/components/vehicles/item-vehicle';
+} from '@/components/vehicle/item-vehicle';
 import { TabsVehicle } from '@/lib/models/helpers';
 import { PAGE_OFFSET } from '@/lib/utils';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';

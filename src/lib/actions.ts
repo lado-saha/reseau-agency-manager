@@ -13,12 +13,15 @@ import { areArraysEqual } from './utils';
 import { Station } from './models/station';
 import { StationRepository } from './repo/station-repo';
 import { PlaceAddress } from './repo/osm-place-repo';
+import { VehicleModelRepository } from './repo/vechicle-model-repo';
+import { VehicleModel } from './models/resource';
 
 const agencyRepo = new AgencyRepository()
 const stationRepo = new StationRepository()
 const userRepo = new UserRepository()
 const agencyEmpRepo = new AgencyEmployeeRepository()
 const stationEmpRepo = new StationEmployeeRepository()
+const vehicleModelRepo = new VehicleModelRepository()
 
 // Agency actions
 export async function saveAgencyBasicInfo(agencyId: string, basicInfo: AgencyBasicInfo, ownerId?: string,): Promise<{ id: string, basicInfo: AgencyBasicInfo }> {
@@ -102,6 +105,13 @@ export async function saveEmployee<T extends EmployeeRole>(
     );
   }
 
+}
+
+export async function saveVehicleModel(
+  model: VehicleModel,
+  adminId: string
+): Promise<VehicleModel> {
+  return vehicleModelRepo.addVehicleModel(model, adminId)
 }
 
 export async function searchEmployeeByEmail<T extends EmployeeRole>(orgId: string, email: string, roles: T[]): Promise<Employee<T>> {

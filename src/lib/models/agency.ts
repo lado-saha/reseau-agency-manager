@@ -1,7 +1,7 @@
 /**
  * This definition file will contain all definitions relative to an agency
  */
-import { AuditInfo, GeoLocation } from '@/lib/models/helpers';
+import { Audit, GeoLocation } from '@/lib/models/helpers';
 import { LucideFastForward } from 'lucide-react';
 
 // Agency export class with audit information
@@ -9,7 +9,7 @@ export class Agency {
   agencyId: string; // Unique agency identifier
   name: string; // Agency name
   motto: string; // Agency motto
-  auditInfo: AuditInfo; // Composition of AuditInfo for agency-level auditing
+  auditInfo: Audit; // Composition of Audit for agency-level auditing
   logoUrl: string; // URL to agency's logo
   contactInfo: { phone: string; email?: string }; // Optional contact info for the agency
   settings: { [key: string]: any }; // Additional customizable settings for the Agency(e.g., operating hours, etc.)
@@ -26,7 +26,7 @@ export class Agency {
     this.agencyId = agencyId;
     this.name = name;
     this.motto = motto;
-    this.auditInfo = new AuditInfo(createdBy);
+    this.auditInfo = new Audit(createdBy);
     this.logoUrl = logoUrl;
     this.contactInfo = contactInfo;
     this.settings = settings;
@@ -41,7 +41,7 @@ export class Agency {
 export class Station {
   name: string; // Station name
   agency: AgencyInfo; // Associated agency
-  auditInfo: AuditInfo; // Station-specific audit information
+  auditInfo: Audit; // Station-specific audit information
   location: GeoLocation; // Station's physical location
   photosUrls: string[]; // URLs to photos related to the station
   settings: { [key: string]: any }; // Additional customizable settings for the station (e.g., operating hours, etc.)
@@ -56,7 +56,7 @@ export class Station {
   ) {
     this.name = name;
     this.agency = agency;
-    this.auditInfo = new AuditInfo(createdBy);
+    this.auditInfo = new Audit(createdBy);
     this.location = location;
     this.photosUrls = photosUrls;
     this.settings = settings;
