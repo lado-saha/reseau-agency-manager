@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { convertBitmaskToMatrix, convertMatrixToBitmask, FUEL_TYPES, FuelType, LUGGAGE_SPACES, LuggagSpace, VehicleModel, originalModelRowCount } from '@/lib/models/resource';
+import { convertBitmaskToMatrix, convertMatrixToBitmask, FUEL_TYPES, FuelType, LUGGAGE_SPACES, LuggageSpace, VehicleModel } from '@/lib/models/resource';
 import {
   Form,
   FormField,
@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input';
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Check, ChevronsUpDown, X } from 'lucide-react';
+import { Check, ChevronsUpDown, EyeIcon, TrashIcon } from 'lucide-react';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { cn } from '@/lib/utils';
 import { ErrorDialog } from '../dialogs/dialog-error';
@@ -24,6 +24,7 @@ import VehicleModelLayoutEditor from './editor-vehicle-model-schema';
 import { Badge } from '../ui/badge';
 import { auditUpdOrNew } from '@/lib/models/helpers';
 import { saveVehicleModel } from '@/lib/actions';
+import Image from 'next/image';
 
 // Define the validation schema using Zod
 const schema = z.object({
@@ -67,6 +68,9 @@ export function VehicleModelForm({
   adminId: string;
   onSubmitCompleteAction: (newId: string, data: VehicleModel) => void;
 }) {
+  const [modelPhotoPreview, setModelPhotoPreview] = useState<string | null>(originalModel?.modelPhoto as string | undefined || null);
+  const [selectedModelPhoto, setSelectedModelPhoto] = useState<File | null>(null);
+
   const [matrix, setMatrix] = useState<number[][]>(originalModel ? convertBitmaskToMatrix(originalModel) : [[1]]);
   const [errorMessage, setErrorMessage] = useState('');
   const [isPending, setIsPending] = useState<boolean>(false);
@@ -89,10 +93,34 @@ export function VehicleModelForm({
       e.preventDefault();
     }
   };
+  const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedModelPhoto(file);
+      const reader = new FileReader();
+      reader.onload = () => setModelPhotoPreview(reader.result as string);
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemovePhoto = () => {
+    setModelPhotoPreview(null);
+    setSelectedModelPhoto(null);
+    const fileInput = document.getElementById('photo-upload') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = ''; // Clear the input value
+    }
+  };
+
 
   // Handle form submission
   const onSubmit = async (data: FormValues) => {
     setIsPending(true);
+    if (!selectedModelPhoto && !modelPhotoPreview) {
+      setErrorMessage('Please upload a photo of your vehicle model to ease recognition.');
+      return;
+    }
+
     try {
       const newModel = await saveVehicleModel(
         {
@@ -101,6 +129,7 @@ export function VehicleModelForm({
           name: data.name, seatLayout: convertMatrixToBitmask(matrix),
           agencyId: agencyId, columns: matrix[0].length, fuelType: data.fuelType,
           luggageSpaces: data.luggageSpaces,
+          modelPhoto: selectedModelPhoto ? selectedModelPhoto : modelPhotoPreview!!,
           ...auditUpdOrNew(adminId, originalModel)
         }, adminId)
       onSubmitCompleteAction(newModel.id, newModel);
@@ -128,6 +157,62 @@ export function VehicleModelForm({
                 <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-8"
                   onKeyDown={handleKeyDown}>
                   {/* Model Name */}
+
+                  <div className="flex flex-col items-center gap-4">
+                   {/* Image Preview */}
+                    <FormLabel
+                      htmlFor="photo-upload"
+                      className="relative w-32 h-32 rounded-md border-2 border-gray-300 flex items-center justify-center overflow-hidden cursor-pointer"
+                    >
+                      {modelPhotoPreview ? (
+                        <Image
+                          src={modelPhotoPreview}
+                          alt="Model Photo Preview"
+                          layout="fill"
+                          objectFit="cover"
+                        />
+                      ) : (
+                        <span className="text-gray-400 text-sm text-center">
+                          Upload the example photo
+                        </span>
+                      )}
+                    </FormLabel>
+
+                    {/* File Input */}
+                    <input
+                      id="photo-upload"
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handlePhotoChange}
+                    />
+
+                    {modelPhotoPreview && (
+                      <div className="flex flex-row gap-2 items-center">
+                        {/* View Button */}
+                        <Button
+                          variant="outline"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            window.open(modelPhotoPreview, '_blank');
+                          }}
+                        >
+                          <EyeIcon className="h-4 w-4" />
+                          <span className="hidden md:inline">View Full Photo</span>
+                        </Button>
+
+                        {/* Delete Button */}
+                        <Button
+                          variant="destructive"
+                          onClick={handleRemovePhoto}
+                        >
+                          <TrashIcon className="h-4 w-4" />
+                          <span className="hidden md:inline">Remove</span>
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                  <div className="border-t border-gray-300" />
                   <FormField
                     control={form.control}
                     name="name"
@@ -250,7 +335,7 @@ export function VehicleModelForm({
                                       key={type.value}
                                       onSelect={() => {
                                         const currentValues = field.value;
-                                        if (currentValues.includes(type.value as LuggagSpace)) {
+                                        if (currentValues.includes(type.value as LuggageSpace)) {
                                           // Remove if already selected
                                           field.onChange(currentValues.filter((v) => v !== type.value));
                                         } else {
@@ -263,7 +348,7 @@ export function VehicleModelForm({
                                       <Check
                                         className={cn(
                                           'ml-auto',
-                                          field.value.includes(type.value as LuggagSpace) ? 'opacity-100' : 'opacity-0'
+                                          field.value.includes(type.value as LuggageSpace) ? 'opacity-100' : 'opacity-0'
                                         )}
                                       />
                                     </CommandItem>
@@ -317,13 +402,14 @@ export function VehicleModelForm({
         </div>
 
         {/* Vehicle Layout Editor Section */}
-        <div className="relative rounded-lg border overflow-x-scroll">
-          <VehicleModelLayoutEditor
-            matrix={matrix}
-            setSeatCountChangeAction={(count) => form.setValue('seatCount', count)}
-            setMatrixChangeAction={setMatrix}
-          />
-        </div>
+<div className="relative rounded-lg border overflow-x-auto flex justify-center items-center w-full">
+  <VehicleModelLayoutEditor
+    editable={true}
+    matrix={matrix}
+    setSeatCountChangeAction={(count) => form.setValue('seatCount', count)}
+    setMatrixChangeAction={setMatrix}
+  />
+</div>
       </CardContent>    </Card>
   );
 }

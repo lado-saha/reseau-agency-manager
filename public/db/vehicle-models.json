@@ -4,26 +4,36 @@
     "name": "Tesla",
     "seatLayout": "101111",
     "seatCount": 5,
-    "fuelType": "Petrol",
-    "luggageSpace": true,
+    "fuelType": "electric",
+    "luggageSpaces": [
+      "top",
+      "inside"
+    ],
     "columns": 3,
     "createdOn": "2025-01-16T09:35:51+01:00",
     "createdBy": "admin",
-    "updatedBy": "admin",
-    "updatedOn": "2025-01-16T09:35:51+01:00"
+    "updatedBy": "afd35be5-6642-4c68-87d4-3230ca9d2e4b",
+    "updatedOn": "2025-02-12T16:03:05.717Z",
+    "agencyId": "a820da8d-be78-48ea-87d8-0a510d241ad7",
+    "modelPhoto": ""
   },
   {
     "id": "2",
     "name": "Bus Model X",
     "seatLayout": "000011111011111011111000111011111011111011111011111011111011111011111000111011111011111111",
     "seatCount": 69,
-    "fuelType": "Petrol",
-    "luggageSpace": true,
+    "fuelType": "hybrid",
+    "luggageSpaces": [
+      "top",
+      "inside"
+    ],
     "columns": 6,
     "createdOn": "2025-01-16T09:38:09+01:00",
     "createdBy": "admin",
-    "updatedBy": "admin",
-    "updatedOn": "2025-01-16T09:38:09+01:00"
+    "updatedBy": "afd35be5-6642-4c68-87d4-3230ca9d2e4b",
+    "updatedOn": "2025-02-12T16:04:05.331Z",
+    "agencyId": "a820da8d-be78-48ea-87d8-0a510d241ad7",
+    "modelPhoto": ""
   },
   {
     "id": "3",
@@ -31,12 +41,16 @@
     "seatLayout": "000001101111011110111101111011110111101111011110111101111011110111101111111",
     "seatCount": 57,
     "fuelType": "Petrol",
-    "luggageSpace": true,
+    "luggageSpaces": [
+      "top",
+      "inside"
+    ],
     "columns": 5,
     "createdOn": "2025-01-16T09:39:10+01:00",
     "createdBy": "admin",
     "updatedBy": "admin",
-    "updatedOn": "2025-01-16T09:39:10+01:00"
+    "updatedOn": "2025-01-16T09:39:10+01:00",
+    "modelPhoto": ""
   },
   {
     "id": "4",
@@ -44,12 +58,16 @@
     "seatLayout": "111000111111111000000000111000111111111000111111111111110000111111111000111111111111111",
     "seatCount": 45,
     "fuelType": "Petrol",
-    "luggageSpace": true,
+    "luggageSpaces": [
+      "top",
+      "inside"
+    ],
     "columns": 4,
     "createdOn": "2025-01-16T09:45:00+01:00",
     "createdBy": "admin",
     "updatedBy": "admin",
-    "updatedOn": "2025-01-16T09:45:00+01:00"
+    "updatedOn": "2025-01-16T09:45:00+01:00",
+    "modelPhoto": ""
   },
   {
     "id": "10",
@@ -57,12 +75,16 @@
     "seatLayout": "11111",
     "seatCount": 5,
     "fuelType": "Petrol",
-    "luggageSpace": true,
+    "luggageSpaces": [
+      "top",
+      "inside"
+    ],
     "columns": 3,
     "createdOn": "2025-01-16T10:35:10+01:00",
     "createdBy": "admin",
     "updatedBy": "admin",
-    "updatedOn": "2025-01-16T10:35:10+01:00"
+    "updatedOn": "2025-01-16T10:35:10+01:00",
+    "modelPhoto": ""
   },
   {
     "id": "11",
@@ -70,12 +92,16 @@
     "seatLayout": "111100000011110000000000",
     "seatCount": 6,
     "fuelType": "Petrol",
-    "luggageSpace": true,
+    "luggageSpaces": [
+      "top",
+      "inside"
+    ],
     "columns": 3,
     "createdOn": "2025-01-16T10:40:00+01:00",
     "createdBy": "admin",
     "updatedBy": "admin",
-    "updatedOn": "2025-01-16T10:40:00+01:00"
+    "updatedOn": "2025-01-16T10:40:00+01:00",
+    "modelPhoto": ""
   },
   {
     "id": "12",
@@ -83,12 +109,16 @@
     "seatLayout": "1111111",
     "seatCount": 7,
     "fuelType": "Petrol",
-    "luggageSpace": true,
+    "luggageSpaces": [
+      "top",
+      "inside"
+    ],
     "columns": 4,
     "createdOn": "2025-01-16T10:45:30+01:00",
     "createdBy": "admin",
     "updatedBy": "admin",
-    "updatedOn": "2025-01-16T10:45:30+01:00"
+    "updatedOn": "2025-01-16T10:45:30+01:00",
+    "modelPhoto": ""
   },
   {
     "id": "13",
@@ -96,12 +126,13 @@
     "seatLayout": "111110100000",
     "seatCount": 6,
     "fuelType": "Petrol",
-    "luggageSpace": true,
+    "luggageSpaces": [],
     "columns": 3,
     "createdOn": "2025-01-16T10:50:20+01:00",
     "createdBy": "admin",
     "updatedBy": "admin",
-    "updatedOn": "2025-01-16T10:50:20+01:00"
+    "updatedOn": "2025-01-16T10:50:20+01:00",
+    "modelPhoto": ""
   },
   {
     "id": "98f59a7f-a487-4487-9a4a-2f1dea27aaa7",
@@ -119,5 +150,22 @@
     "createdOn": "2025-02-12T13:34:34.773Z",
     "updatedBy": "afd35be5-6642-4c68-87d4-3230ca9d2e4b",
     "updatedOn": "2025-02-12T14:00:22.651Z"
+  },
+  {
+    "id": "0dcb7919-6248-43a7-84bc-4240f520809b",
+    "seatCount": 49,
+    "name": "Karl Poppoer",
+    "seatLayout": "1111111111111111111111101101111111111111111111111",
+    "agencyId": "a820da8d-be78-48ea-87d8-0a510d241ad7",
+    "columns": 7,
+    "fuelType": "diesel",
+    "luggageSpaces": [
+      "bottom"
+    ],
+    "modelPhoto": "/storage/1739397471098-avis_recherche.jpeg",
+    "createdOn": "2025-02-12T21:54:14.650Z",
+    "updatedOn": "2025-02-12T21:57:51.108Z",
+    "createdBy": "afd35be5-6642-4c68-87d4-3230ca9d2e4b",
+    "updatedBy": "afd35be5-6642-4c68-87d4-3230ca9d2e4b"
   }
 ]

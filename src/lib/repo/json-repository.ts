@@ -100,11 +100,7 @@ export abstract class JsonRepository<T> implements IRepository<T> {
 }
 
 
-export class VehicleRepository extends JsonRepository<Vehicle> {
-  constructor() {
-    super('vehicles.json');
-  }
-}
+
 export class VehicleModelRepository extends JsonRepository<VehicleModel> {
   constructor() {
     super('vehicle-models.json');

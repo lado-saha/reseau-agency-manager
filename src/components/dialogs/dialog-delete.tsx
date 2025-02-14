@@ -33,10 +33,6 @@ export function DeleteDialog({
 }: DeleteDialogProps) {
   const dialogCloseRef = useRef<HTMLButtonElement>(null);
 
-  const getButtonVariant = () => {
-    return 'destructive'
-  };
-
   const getIcon = () => {
     return mode === 'delete' ? (
       <Trash2Icon className="h-3.5 w-3.5" />
@@ -52,7 +48,7 @@ export function DeleteDialog({
   return (
     <Dialog>
       <DialogTrigger>
-        <Button variant={getButtonVariant()}>
+        <Button variant='destructive'>
           <span className="hidden md:inline">{triggerText}</span>
           {getIcon()}
         </Button>

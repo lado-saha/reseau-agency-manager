@@ -14,7 +14,7 @@ import {
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { TabsContent } from '@radix-ui/react-tabs';
 import {
-  AgencyProfile,
+  Agency,
   AgencyRoles,
   AGENCY_EMPTY
 } from '@/lib/models/agency';
@@ -27,7 +27,7 @@ export function AgencyDetailView({
   adminId,
   role
 }: {
-  originalAgency: AgencyProfile | undefined;
+  originalAgency: Agency | undefined;
   adminId: string;
   role: AgencyRoles;
 }) {
@@ -122,7 +122,7 @@ export function AgencyDetailView({
                 onClick={handleDeleteClick}
               >
                 <Trash2Icon className="h-3.5 w-3.5" />
-                <span className="hidden md:inline">Delete Agency</span>
+                <span className="hidden md:inline">Archive Agency</span>
                 <SkullIcon className="h-3.5 w-3.5" />
               </Button>
             )}

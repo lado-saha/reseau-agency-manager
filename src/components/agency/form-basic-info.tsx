@@ -556,7 +556,9 @@ export function BasicInfoForm({
                 description={errorMessage}
               />
 
+            </div>
           </form>
+
         </Form>
       </CardContent>
     </Card>

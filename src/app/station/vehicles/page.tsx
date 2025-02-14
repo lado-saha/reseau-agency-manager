@@ -4,7 +4,7 @@ import { SortingDirection } from '@/lib/models/helpers';
 import { Suspense } from 'react';
 import Loading from '../../agency/loading';
 import { Metadata } from 'next';
-import StationFleetView from '@/components/vehicle/fleet-view';
+import StationFleetView from '@/components/vehicle/list-vehicles';
 import { PAGE_OFFSET } from '@/lib/utils';
 export const metadata: Metadata = {
   title: 'Station | Fleet'

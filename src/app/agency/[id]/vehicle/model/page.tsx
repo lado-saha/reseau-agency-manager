@@ -4,7 +4,7 @@ import { Metadata } from 'next';
 import { PAGE_OFFSET } from '@/lib/utils';
 import { VehicleModelRepository } from '@/lib/repo/vechicle-model-repo';
 import Loading from '@/app/agency/loading';
-import VehicleModelList from '@/components/vehicle/list-vehicle-models';
+import VehicleModelList from '@/components/vehicle-model/list-vehicle-models';
 
 export const metadata: Metadata = {
   title: 'Agency | Vehicle Models'

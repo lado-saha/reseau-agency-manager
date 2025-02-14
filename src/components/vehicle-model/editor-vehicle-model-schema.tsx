@@ -19,10 +19,12 @@ export type ActionDomain = 'row' | 'column';
 // Assuming the BusModel class is imported from your model file
 
 export default function VehicleModelLayoutEditor({
+  editable = true,
   matrix,
   setMatrixChangeAction,
   setSeatCountChangeAction
 }: {
+  editable: boolean;
   matrix: number[][];
   setMatrixChangeAction: Dispatch<SetStateAction<number[][]>>;
   setSeatCountChangeAction: (newCount: number) => void
@@ -33,6 +35,7 @@ export default function VehicleModelLayoutEditor({
   );
   // Initialize the matrix (seat grid) state
   const handleColumnAction = (colIndex: number, action: CellAction) => {
+    if (!editable) return;
     setSeatCountChangeAction(seatCounter)
 
     setMatrixChangeAction((prevMatrix) => {
@@ -60,6 +63,7 @@ export default function VehicleModelLayoutEditor({
   };
 
   const handleRowAction = (rowIndex: number, action: CellAction) => {
+    if (!editable) return;
     setSeatCountChangeAction(seatCounter)
 
     setMatrixChangeAction((prevMatrix) => {
@@ -87,6 +91,8 @@ export default function VehicleModelLayoutEditor({
 
   // Handle toggle of seat/empty space
   const handleCellClick = (rowIndex: number, colIndex: number) => {
+    if (!editable) return
+
     setSeatCountChangeAction(seatCounter)
     setMatrixChangeAction((prevMatrix) => {
       const newMatrix = [...prevMatrix];
@@ -99,39 +105,45 @@ export default function VehicleModelLayoutEditor({
   // Calculate seat numbers in the grid based on seat (1) positions
 
 
+
   const renderActionCell = (
     action: CellAction,
     domain: ActionDomain,
     row: number,
     col: number
-  ) => (
-    <Button
-      variant="ghost"
-      key={`h${row}-${col}`}
-      onClick={() => {
-        if (domain === 'column') handleColumnAction(col, action);
-        else handleRowAction(row, action);
-      }}
-      className="relative flex items-center justify-center w-10 h-10 rounded-lg"
-    >
-      {action === 'add' ? (
-        <div className="relative flex items-center">
-          <PlusCircleIcon className="text-blue-500" />
-          {domain === 'column' ? (
-            <ArrowRight className="text-blue-500" /> // Horizontal bar for column
-          ) : (
-            <ArrowDown className=" text-blue-500" /> // Horizontal bar for column
-          )}
-        </div>
-      ) : (
-        <MinusCircleIcon className="text-red-500" />
-      )}
-    </Button>
-  );
+  ) => {
+    if (!editable) return <div/>; // Explicitly return an empty fragment
+
+    return (
+      <Button
+        variant="ghost"
+        key={`h${row}-${col}`}
+        onClick={() => {
+          if (domain === "column") handleColumnAction(col, action);
+          else handleRowAction(row, action);
+        }}
+        className="relative flex items-center justify-center w-10 h-10 rounded-lg"
+      >
+        {action === "add" ? (
+          <div className="relative flex items-center">
+            <PlusCircleIcon className="text-blue-500" />
+            {domain === "column" ? (
+              <ArrowRight className="text-blue-500" /> // Horizontal bar for column
+            ) : (
+              <ArrowDown className="text-blue-500" /> // Vertical bar for row
+            )}
+          </div>
+        ) : (
+          <MinusCircleIcon className="text-red-500" />
+        )}
+      </Button>
+    );
+  };
+
 
   return (
     <div
-      className="grid gap-2 p-2 rounded-md"
+      className="grid gap-2 p-2 border w-fit rounded-md"
       style={{
         gridTemplateColumns: `repeat(${2 + matrix[0]?.length || 0}, 40px)`,
         justifyContent: 'center'

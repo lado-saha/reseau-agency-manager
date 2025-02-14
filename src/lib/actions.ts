@@ -14,7 +14,8 @@ import { Station } from './models/station';
 import { StationRepository } from './repo/station-repo';
 import { PlaceAddress } from './repo/osm-place-repo';
 import { VehicleModelRepository } from './repo/vechicle-model-repo';
-import { VehicleModel } from './models/resource';
+import { Vehicle, VehicleModel } from './models/resource';
+import { VehicleRepository } from './repo/vehicle-repo';
 
 const agencyRepo = new AgencyRepository()
 const stationRepo = new StationRepository()
@@ -22,6 +23,7 @@ const userRepo = new UserRepository()
 const agencyEmpRepo = new AgencyEmployeeRepository()
 const stationEmpRepo = new StationEmployeeRepository()
 const vehicleModelRepo = new VehicleModelRepository()
+const vehicleRepo = new VehicleRepository()
 
 // Agency actions
 export async function saveAgencyBasicInfo(agencyId: string, basicInfo: AgencyBasicInfo, ownerId?: string,): Promise<{ id: string, basicInfo: AgencyBasicInfo }> {
@@ -138,7 +140,11 @@ export async function deleteEmployee<T extends EmployeeRole>(
   } else {
     return await stationEmpRepo.deleteEmployee(id);
   }
-
 }
+export async function saveVehicleBasicInfo(agencyId: string, vehicle: Partial<Vehicle>, adminId: string,): Promise< Partial<Vehicle>> {
+  return await vehicleRepo.saveVehicleBasicInfo(agencyId, vehicle, adminId)
+}
+
+
 
 

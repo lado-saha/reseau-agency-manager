@@ -5,7 +5,7 @@ import { Suspense } from 'react';
 import { Metadata } from 'next';
 import { PAGE_OFFSET } from '@/lib/utils';
 import Loading from '../../../agency/loading';
-import VehicleModelList from '@/components/vehicle/list-vehicle-models';
+import VehicleModelList from '@/components/vehicle-model/list-vehicle-models';
 export const metadata: Metadata = {
   title: 'Station | Vehicle Models'
 };

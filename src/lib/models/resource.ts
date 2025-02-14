@@ -1,20 +1,23 @@
 import { Audit } from "@/lib/models/helpers";
+import { GPSPosition } from "../repo/osm-place-repo";
+import { AgencyEmployee } from "./employee";
 
 /**
  * Represents a general resource that can be owned, transferred, andmaintained.
  * Extends the Audit interface to include auditing details (created/pdated timestamps, etc.).
  */
-interface Resource extends Audit {
-  id: string; // Unique identifier for the resource (UUID or similar
-  permanentOwnerId: string; // The original and permanent owner of the resource
-  tempOwnerId?: string; // Optional: If the resource is temporarily assigned, this stores the temporary owner's ID
-  tempOwnershipStartTime?: Date; // Optional: Start time when temporary ownership began
-  tempOwnershipEndTime?: Date; // Optional: End time when temporary ownership expires
-  isUnderMaintenance: boolean; // Indicates whether the resource is currently under maintenance
-  maintenanceStartTime?: Date; // Optional: Timestamp when maintenance started
-  maintenanceEndTime?: Date; // Optional: Timestamp when maintenance is expected to or has ended
-}
+export interface Resource extends Audit, GPSPosition {
+  id: string; // Unique identifier for the resource (UUID or similar)
+  name: string; // Human-readable name for the resource
+  healthStatus: 'good' | 'bad' | 'maintenance'; // Current status of the resource
 
+  ownerId: string; // The original and permanent owner of the resource
+  tenantId?: string; // Optional: Temporary owner's ID (if rented or borrowed)
+  tenancyStartTime?: Date | string; // Optional: Start time of temporary ownership
+  tenancyEndTime?: Date | string; // Optional: End time of temporary ownership
+
+  usageCount: number; // Total number of times the resource has been used (lifetime or resettable?)
+}
 /**
  * Defines the structural model of a vehicle, specifying its layout,fuel type, and seating details.
  * This acts as a template that multiple vehicle instances can referto.
@@ -27,7 +30,8 @@ export interface VehicleModel extends Audit {
   seatLayout: string; // Represents seat arrangement: 
   columns: number; // Number of seat columns per row
   seatCount: number; // Total number of seats in the vehicle
-  luggageSpaces: LuggagSpace[]; // Indicates whether the model includes dedicated luggage space
+  luggageSpaces: LuggageSpace[]; // Indicates whether the model includes dedicated luggage space
+  modelPhoto: File | string
 }
 
 /**
@@ -36,10 +40,12 @@ export interface VehicleModel extends Audit {
  */
 export interface Vehicle extends Resource {
   manufacturer: string; // Name of the vehicle's manufacturer (e.g.,"Mercedes-Benz", "Toyota")
-  model: VehicleModel; // Reference to the vehicle model, which defines seating and fuel type
+  model: VehicleModel | string; // Reference to the vehicle model, which defines seating and fuel type
   registrationNumber: string; // Official vehicle registration number (license plate)
   productionYear: number; // Year the vehicle was manufactured
 }
+
+export interface Driver extends Resource, AgencyEmployee {}
 
 /**
  * Defines the possible fuel types for a vehicle.
@@ -49,7 +55,7 @@ export type FuelType =
   | "diesel"
   | "electric"
   | "hybrid";
-export type LuggagSpace = 'top' | 'bottom' | 'inside'
+export type LuggageSpace = 'top' | 'bottom' | 'inside'
 export const FUEL_TYPES = ['petrol', 'diesel', "electric", "hybrid"] as const
 export const LUGGAGE_SPACES = ['top', 'bottom', "inside"] as const
 

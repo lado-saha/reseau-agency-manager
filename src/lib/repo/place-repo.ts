@@ -1,4 +1,4 @@
-import { AgencyProfile } from "../models/agency";
+import { Agency } from "../models/agency";
 import { API_URL } from "../utils";
 import { JsonRepository, UserRepository } from "./json-repository";
 import { PlaceAddress } from "./osm-place-repo";

@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 import { notFound, redirect } from 'next/navigation';
 import { AgencyDetailView } from '@/components/agency/details-agency';
 import Loading from '../loading';
-import { AgencyProfile, AgencyRoles } from '@/lib/models/agency';
+import { Agency, AgencyRoles } from '@/lib/models/agency';
 import { auth } from '@/auth';
 
 type Params = Promise<{ id: string }>;
@@ -12,7 +12,7 @@ type Params = Promise<{ id: string }>;
 export default async function Page({ params }: { params: Params }) {
   const { id } = await params;
   const repo = new AgencyRepository();
-  let original: AgencyProfile | undefined;
+  let original: Agency | undefined;
   const isNew = id === 'new';
 
   const session = await auth(); // Implement this function

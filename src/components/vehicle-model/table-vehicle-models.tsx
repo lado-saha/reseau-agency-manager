@@ -22,7 +22,7 @@ import { PAGE_OFFSET } from '@/lib/utils';
 import {
   VehicleModelGridItem,
   VehicleModelTableItem
-} from '@/components/vehicle/item-vehicle-model';
+} from '@/components/vehicle-model/item-vehicle-model';
 
 export interface PropsVehicleModels {
   models: VehicleModel[];

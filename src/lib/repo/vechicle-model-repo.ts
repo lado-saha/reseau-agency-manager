@@ -14,11 +14,28 @@ export class VehicleModelRepository extends JsonRepository<VehicleModel> {
     if (model.id === 'new') {
       if (
         models.some(
-          (mod) => mod.seatLayout === model.seatLayout && mod.agencyId == model.agencyId
+          (mod) => mod.seatLayout === model.seatLayout && mod.agencyId == model.agencyId 
         )
       ) {
-        throw new Error("A similar vehicle model already exists.");
+        throw new Error("A vehicle model with a similar seat layout already exists.");
       }
+           if (
+        models.some(
+          (mod) => mod.seatLayout === model.seatLayout && mod.agencyId == model.agencyId 
+        )
+      ) {
+        throw new Error("A vehicle model with as similar name already exists.");
+      }
+
+      if (typeof model.modelPhoto !== 'string') {
+        const formData = new FormData();
+        formData.append('file', model?.modelPhoto as File);
+        const uploadResponse = await fetch(`${API_URL}/api/upload`, { method: 'POST', body: formData });
+        const { fileUrl } = await uploadResponse.json();
+        model.modelPhoto = fileUrl
+      }
+
+
       const newModel: VehicleModel = { ...model, id: crypto.randomUUID(), ...auditCreate(adminId) };
 
       // Assuming you will post it to the API endpoint
@@ -35,14 +52,22 @@ export class VehicleModelRepository extends JsonRepository<VehicleModel> {
         throw new Error(`Employee with id ${model.id} not found.`);
       }
 
-      const newEmpl = { ...models[index], ...model, ...auditUpdate(adminId) }
+      if (typeof model.modelPhoto !== 'string') {
+        const formData = new FormData();
+        formData.append('file', model?.modelPhoto as File);
+        const uploadResponse = await fetch(`${API_URL}/api/upload`, { method: 'POST', body: formData });
+        const { fileUrl } = await uploadResponse.json();
+        model.modelPhoto = fileUrl
+      }
+
+      const newModel = { ...models[index], ...model, ...auditUpdate(adminId) }
 
       await fetch(`${API_URL}/api/data/vehicle-models`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newEmpl),
+        body: JSON.stringify(newModel),
       });
-      return newEmpl;
+      return newModel;
     }
 
   }

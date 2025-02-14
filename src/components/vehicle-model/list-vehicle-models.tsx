@@ -18,13 +18,14 @@ import {
   SortDescIcon,
   CarTaxiFront,
   BusFront,
-  PlusIcon
+  PlusIcon,
+  BusIcon
 } from 'lucide-react';
 import {
   GridVehicleModels,
   TableVehicleModels,
   vehicleModelSortingOptions
-} from '@/components/vehicle/table-vehicle-models';
+} from '@/components/vehicle-model/table-vehicle-models';
 import { VehicleModel } from '@/lib/models/resource';
 import { SortingDirection, TabsVehicleModel } from '@/lib/models/helpers';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
@@ -72,7 +73,7 @@ export default function VehicleModelList({
   };
 
   function detailsAction(id: string): void {
-    router.replace(`${pathname}/${id}`);
+    router.push(`${pathname}/${id}`);
   }
 
   function archiveAction(id: string): void {
@@ -90,13 +91,18 @@ export default function VehicleModelList({
             <span>All</span>
           </TabsTrigger>
 
-          <TabsTrigger value="coaster" className="items-center">
+          <TabsTrigger value="taxi" className="items-center">
             <CarTaxiFront className="mx-1 w-4 h-4" />
             <span>Car</span>
           </TabsTrigger>
 
-          <TabsTrigger value="bus" className="items-center">
+          <TabsTrigger value="coaster" className="items-center">
             <BusFront className="mx-1 w-4 h-4" />
+            <span>Coaster</span>
+          </TabsTrigger>
+
+          <TabsTrigger value="bus" className="items-center">
+            <BusIcon className="mx-1 w-4 h-4" />
             <span>Bus</span>
           </TabsTrigger>
         </TabsList>

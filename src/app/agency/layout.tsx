@@ -27,7 +27,7 @@ import {
   URL_PATHS_AGENCY,
 } from '@/lib/paths';
 import { AgencyRepository } from '@/lib/repo/agency-repo';
-import { AgencyProfile } from '@/lib/models/agency';
+import { Agency } from '@/lib/models/agency';
 import React, { useState, useEffect, Suspense } from 'react';
 import { CompassIcon } from 'lucide-react';
 
@@ -57,7 +57,7 @@ export default function AgencyLayout({
     return <div>Invalid Agency ID</div>;
   }
 
-  const [agencyProfile, setAgencyProfile] = useState<AgencyProfile | null>(
+  const [agencyProfile, setAgencyProfile] = useState<Agency | null>(
     null
   );
   const [userRole, setUserRole] = useState<string>('none');

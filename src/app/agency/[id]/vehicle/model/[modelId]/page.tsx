@@ -5,7 +5,7 @@ import { notFound, redirect } from 'next/navigation';
 import { auth } from '@/auth';
 import Loading from '@/app/agency/loading';
 import { VehicleModelRepository } from '@/lib/repo/vechicle-model-repo';
-import { VehicleModelDetailView } from '@/components/vehicle/details-vehicle-model';
+import { VehicleModelDetailView } from '@/components/vehicle-model/details-vehicle-model';
 import { VehicleModel } from '@/lib/models/resource';
 
 type Params = Promise<{ modelId: string; id: string }>;

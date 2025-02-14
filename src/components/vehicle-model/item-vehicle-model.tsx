@@ -12,6 +12,7 @@ import {
   BusFrontIcon,
   BusIcon,
   CarTaxiFront,
+  Check,
   MoreHorizontal,
   MoreVertical
 } from 'lucide-react';
@@ -21,6 +22,9 @@ import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { format } from 'date-fns';
 import { VehicleModel } from '@/lib/models/resource';
 import { DeleteDialog } from '../dialogs/dialog-delete';
+import { ListBadges } from '../list-badges';
+import { Checkbox } from '../ui/checkbox';
+
 
 interface VehicleModelItemProps {
   model: VehicleModel;
@@ -66,7 +70,7 @@ export function VehicleModelTableItem({
           alt="Vehicle image"
           className="aspect-square rounded-md object-cover"
           height="64"
-          src={'' || '/placeholder.svg'}
+          src={model.modelPhoto as string || '/placeholder.svg'}
           width="64"
         />
       </TableCell>
@@ -76,7 +80,7 @@ export function VehicleModelTableItem({
       <TableCell>{model.seatCount}</TableCell>
       {tab === 'all' && <TableCell>{renderTypeBadge(model)}</TableCell>}
       <TableCell>{model.fuelType}</TableCell>
-      <TableCell>{model.luggageSpace}</TableCell>
+      <TableCell><ListBadges items={model.luggageSpaces} /></TableCell>
       <TableCell>{format(model.createdOn, 'PP')}</TableCell>
 
       {/* Action Menu */}
@@ -88,7 +92,7 @@ export function VehicleModelTableItem({
               <span className="sr-only">Toggle menu</span>
             </Button>
           </DropdownMenuTrigger>
-          {DropdownMenuVehicleModel({model, detailsAction, tab, archiveAction})}
+          {DropdownMenuVehicleModel({ model, detailsAction, tab, archiveAction })}
         </DropdownMenu>
       </TableCell>
     </TableRow>
@@ -135,19 +139,16 @@ export function VehicleModelGridItem({
             <MoreVertical className="h-5 w-5" />
           </Button>
         </DropdownMenuTrigger>
-        {DropdownMenuVehicleModel({model, detailsAction, tab, archiveAction})}
+        {DropdownMenuVehicleModel({ model, detailsAction, tab, archiveAction })}
       </DropdownMenu>
 
       {/* Vehicle Image */}
       <div className="relative w-full h-32">
         <Image
-          src={'' || '/placeholder.svg'}
+          src={model.modelPhoto as string || '/placeholder.svg'}
           alt="Vehicle Model image"
           fill
-          className="object-cover"
-        />
-      </div>
-
+          className="object-cover" /> </div>
       {/* Card Content */}
       <CardContent className="flex flex-col items-center space-y-0 text-center">
         <div className="py-2">
@@ -164,7 +165,7 @@ export function VehicleModelGridItem({
         <div className="grid grid-cols-2 gap-4 items-center text-sm mt-3 w-full">
           <div>
             <span className="block text-muted-foreground">Luggage</span>
-            <span>{model.luggageSpace}</span>
+            <ListBadges items={model.luggageSpaces} />
           </div>
 
           <div>
@@ -187,6 +188,67 @@ export function VehicleModelGridItem({
           </span>
         </div>
       </div>
+    </Card>
+  );
+}
+interface VehicleModelSearchItemProps {
+  model: VehicleModel;
+  isSelected: boolean;
+  onCheckedChange: (checked: boolean) => void;
+}
+export function VehicleModelSearchItem({
+  model,
+  isSelected,
+  onCheckedChange,
+}: VehicleModelSearchItemProps) {
+  return (
+    <Card
+      className={`relative overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-200 ${isSelected ? 'border-2 border-primary' : 'border'
+        }`}
+      onClick={() => onCheckedChange(!isSelected)} // Toggle selection on card click
+    >
+      {/* Selection Indicator */}
+      {isSelected && (
+        <div className="absolute top-2 right-2 z-10 bg-primary rounded-full p-1">
+          <Check className="h-4 w-4 text-white" /> {/* Checkmark icon */}
+        </div>
+      )}
+
+      {/* Vehicle Image */}
+      <div className="relative w-full h-32">
+        <Image
+          src={model.modelPhoto as string || '/placeholder.svg'}
+          alt="Vehicle Model image"
+          fill
+          className="object-cover"
+        />
+      </div>
+
+      {/* Card Content */}
+      <CardContent className="flex flex-col items-center space-y-2 text-center p-4">
+        {/* Vehicle Name */}
+        <CardTitle className="text-lg font-semibold">{model.name}</CardTitle>
+
+        {/* Seat Count */}
+        <div className="text-md text-muted-foreground">
+          <span className="font-semibold">{model.seatCount} Seats</span>
+        </div>
+
+        {/* Additional Info */}
+        <div className="grid grid-cols-2 gap-4 items-center text-sm mt-3 w-full">
+          {/* Luggage Spaces */}
+          <div>
+            <span className="block text-muted-foreground">Luggage</span>
+            <ListBadges items={model.luggageSpaces} />
+          </div>
+
+          {/* Fuel Type */}
+          <div>
+            <span className="block text-muted-foreground">Fuel</span>
+            <span>{model.fuelType}</span>
+          </div>
+        </div>
+      </CardContent>
     </Card>
   );
 }

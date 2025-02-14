@@ -1,8 +1,8 @@
-import { AgencyProfile, AgencyLegalDocuments, AgencyBasicInfo, AgencySocialMediaInfo } from "@/lib/models/agency";
+import { Agency, AgencyLegalDocuments, AgencyBasicInfo, AgencySocialMediaInfo } from "@/lib/models/agency";
 import { JsonRepository } from "@/lib/repo/json-repository";
 import { API_URL } from "@/lib/utils";
 
-export class AgencyRepository extends JsonRepository<AgencyProfile> {
+export class AgencyRepository extends JsonRepository<Agency> {
   constructor() {
     super('agencies.json');
   }
@@ -58,7 +58,7 @@ export class AgencyRepository extends JsonRepository<AgencyProfile> {
         id: crypto.randomUUID(),
         ownerId: adminId,
         basicInfo: newBasicInfo,
-      } satisfies Partial<AgencyProfile>;
+      } satisfies Partial<Agency>;
 
       await fetch(`${API_URL}/api/data/agencies`, {
         method: "POST",
@@ -81,7 +81,7 @@ export class AgencyRepository extends JsonRepository<AgencyProfile> {
       await fetch(`${API_URL}/api/data/agencies`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: agencyId, basicInfo: newBasicInfo } satisfies Partial<AgencyProfile>),
+        body: JSON.stringify({ id: agencyId, basicInfo: newBasicInfo } satisfies Partial<Agency>),
       });
 
       return { id: agencyId, basicInfo: newBasicInfo };
@@ -107,7 +107,7 @@ export class AgencyRepository extends JsonRepository<AgencyProfile> {
     await fetch(`${API_URL}/api/data/agencies`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: agencyId, 'legalDocs': newDocs } satisfies Partial<AgencyProfile>),
+      body: JSON.stringify({ id: agencyId, 'legalDocs': newDocs } satisfies Partial<Agency>),
     });
 
     return newLegalDocs
@@ -132,7 +132,7 @@ export class AgencyRepository extends JsonRepository<AgencyProfile> {
     await fetch(`${API_URL}/api/data/agencies`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: agencyId, socialMedia: newSocialInfo } satisfies Partial<AgencyProfile>),
+      body: JSON.stringify({ id: agencyId, socialMedia: newSocialInfo } satisfies Partial<Agency>),
     });
 
     return newSocialInfo
