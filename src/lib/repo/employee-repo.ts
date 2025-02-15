@@ -125,6 +125,17 @@ export class EmployeeRepository<T extends Employee<EmployeeRole>> extends JsonRe
     return { ...empl!!, user }
   }
   // Update Employee
+  //
+  //
+  async getByIds(ids: string[]): Promise<T[]> {
+    const empls = (await this.fetchData()).filter(v => ids.includes(v.id));
+    const userMap = new Map((await this.userRepo.getByIds(empls.map(v => v.user as string))).map(m => [m.id, m]));
+    return empls.map(v => ({
+      ...v,
+      user: userMap.get(v.user as string) ?? (() => { throw new Error(`Unknown user for employee${v.id}`) })(),
+    }));
+  }
+
   async updateEmployee(
     currentUserId: string,
     newEmployee: T

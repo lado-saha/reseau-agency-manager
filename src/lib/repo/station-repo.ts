@@ -47,38 +47,65 @@ export class StationRepository extends JsonRepository<Station> {
     return { ...station, chief: chief as User, address: address as PlaceAddress }
   }
 
-  async getAll(search?: string, offset?: number, sortBy?: string | undefined, direction?: SortingDirection): Promise<{ items: Station[]; newOffset: number; totalCount: number; }> {
-    const stations = await super.getAll(search, offset, sortBy, direction)
+  async getByIds(ids: string[]): Promise<Station[]> {
+    const stations = (await this.fetchData()).filter(v => ids.includes(v.id));
 
-    const chiefIds = stations.items.map((st) => st.chief as string);
-    const placeIds = stations.items.map((st) => st.address as string);
+    // Fetch chiefs and addresses in parallel
+    const [chiefs, addresses] = await Promise.all([
+      this.userRepo.getByIds(stations.map(station => station.chief as string)),
+      this.placeRepo.getByIds(stations.map(station => station.address as string)),
+    ]);
 
-    const chiefs = await this.userRepo.getByIds(chiefIds);
-    const addresses = await this.placeRepo.getByIds(placeIds);
+    // Create Maps for quick lookups
+    const chiefMap = new Map(chiefs.map(chief => [chief.id, chief]));
+    const addressMap = new Map(addresses.map(address => [address.id, address]));
 
-    const itemsWithChiefs = stations.items.map((station) => {
-      // Find the user corresponding to the employee
-      const chief = chiefs.find((u) => u.id === (station.chief as string));
-      const adddress = addresses.find((u) => u.id === (station.address as string));
-      if (!chiefs) {
-        throw Error(`Unkown chief found for ${station.name}`)
-      }
-      if (!adddress) {
-        throw Error(`Unkown address dound for ${station.name}`)
-      }
-      // Return the employee with the attached user object
+    // Map stations to include chiefs and addresses
+    return stations.map(station => ({
+      ...station,
+      chief: chiefMap.get(station.chief as string) as User,
+      address: addressMap.get(station.address as string) as PlaceAddress,
+    }));
+  }
+
+  async getAll(
+    search?: string,
+    offset?: number,
+    sortBy?: string | undefined,
+    direction?: SortingDirection
+  ): Promise<{ items: Station[]; newOffset: number; totalCount: number }> {
+    const stations = await super.getAll(search, offset, sortBy, direction);
+
+    // Extract chief and address IDs
+    const chiefIds = stations.items.map(st => st.chief as string);
+    const placeIds = stations.items.map(st => st.address as string);
+
+    // Fetch chiefs and addresses in parallel
+    const [chiefs, addresses] = await Promise.all([
+      this.userRepo.getByIds(chiefIds),
+      this.placeRepo.getByIds(placeIds),
+    ]);
+
+    // Create Maps for quick lookups
+    const chiefMap = new Map(chiefs.map(chief => [chief.id, chief]));
+    const addressMap = new Map(addresses.map(address => [address.id, address]));
+
+    // Map stations to include chiefs and addresses
+    const itemsWithChiefs = stations.items.map(station => {
+      const chief = chiefMap.get(station.chief as string)!!;
+      const address = addressMap.get(station.address as string)!!;
+
       return {
         ...station,
-        chief: chief as User,// Add the user object (or null if not found)
-        address: adddress as PlaceAddress
+        chief: chief as User,
+        address: address as PlaceAddress,
       };
     });
-    return {
-      items: itemsWithChiefs,
-      newOffset: stations.newOffset,
-      totalCount: stations.totalCount,
-    };
 
+    return {
+      ...stations,
+      items: itemsWithChiefs,
+    };
   }
 
   async saveStationBasicInfo(

@@ -8,16 +8,30 @@ import { AgencyEmployee } from "./employee";
  */
 export interface Resource extends Audit, GPSPosition {
   id: string; // Unique identifier for the resource (UUID or similar)
-  name: string; // Human-readable name for the resource
-  healthStatus: 'good' | 'bad' | 'maintenance'; // Current status of the resource
-
+  healthStatus: HealthStatus; // Current status of the resource
   ownerId: string; // The original and permanent owner of the resource
   tenantId?: string; // Optional: Temporary owner's ID (if rented or borrowed)
   tenancyStartTime?: Date | string; // Optional: Start time of temporary ownership
   tenancyEndTime?: Date | string; // Optional: End time of temporary ownership
-
   usageCount: number; // Total number of times the resource has been used (lifetime or resettable?)
+  status: ResourceStatus
 }
+
+export type HealthStatus = 'good' | 'bad' | 'maintenance';
+export const HEALTH_STATUS = ['good', 'bad', 'maintenance'] as const;
+export const HEALTH_STATUS_OPTIONS = HEALTH_STATUS.map((status) => ({
+  value: status,
+  label: status.replace(/\b\w/g, (char) => char.toUpperCase()), // Capitalize first letter
+}));
+
+export type ResourceStatus = 'scheduled' | 'in-progress' | 'free';
+export const RESOURCE_STATUS = ['scheduled', 'in-progress', 'free'] as const;
+export const RESOURCE_STATUS_OPTIONS = RESOURCE_STATUS.map((status) => ({
+  value: status,
+  label: status
+    .replace(/-/g, ' ') // Replace dashes with spaces
+    .replace(/\b\w/g, (char) => char.toUpperCase()), // Capitalize first letter of each word
+}));
 /**
  * Defines the structural model of a vehicle, specifying its layout,fuel type, and seating details.
  * This acts as a template that multiple vehicle instances can referto.
@@ -45,7 +59,11 @@ export interface Vehicle extends Resource {
   productionYear: number; // Year the vehicle was manufactured
 }
 
-export interface Driver extends Resource, AgencyEmployee {}
+export interface Driver extends Resource {
+  id: string,
+  employee: AgencyEmployee | string,
+  license: string
+}
 
 /**
  * Defines the possible fuel types for a vehicle.

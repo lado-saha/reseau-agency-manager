@@ -402,14 +402,14 @@ export function VehicleModelForm({
         </div>
 
         {/* Vehicle Layout Editor Section */}
-<div className="relative rounded-lg border overflow-x-auto flex justify-center items-center w-full">
-  <VehicleModelLayoutEditor
-    editable={true}
-    matrix={matrix}
-    setSeatCountChangeAction={(count) => form.setValue('seatCount', count)}
-    setMatrixChangeAction={setMatrix}
-  />
-</div>
+        <div className="relative rounded-lg border overflow-x-scroll flex justify-center items-center">
+          <VehicleModelLayoutEditor
+            editable={true}
+            matrix={matrix}
+            setSeatCountChangeAction={(count) => form.setValue('seatCount', count)}
+            setMatrixChangeAction={setMatrix}
+          />
+        </div>
       </CardContent>    </Card>
   );
 }

@@ -164,7 +164,7 @@ export function TableEmployees<T extends EmployeeRole>({
               <EmployeeTableItem
                 detailsAction={detailsAction}
                 key={employee.id}
-                employee={employee}
+                item={employee}
                 currentTab={currentTab}
                 deleteAction={deleteAction}
               />
@@ -199,7 +199,7 @@ export function GridEmployees<T extends EmployeeRole>({
             <EmployeeGridItem
               detailsAction={detailsAction}
               key={employee.id}
-              employee={employee}
+              item={employee}
               deleteAction={deleteAction}
               currentTab={currentTab}
             />

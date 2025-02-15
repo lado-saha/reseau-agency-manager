@@ -1,12 +1,19 @@
 import { VehicleModel } from "@/lib/models/resource";
 import { JsonRepository } from "./json-repository";
-import { auditCreate, auditUpdate } from "../models/helpers";
+import { auditCreate, auditUpdate, SortingDirection } from "../models/helpers";
 import { API_URL } from "../utils";
 
 export class VehicleModelRepository extends JsonRepository<VehicleModel> {
   constructor() {
     super("vehicle-models.json");
   }
+
+
+  async getByIds(ids: string[]): Promise<VehicleModel[]> {
+    const models = await this.fetchData();
+    return models.filter((a) => ids.includes(a.id))
+  }
+
 
   async addVehicleModel(model: VehicleModel, adminId: string): Promise<VehicleModel> {
     const models = await this.fetchData();
@@ -71,9 +78,7 @@ export class VehicleModelRepository extends JsonRepository<VehicleModel> {
     }
 
   }
-  async getById(id: string): Promise<VehicleModel | undefined> {
-    return await super.getById(id)
-  }
+
 
   // Update Employee
   async updateVehicleModel(

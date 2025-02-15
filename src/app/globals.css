@@ -130,6 +130,38 @@ body {
   -ms-overflow-style: none;
 }
 
+@keyframes slide {
+  0% {
+    left: 0;
+  }
+
+  100% {
+    left: 100%;
+  }
+}
+
+@keyframes move-arrow {
+  0% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(5px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.animate-slide {
+  animation: slide 1.2s infinite linear;
+}
+
+.animate-move-arrow {
+  animation: move-arrow 1.2s infinite ease-in-out;
+}
+
 .container::-webkit-scrollbar {
   width: 0;
   height: 0;

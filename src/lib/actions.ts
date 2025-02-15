@@ -146,5 +146,27 @@ export async function saveVehicleBasicInfo(agencyId: string, vehicle: Partial<Ve
 }
 
 
+export async function searchVehicleModel(query: string) {
+  return (await vehicleModelRepo.getAll(query, 0)).items;
+} 
+
+export async function searchStation(query: string) {
+  return (await stationRepo.getAll(query, 0)).items;
+} 
+
+export async function fetchStationById(id: string) {
+  return stationRepo.getById(id)
+}
+
+export async function fetchVehicleById(id: string) {
+  return vehicleRepo.getById(id)
+}
+
+export async function fetchEmplById(id: string){
+  return agencyEmpRepo.getById(id)
+
+}
+
+
 
 

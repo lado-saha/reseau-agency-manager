@@ -1,5 +1,6 @@
-import { auditCreate, auditUpdate } from "../models/helpers";
-import { Vehicle } from "../models/resource";
+import { monitorEventLoopDelay } from "perf_hooks";
+import { auditCreate, auditUpdate, SortingDirection } from "../models/helpers";
+import { Vehicle, VehicleModel } from "../models/resource";
 import { API_URL } from "../utils";
 import { JsonRepository } from "./json-repository";
 import { VehicleModelRepository } from "./vechicle-model-repo";
@@ -10,6 +11,45 @@ export class VehicleRepository extends JsonRepository<Vehicle> {
   constructor() {
     super('vehicles.json');
   }
+
+
+  private async enrichVehicles(vehicles: Vehicle[]): Promise<Vehicle[]> {
+    // Extract model IDs from the vehicles
+    const modelMap = new Map((await this.modelRepo.getByIds(vehicles.map(v => v.model as string))).map(m => [m.id, m]))
+
+    // Map vehicles to include full model details
+    return vehicles.map(vehicle => ({
+      ...vehicle,
+      model: modelMap.get(vehicle.model as string) ?? (() => {
+        throw new Error(`Unknown model found for vehicle ${vehicle.registrationNumber}`);
+      })(),
+    }));
+  }
+
+  async getByIds(vehicleIds: string[]): Promise<Vehicle[]> {
+    const vehicles = (await this.fetchData()).filter(vehicle => vehicleIds.includes(vehicle.id));
+    return this.enrichVehicles(vehicles);
+  }
+
+  async getAll(
+    search?: string,
+    offset?: number,
+    sortBy?: string,
+    direction?: SortingDirection
+  ): Promise<{ items: Vehicle[]; newOffset: number; totalCount: number }> {
+    const vehicles = await super.getAll(search, offset, sortBy, direction);
+    const fullVehicles = await this.enrichVehicles(vehicles.items);
+    return {
+      ...vehicles,
+      items: fullVehicles,
+    };
+  } async getById(id: string): Promise<Vehicle | undefined> {
+    const vehicle = (await super.getById(id))!!
+    const model = await this.modelRepo.getById(vehicle?.model as string)
+    return { ...vehicle, model: model as VehicleModel }
+  }
+
+
   async saveVehicleBasicInfo(
     vehicleId: string = "new",
     vehicle: Partial<Vehicle>,

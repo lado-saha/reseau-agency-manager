@@ -27,7 +27,9 @@ import VehicleModelLayoutEditor from '../vehicle-model/editor-vehicle-model-sche
 import { SearchDialogVehicleModel } from '../vehicle-model/search-diag-vehicle-model';
 import { convertBitmaskToMatrix } from '@/lib/models/resource';
 import { auditUpdOrNew } from '@/lib/models/helpers';
-import { saveVehicleBasicInfo } from '@/lib/actions';
+import { saveVehicleBasicInfo, searchVehicleModel } from '@/lib/actions';
+import { SearchDialogGeneric } from '../dialogs/search-dialog';
+import { VehicleModelSearchItem } from '../vehicle-model/item-vehicle-model';
 
 // Define the form schema using zod
 const schema = z.object({
@@ -163,13 +165,20 @@ export function VehicleBasicInfoForm({
                       <TrashIcon className="h-4 w-4 " />
                       <span className="hidden md:inline">Remove</span>
                     </Button>
-                  ) : <SearchDialogVehicleModel
-                    triggerText="Select Model"
-                    onSelectAction={(items) => {
-                      setVehicleModel(items[0]);
-                    }}
-                    selectionMode="single"
-                  />
+                  ) :
+                    <SearchDialogGeneric
+                      triggerText="Select Model"
+                      fetchItemsAction={ searchVehicleModel} // Pass function instead of repo
+                      onSelectAction={(selectedItems) => setVehicleModel(selectedItems[0])}
+                      renderItemAction={(item, isSelected, onCheckedChange) => (
+                        <VehicleModelSearchItem
+                          key={item.id}
+                          item={item }
+                          isSelected={isSelected}
+                          onCheckedChange={onCheckedChange}
+                        />
+                      )}
+                    />
                   }
 
                   {vehicleModel && (

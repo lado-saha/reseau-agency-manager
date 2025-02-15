@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import {
+  Check,
   CrownIcon,
   Delete,
   LucideIcon,
@@ -32,9 +33,10 @@ import { User } from '@/lib/models/user';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { JSX, useState } from 'react';
 import { DeleteDialog } from '@/components/dialogs/dialog-delete';
+import { SearchItemProps } from '@/lib/utils';
 
 interface EmployeeItemProps<T extends EmployeeRole> {
-  employee: Employee<T>;
+  item: Employee<T>;
   currentTab: TabsEmployee<T>;
   detailsAction: (id: string) => void;
   deleteAction: (id: string) => void;
@@ -62,7 +64,7 @@ const renderRoleBadge = (role: EmployeeRole) => {
  * @returns
  */
 export function EmployeeTableItem<T extends EmployeeRole>({
-  employee,
+  item: employee,
   currentTab,
   detailsAction,
   deleteAction
@@ -137,7 +139,7 @@ export function DropdownMenuEmployee<T extends EmployeeRole>(
 }
 
 export function EmployeeGridItem<T extends EmployeeRole>({
-  employee,
+  item: employee,
   currentTab,
   detailsAction,
   deleteAction
@@ -166,6 +168,11 @@ export function EmployeeGridItem<T extends EmployeeRole>({
           alt={"user's picture"}
           fill
           className="object-cover"
+          onClick={(e) => {
+            e.preventDefault();
+            window.open(user.photo as string, '_blank');
+          }}
+
         />
       </div>
 
@@ -204,6 +211,64 @@ export function EmployeeGridItem<T extends EmployeeRole>({
           <span className="text-end">{format(employee.updatedOn, 'Pp')}</span>
         </div>
       </div>
+    </Card>
+  );
+}
+
+export function EmployeeSearchItem<T extends EmployeeRole>({
+  item, isSelected, onCheckedChange
+}: SearchItemProps<Employee<T>>) {
+  const user = item.user as User;
+  return (
+    <Card
+      className={`relative overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-200 ${isSelected ? 'border-2 border-primary' : 'border'
+        }`}
+      onClick={() => onCheckedChange(!isSelected)} // Toggle selection on card click
+    >
+      {/* Selection Indicator */}
+      {isSelected && (
+        <div className="absolute top-2 right-2 z-10 bg-primary rounded-full p-1">
+          <Check className="h-4 w-4 text-white" /> {/* Checkmark icon */}
+        </div>
+      )}
+
+      {/* Employee Image */}
+      <div className="relative w-full h-32">
+        <Image
+          src={(user.photo as string) || '/placeholder.svg'}
+          alt={"user's picture"}
+          fill
+          className="object-cover"
+          onClick={(e) => {
+            e.preventDefault();
+            window.open(user.photo as string, '_blank');
+          }}
+
+        />
+      </div>
+
+      {/* Card Content */}
+      <CardContent className="flex flex-col items-center space-y-1 text-center">
+        {/* Status Badge */}
+        <div className="py-2">
+          renderRoleBadge(item.role) : null
+        </div>
+        {/* Employee Details */}
+        <CardTitle>{user.name}</CardTitle>
+        <div className="text-md text-muted-foreground">{user.email}</div>
+
+        {/* Additional Info */}
+        <div className="grid grid-cols-2 gap-4 items-center text-sm mt-3 w-full">
+          <div>
+            <span className="block text-muted-foreground">Phone</span>
+            <span>{user.phone}</span>
+          </div>
+          <div>
+            <span className="block text-muted-foreground">Sex</span>
+            <span>{user.sex}</span>
+          </div>
+        </div>
+      </CardContent>
     </Card>
   );
 }

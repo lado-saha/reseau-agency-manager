@@ -13,7 +13,7 @@ import { NewUserFormMode } from '@/components/auth/new-user-form';
 const fuelTypes = ['Gasoline', 'Diesel', 'Electric', 'Hybrid'];
 fuelTypes[Math.floor(Math.random() * fuelTypes.length)];
 
-interface IRepository<T> {
+export interface IRepository<T> {
   getAll(search?: string, offset?: number, sortBy?: keyof T, direction?: SortingDirection): Promise<{ items: T[]; newOffset: number; totalCount: number }>;
   getById(id: string): Promise<T | undefined>;
   fetchData(): Promise<T[]>;
@@ -32,6 +32,11 @@ export abstract class JsonRepository<T> implements IRepository<T> {
     }
     return await response.json();
   }
+
+  async getByIds(ids: string[]): Promise<T[]> {
+    return (await this.fetchData()).filter(o => ids.includes((o as any).id))
+  }
+
   async getAllFiltered(
     search: string,
     offset = 0,
@@ -100,13 +105,6 @@ export abstract class JsonRepository<T> implements IRepository<T> {
 }
 
 
-
-export class VehicleModelRepository extends JsonRepository<VehicleModel> {
-  constructor() {
-    super('vehicle-models.json');
-  }
-}
-
 export class UserRepository extends JsonRepository<User> {
   constructor() {
     super('users.json');
@@ -116,37 +114,6 @@ export class UserRepository extends JsonRepository<User> {
     const data = await this.fetchData();
     return data.find((item) => item.email === email);
   }
-  // static async authenticateUser(
-  //   redirect: boolean,
-  //   email: string, password: string,
-  // ): Promise<string | void> {
-  //   try {
-  //     await signIn('credentials', {
-  //       redirect: redirect, // Avoid automatic redirection
-  //       email: email,
-  //       password: password
-  //     });
-  //   } catch (error) {
-  //     if (error instanceof AuthError) {
-  //       switch (error.type) {
-  //         case 'CredentialsSignin':
-  //           return 'Invalid credentials.';
-  //         default:
-  //           // console.log("sd" + error.cause)
-  //           return error.cause?.err?.message;
-  //       }
-  //     }
-  //     throw error;
-  //   }
-  // }
-
-
-  // static async signOutUser() {
-  //   'use server'
-  //   const cookieStore = await cookies()
-  //   await signOut();
-  // }
-
 
   async getByIds(ids: string[]): Promise<User[]> {
     const users = await this.fetchData();

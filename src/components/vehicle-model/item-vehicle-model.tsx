@@ -24,6 +24,7 @@ import { VehicleModel } from '@/lib/models/resource';
 import { DeleteDialog } from '../dialogs/dialog-delete';
 import { ListBadges } from '../list-badges';
 import { Checkbox } from '../ui/checkbox';
+import { SearchItemProps } from '@/lib/utils';
 
 
 interface VehicleModelItemProps {
@@ -191,16 +192,11 @@ export function VehicleModelGridItem({
     </Card>
   );
 }
-interface VehicleModelSearchItemProps {
-  model: VehicleModel;
-  isSelected: boolean;
-  onCheckedChange: (checked: boolean) => void;
-}
+
 export function VehicleModelSearchItem({
-  model,
-  isSelected,
+  item, isSelected,
   onCheckedChange,
-}: VehicleModelSearchItemProps) {
+}: SearchItemProps<VehicleModel>) {
   return (
     <Card
       className={`relative overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-200 ${isSelected ? 'border-2 border-primary' : 'border'
@@ -217,21 +213,25 @@ export function VehicleModelSearchItem({
       {/* Vehicle Image */}
       <div className="relative w-full h-32">
         <Image
-          src={model.modelPhoto as string || '/placeholder.svg'}
+          src={item.modelPhoto as string || '/placeholder.svg'}
           alt="Vehicle Model image"
           fill
           className="object-cover"
+          onClick={(e) => {
+            e.preventDefault();
+            window.open(item.modelPhoto as string, '_blank');
+          }}
         />
       </div>
 
       {/* Card Content */}
       <CardContent className="flex flex-col items-center space-y-2 text-center p-4">
         {/* Vehicle Name */}
-        <CardTitle className="text-lg font-semibold">{model.name}</CardTitle>
+        <CardTitle className="text-lg font-semibold">{item.name}</CardTitle>
 
         {/* Seat Count */}
         <div className="text-md text-muted-foreground">
-          <span className="font-semibold">{model.seatCount} Seats</span>
+          <span className="font-semibold">{item.seatCount} Seats</span>
         </div>
 
         {/* Additional Info */}
@@ -239,13 +239,13 @@ export function VehicleModelSearchItem({
           {/* Luggage Spaces */}
           <div>
             <span className="block text-muted-foreground">Luggage</span>
-            <ListBadges items={model.luggageSpaces} />
+            <ListBadges items={item.luggageSpaces} />
           </div>
 
           {/* Fuel Type */}
           <div>
             <span className="block text-muted-foreground">Fuel</span>
-            <span>{model.fuelType}</span>
+            <span>{item.fuelType}</span>
           </div>
         </div>
       </CardContent>

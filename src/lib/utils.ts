@@ -6,6 +6,12 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export interface SearchItemProps<T> {
+  item: T;
+  isSelected: boolean;
+  onCheckedChange: (checked: boolean) => void;
+}
+
 /**
  * Number of items per page
  */
