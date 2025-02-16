@@ -7,15 +7,18 @@ import { User } from './models/user';
 import { UserRepository } from '@/lib/repo/json-repository';
 import { AgencyRepository } from './repo/agency-repo';
 import { AgencyBasicInfo, AgencyLegalDocuments, AgencySocialMediaInfo } from './models/agency';
-import { AgencyEmployeeRole, agencyEmplRoles, Employee, EmployeeRole, StationEmployeeRole } from './models/employee';
+import { AgencyEmployee, AgencyEmployeeRole, agencyEmplRoles, Employee, EmployeeRole, StationEmployeeRole } from './models/employee';
 import { AgencyEmployeeRepository, StationEmployeeRepository } from './repo/employee-repo';
 import { areArraysEqual } from './utils';
 import { Station } from './models/station';
 import { StationRepository } from './repo/station-repo';
 import { PlaceAddress } from './repo/osm-place-repo';
 import { VehicleModelRepository } from './repo/vechicle-model-repo';
-import { Vehicle, VehicleModel } from './models/resource';
+import { Driver, Vehicle, VehicleModel } from './models/resource';
 import { VehicleRepository } from './repo/vehicle-repo';
+import { Trip } from './models/trip';
+import { TripRepository } from './repo/trip-repo';
+import { DriverRepository } from './repo/driver-repo';
 
 const agencyRepo = new AgencyRepository()
 const stationRepo = new StationRepository()
@@ -24,11 +27,14 @@ const agencyEmpRepo = new AgencyEmployeeRepository()
 const stationEmpRepo = new StationEmployeeRepository()
 const vehicleModelRepo = new VehicleModelRepository()
 const vehicleRepo = new VehicleRepository()
+const tripRepo = new TripRepository()
+const driverRepo = new DriverRepository()
 
 // Agency actions
 export async function saveAgencyBasicInfo(agencyId: string, basicInfo: AgencyBasicInfo, ownerId?: string,): Promise<{ id: string, basicInfo: AgencyBasicInfo }> {
   return await agencyRepo.saveAgencyBasicInfo(agencyId, basicInfo, ownerId,)
 }
+
 export async function saveAgencyLegalDocuments(agencyId: string, legalDocs: AgencyLegalDocuments): Promise<AgencyLegalDocuments> {
   return await agencyRepo.saveAgencyLegalDocuments(agencyId, legalDocs)
 }
@@ -49,8 +55,6 @@ export async function saveStationBasicInfo(stationId: string, station: Partial<S
 export async function saveStationGeoInfo(stationId: string, place: PlaceAddress, adminId: string,): Promise<Station> {
   return await stationRepo.saveStationGeoInfo(stationId, place, adminId)
 }
-
-
 
 // User actions
 export async function authenticateUser(
@@ -141,18 +145,34 @@ export async function deleteEmployee<T extends EmployeeRole>(
     return await stationEmpRepo.deleteEmployee(id);
   }
 }
-export async function saveVehicleBasicInfo(agencyId: string, vehicle: Partial<Vehicle>, adminId: string,): Promise< Partial<Vehicle>> {
-  return await vehicleRepo.saveVehicleBasicInfo(agencyId, vehicle, adminId)
+
+export async function saveVehicleBasicInfo(id: string, vehicle: Partial<Vehicle>, adminId: string,): Promise<Partial<Vehicle>> {
+  return await vehicleRepo.saveVehicleBasicInfo(id, vehicle, adminId)
+}
+export async function saveDriverInfo(adminId: string, driver: Driver | AgencyEmployee): Promise<Driver> {
+  return await driverRepo.saveDriverInfo(driver, adminId)
 }
 
+export async function saveTripBasicInfo(id: string, agencyId: string, trip: Trip, adminId: string,): Promise<Trip> {
+  return await tripRepo.saveTripBasicInfo(id, agencyId, trip, adminId)
+}
 
 export async function searchVehicleModel(query: string) {
   return (await vehicleModelRepo.getAll(query, 0)).items;
-} 
+}
+
+export async function searchVehicle(query: string) {
+  return (await vehicleRepo.getAll(query, 0)).items;
+}
 
 export async function searchStation(query: string) {
   return (await stationRepo.getAll(query, 0)).items;
-} 
+}
+
+export async function searchDriver(query: string) {
+  return (await driverRepo.getAll(query, 0)).items;
+}
+
 
 export async function fetchStationById(id: string) {
   return stationRepo.getById(id)
@@ -162,11 +182,9 @@ export async function fetchVehicleById(id: string) {
   return vehicleRepo.getById(id)
 }
 
-export async function fetchEmplById(id: string){
+export async function fetchEmplById(id: string) {
   return agencyEmpRepo.getById(id)
-
 }
-
 
 
 

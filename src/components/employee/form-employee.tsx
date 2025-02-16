@@ -45,24 +45,24 @@ import {
   CardContent
 } from '@/components/ui/card';
 import { User } from '@/lib/models/user';
-import { Employee, EmployeeRole, roleLabels } from '@/lib/models/employee';
-import { saveEmployee, searchUserByEmail } from '@/lib/actions';
+import { AgencyEmployee, Employee, EmployeeRole, roleLabels } from '@/lib/models/employee';
+import { saveDriverInfo, saveEmployee, searchUserByEmail } from '@/lib/actions';
 import { Audit, auditCreate, auditUpdate } from '@/lib/models/helpers';
 import { ErrorDialog } from '../dialogs/dialog-error';
 import { usePathname, useRouter } from 'next/navigation';
 
 // Fix the schema to dynamically select the correct one based on the provided roles
 const getRoleSchema = <T extends EmployeeRole>(roles: T[]) => {
-  return z.enum(['', roles]); // Dynamically creates the enum schema based on the roles array
+  return z.enum(roles); // Dynamically creates the enum schema based on the roles array
 
 };
 
 const roleMap = <T extends EmployeeRole>(
   roles: T[]
 ): { value: T; label: string }[] => {
-  return roles.map((role) => ({
-    value: role,
-    label: roleLabels[role]!! // Add fallback in case roleLabel is missing
+  return roles.map((r) => ({
+    value: r,
+    label: roleLabels[r]!! // Add fallback in case roleLabel is missing
   }));
 };
 
@@ -109,7 +109,7 @@ export function EmployeeForm<T extends EmployeeRole>({
     defaultValues: {
       role: oldEmployee?.role ?? roles[0], // Set default role to the first role in the list
       email: emailParam || user?.email,
-      salary: oldEmployee?.salary
+      salary: oldEmployee?.salary, 
     }
   });
 
@@ -156,6 +156,11 @@ export function EmployeeForm<T extends EmployeeRole>({
           roles,
           adminId
         );
+
+        if(newEmpl.role === 'driver'){
+          const driver = await saveDriverInfo(adminId,newEmpl as AgencyEmployee)
+          console.log(driver)
+        }
         onSubmitCompleteAction(id, newEmpl); // Pass back the data when successful
       }
     } catch (error) {

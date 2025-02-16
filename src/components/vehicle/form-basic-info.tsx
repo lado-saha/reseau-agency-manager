@@ -11,7 +11,7 @@ import {
   FormMessage,
   FormDescription,
 } from '@/components/ui/form';
-import { EyeIcon, TrashIcon } from 'lucide-react';
+import { Check, ChevronsUpDown, EyeIcon, TrashIcon } from 'lucide-react';
 import { useState } from 'react';
 import Image from 'next/image';
 import {
@@ -21,7 +21,7 @@ import {
   CardDescription,
   CardContent,
 } from '@/components/ui/card';
-import { Vehicle, VehicleModel } from '@/lib/models/resource';
+import { HEALTH_STATUS, HEALTH_STATUS_OPTIONS, Vehicle, VehicleModel } from '@/lib/models/resource';
 import { ErrorDialog } from '../dialogs/dialog-error';
 import VehicleModelLayoutEditor from '../vehicle-model/editor-vehicle-model-schema';
 import { SearchDialogVehicleModel } from '../vehicle-model/search-diag-vehicle-model';
@@ -30,6 +30,9 @@ import { auditUpdOrNew } from '@/lib/models/helpers';
 import { saveVehicleBasicInfo, searchVehicleModel } from '@/lib/actions';
 import { SearchDialogGeneric } from '../dialogs/search-dialog';
 import { VehicleModelSearchItem } from '../vehicle-model/item-vehicle-model';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '../ui/command';
+import { cn } from '@/lib/utils';
 
 // Define the form schema using zod
 const schema = z.object({
@@ -42,6 +45,10 @@ const schema = z.object({
     .string()
     .trim()
     .min(1, { message: 'Manufacturer is required.' }),
+
+  healthStatus: z.enum(HEALTH_STATUS, {
+    message: 'Please select the health status.'
+  }),
 
   productionYear: z
     .coerce
@@ -77,6 +84,7 @@ export function VehicleBasicInfoForm({
       manufacturer: originalVehicle?.manufacturer || '',
       productionYear: originalVehicle?.productionYear || 1887,
       registrationNumber: originalVehicle?.registrationNumber || '',
+      healthStatus: originalVehicle?.healthStatus || 'good'
     },
   });
 
@@ -90,7 +98,7 @@ export function VehicleBasicInfoForm({
 
       const newVehicle = await saveVehicleBasicInfo(id, {
         id: id,
-        manufacturer: data.manufacturer, productionYear: data.productionYear, registrationNumber: data.registrationNumber,
+        manufacturer: data.manufacturer, productionYear: data.productionYear, registrationNumber: data.registrationNumber, healthStatus: data.healthStatus,
         model: vehicleModel.id,
         ...auditUpdOrNew(adminId, originalVehicle)
 
@@ -168,12 +176,12 @@ export function VehicleBasicInfoForm({
                   ) :
                     <SearchDialogGeneric
                       triggerText="Select Model"
-                      fetchItemsAction={ searchVehicleModel} // Pass function instead of repo
+                      fetchItemsAction={searchVehicleModel} // Pass function instead of repo
                       onSelectAction={(selectedItems) => setVehicleModel(selectedItems[0])}
                       renderItemAction={(item, isSelected, onCheckedChange) => (
                         <VehicleModelSearchItem
                           key={item.id}
-                          item={item }
+                          item={item}
                           isSelected={isSelected}
                           onCheckedChange={onCheckedChange}
                         />
@@ -261,6 +269,76 @@ export function VehicleBasicInfoForm({
                   </FormItem>
                 )}
               />
+
+              <FormField
+                control={form.control}
+                name="healthStatus"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Health Status</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            className={cn(
+                              'w-full justify-between',
+                              !field.value && 'text-muted-foreground'
+                            )}
+                          >
+                            {field.value
+                              ? HEALTH_STATUS_OPTIONS.find(
+                                (ls) => ls.value === field.value
+                              )?.label
+                              : 'Select Legal Structure'}
+                            <ChevronsUpDown className="opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-full p-0 ">
+                        <Command>
+                          <CommandInput
+                            placeholder="Search legal structure..."
+                            className="h-9"
+                          />
+                          <CommandList>
+                            <CommandEmpty>
+                              No legal structure found.
+                            </CommandEmpty>
+                            <CommandGroup>
+                              {HEALTH_STATUS_OPTIONS.map((ls) => (
+                                <CommandItem
+                                  key={ls.value}
+                                  onSelect={() =>
+                                    form.setValue('healthStatus', ls.value)
+                                  }
+                                >
+                                  {ls.label}
+                                  <Check
+                                    className={cn(
+                                      'ml-auto',
+                                      ls.value === field.value
+                                        ? 'opacity-100'
+                                        : 'opacity-0'
+                                    )}
+                                  />
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                    <FormDescription>
+                      Whats is the health status of your resource?
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+
 
               {/* Submit Button */}
               <Button type="submit" disabled={isPending}>

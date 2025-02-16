@@ -1,6 +1,7 @@
-import { Audit } from "@/lib/models/helpers";
+import { Audit, auditCreate } from "@/lib/models/helpers";
 import { GPSPosition } from "../repo/osm-place-repo";
 import { AgencyEmployee } from "./employee";
+import { userAgent } from "next/server";
 
 /**
  * Represents a general resource that can be owned, transferred, andmaintained.
@@ -15,6 +16,18 @@ export interface Resource extends Audit, GPSPosition {
   tenancyEndTime?: Date | string; // Optional: End time of temporary ownership
   usageCount: number; // Total number of times the resource has been used (lifetime or resettable?)
   status: ResourceStatus
+}
+
+export function newResource(id: string, agencyId: string, adminId: string): Resource {
+  return {
+    id,
+    healthStatus: 'good',
+    ownerId: agencyId,
+    usageCount: 0,
+    status: 'free',
+    ...auditCreate(adminId), latitude: 0, longitude: 0
+
+  }
 }
 
 export type HealthStatus = 'good' | 'bad' | 'maintenance';

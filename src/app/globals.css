@@ -166,3 +166,39 @@ body {
   width: 0;
   height: 0;
 }
+
+@keyframes glow-negative {
+  0% {
+    box-shadow: 0 0 5px rgba(239, 68, 68, 0.7);
+  }
+
+  50% {
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.9);
+  }
+
+  100% {
+    box-shadow: 0 0 5px rgba(239, 68, 68, 0.7);
+  }
+}
+
+@keyframes glow-positive {
+  0% {
+    box-shadow: 0 0 5px rgba(34, 197, 94, 0.7);
+  }
+
+  50% {
+    box-shadow: 0 0 10px rgba(34, 197, 94, 0.9);
+  }
+
+  100% {
+    box-shadow: 0 0 5px rgba(34, 197, 94, 0.7);
+  }
+}
+
+.glow-animation-negative {
+  animation: glow-negative 1.5s infinite;
+}
+
+.glow-animation-positive {
+  animation: glow-positive 1.5s infinite;
+}

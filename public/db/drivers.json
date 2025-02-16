@@ -1,0 +1,32 @@
+[
+  {
+    "id": "79433226-ac7f-4d3f-b29a-29a1dad09549",
+    "healthStatus": "good",
+    "ownerId": "a820da8d-be78-48ea-87d8-0a510d241ad7",
+    "usageCount": 0,
+    "status": "free",
+    "createdOn": "2025-02-16T04:06:07.959Z",
+    "updatedOn": "2025-02-16T04:06:07.959Z",
+    "createdBy": "afd35be5-6642-4c68-87d4-3230ca9d2e4b",
+    "updatedBy": "afd35be5-6642-4c68-87d4-3230ca9d2e4b",
+    "latitude": 0,
+    "longitude": 0,
+    "employee": "f899d933-866a-411c-8fe1-8cd53c3d7998",
+    "license": ""
+  },
+  {
+    "id": "bcefec7e-4e67-473c-bdfa-e2d51e935526",
+    "healthStatus": "good",
+    "ownerId": "a820da8d-be78-48ea-87d8-0a510d241ad7",
+    "usageCount": 0,
+    "status": "free",
+    "createdOn": "2025-02-16T04:07:50.357Z",
+    "updatedOn": "2025-02-16T04:07:50.357Z",
+    "createdBy": "afd35be5-6642-4c68-87d4-3230ca9d2e4b",
+    "updatedBy": "afd35be5-6642-4c68-87d4-3230ca9d2e4b",
+    "latitude": 0,
+    "longitude": 0,
+    "employee": "02e32a7c-3703-4e1c-a8b5-6775725072f1",
+    "license": ""
+  }
+]

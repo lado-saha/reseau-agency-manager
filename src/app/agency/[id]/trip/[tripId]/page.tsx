@@ -26,6 +26,7 @@ export default async function Page({ params }: { params: Params }) {
   if (isNew) {
     return (
       <TripDetailView
+        id={tripId}
         originalTrip={undefined}
         adminId={userId}
         agencyId={id}
@@ -34,7 +35,7 @@ export default async function Page({ params }: { params: Params }) {
   }
 
   original = await repo.getById(tripId);
-  
+
   if (original === undefined) {
     return notFound();
   }
@@ -51,7 +52,7 @@ export default async function Page({ params }: { params: Params }) {
 
   // Fetch vehicles data from the repository
   return (
-  
+
     <Suspense
       fallback={
         <Loading
@@ -63,6 +64,7 @@ export default async function Page({ params }: { params: Params }) {
       }
     >
       <TripDetailView
+        id={tripId}
         originalTrip={original}
         agencyId={id}
         adminId={userId}

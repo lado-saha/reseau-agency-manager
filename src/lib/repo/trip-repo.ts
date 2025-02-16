@@ -22,7 +22,6 @@ export class TripRepository extends JsonRepository<Trip> {
   constructor() {
     super('trips.json');
   }
-
   private async enrichTrips(trips: Trip[]): Promise<Trip[]> {
     // Extract unique IDs for fromStations, toStations, vehicles, drivers, and passenger users
     const stationIds = [...new Set([...trips.map(trip => trip.fromStation as string, ...trips.map(trip => trip.toStation as string))])];
@@ -56,7 +55,7 @@ export class TripRepository extends JsonRepository<Trip> {
   }
 
   async getById(id: string): Promise<Trip | undefined> {
-    const trip = (await super.getById(id))!!;
+    const trip = (await super.getById(id))!!
 
     // Fetch fromStation and toStation in parallel
     const [fromStation, toStation] = await Promise.all([
@@ -89,7 +88,7 @@ export class TripRepository extends JsonRepository<Trip> {
   }
 
   async getByIds(ids: string[]): Promise<Trip[]> {
-    const trips = await super.getByIds(ids);
+    const trips = (await this.fetchData()).filter(d => ids.includes(d.id));
     return this.enrichTrips(trips);
   }
 
@@ -106,13 +105,15 @@ export class TripRepository extends JsonRepository<Trip> {
       items: enrichedItems,
     };
   }
+
   async saveTripBasicInfo(
-    tripId: string = "new",
+    id: string,
+    agencyId: string,
     trip: Trip,
     adminId: string
-  ): Promise<Partial<Trip>> {
+  ): Promise<Trip> {
     const trips = await this.fetchData();
-    if (tripId === "new") {
+    if (id === "new") {
       //if (
       //  trips.some(
       //    (st) => st.=== trip.name
@@ -135,10 +136,10 @@ export class TripRepository extends JsonRepository<Trip> {
       return newTrip
     } else {
       // We are updating an existing trip
-      const tripIndex = trips.findIndex((t) => t.id === tripId);
+      const tripIndex = trips.findIndex((t) => t.id === id);
 
       if (tripIndex === -1) {
-        throw new Error(`Trip with id ${tripId} not found.`);
+        throw new Error(`Trip with id ${id} not found.`);
       }
 
       const newTrip = { ...trips[tripIndex], ...trip, ...auditUpdate(adminId) };

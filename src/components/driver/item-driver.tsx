@@ -10,7 +10,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import {
   AlertCircle,
-  AlertTriangle,
   ArrowDown,
   ArrowDownCircle,
   ArrowUp,
@@ -26,12 +25,10 @@ import {
   MoreVertical,
   MoveRight,
   ParkingCircle,
-  PauseCircleIcon,
-  Wrench,
-  WrenchIcon
+  PauseCircleIcon
 } from 'lucide-react';
 import { TableCell, TableRow } from '@/components/ui/table';
-import { HealthStatus, Vehicle, VehicleModel } from '@/lib/models/resource';
+import { Driver, Vehicle } from '@/lib/models/resource';
 import { TabsVehicle } from '@/lib/models/helpers';
 import { format } from 'date-fns';
 import {
@@ -43,7 +40,9 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { SearchItemProps } from '@/lib/utils';
-import { ListBadges } from '../list-badges';
+import { AgencyEmployee, Employee } from '@/lib/models/employee';
+import { User } from '@/lib/models/user';
+import { renderHealthBadge } from '../vehicle/item-vehicle';
 
 interface VehicleItemProps {
   vehicle: Vehicle;
@@ -85,26 +84,26 @@ function renderStatusBadge(vehicle: Vehicle) {
   }
 }
 
-export function renderHealthBadge(healthStatus: HealthStatus) {
-  switch (healthStatus) {
-    case 'good':
+function renderHealthBadge1(vehicle: Vehicle) {
+  switch (vehicle.health) {
+    case 'normal':
       return (
         <Badge variant="outline" className="items-center ">
           <CheckCircle2 className="mr-2 h-4 w-4" />
-          <span className="text-sm">Healthy</span>
+          <span className="text-sm">Normal</span>
         </Badge>
       );
-    case 'bad':
+    case 'damaged':
       return (
         <Badge variant="outline" className="items-center ">
           <AlertCircle className="mr-2 h-4 w-4" />
           <span className="text-sm">Damaged</span>
         </Badge>
       );
-    case 'maintenance':
+    case 'repairing':
       return (
         <Badge variant="outline" className="items-center">
-          <WrenchIcon className="mr-2 w-4 h-4" />
+          <Hammer className="mr-2 w-4 h-4" />
           <span className="text-sm">Repairing</span>
         </Badge>
       );
@@ -170,7 +169,7 @@ export function VehicleTableItem({
         <></>
       )}
       <TableCell>{`${12}/${vehicle.nbSeats}`}</TableCell>
-      <TableCell>{renderHealthBadge(vehicle)}</TableCell>
+      <TableCell>{renderHealthBadge1(vehicle)}</TableCell>
 
       {/* Additional Info */}
       {renderAdditionalFields()}
@@ -215,85 +214,7 @@ function DropdownMenuVehicle(
   );
 }
 
-
-export function VehicleSearchItem({
-  item,
-  isSelected,
-  onCheckedChange,
-}: SearchItemProps<Vehicle>) {
-  const model = item.model as VehicleModel; // Assuming item.model is already resolved to VehicleModel
-
-  // Determine chip color and icon based on healthStatus
-  return (
-    <Card
-      className={`relative overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-200 ${isSelected ? 'border-2 border-primary' : 'border'
-        }`}
-      onClick={() => onCheckedChange(!isSelected)} // Toggle selection on card click
-    >
-      {/* Selection Indicator */}
-      {isSelected && (
-        <div className="absolute top-2 right-2 z-10 bg-primary rounded-full p-1">
-          <Check className="h-4 w-4 text-white" /> {/* Checkmark icon */}
-        </div>
-      )}
-
-      {/* Vehicle Image */}
-      <div className="relative w-full h-32">
-        <Image
-          src={model.modelPhoto as string || '/placeholder.svg'}
-          alt="Vehicle image"
-          fill
-          className="object-cover"
-          onClick={(e) => {
-            e.preventDefault();
-            window.open(model.modelPhoto as string, '_blank');
-          }}
-        />
-      </div>
-
-      {/* Card Content */}
-      <CardContent className="flex flex-col items-center space-y-2 text-center p-4">
-        {/* Vehicle Manufacturr and Model Name */}
-        {renderHealthBadge(item.healthStatus)}
-        <CardTitle className="text-lg font-semibold">
-          {item.manufacturer} {model.name}
-        </CardTitle>
-
-        {/* Registration Number */}
-        <div className="text-md text-muted-foreground">
-          <span className="font-semibold">{item.registrationNumber}</span>
-        </div>
-
-        {/* Additional Info */}
-        <div className="grid grid-cols-2 gap-4 items-center text-sm mt-3 w-full">
-          {/* Production Year */}
-          <div>
-            <span className="block text-muted-foreground">Year</span>
-            <span>{item.productionYear}</span>
-          </div>
-
-          {/* Seat Count */}
-          <div>
-            <span className="block text-muted-foreground">Seats</span>
-            <span>{model.seatCount}</span>
-          </div>
-
-          {/* Fuel Type */}
-          <div>
-            <span className="block text-muted-foreground">Fuel</span>
-            <span>{model.fuelType}</span>
-          </div>
-
-          {/* Luggage Spaces */}
-          <div>
-            <span className="block text-muted-foreground">Luggage</span>
-            <ListBadges items={model.luggageSpaces} />
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-} export function VehicleGridItem({
+export function VehicleGridItem({
   vehicle,
   currentTab,
   viewOnMap
@@ -337,7 +258,7 @@ export function VehicleSearchItem({
         <div className="text-md text-muted-foreground">{vehicle.model}</div>
 
         {/* Health Badge */}
-        <div>{renderHealthBadge(vehicle)}</div>
+        <div>{renderHealthBadge1(vehicle)}</div>
 
         {/* Additional Info */}
         <div className="grid grid-cols-2 gap-4 items-center text-sm mt-3 w-full">
@@ -420,7 +341,66 @@ export function VehicleMapTooltip({ vehicle, currentTab }: VehicleItemProps) {
       <span className="text-sm">{vehicle.immatriculation}</span>
       <div className="text-sm text-muted-foreground">{vehicle.model}</div>
       <span>{`${12}/${vehicle.nbSeats}`}</span>
-      {renderHealthBadge(vehicle)}
+      {renderHealthBadge1(vehicle)}
+    </Card>
+  );
+}
+
+export function DriverSearchItem({
+  item, isSelected, onCheckedChange
+}: SearchItemProps<Driver>) {
+  const empl = item.employee as AgencyEmployee
+  const user = empl.user as User;
+  return (
+    <Card
+      className={`relative overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-200 ${isSelected ? 'border-2 border-primary' : 'border'
+        }`}
+      onClick={() => onCheckedChange(!isSelected)} // Toggle selection on card click
+    >
+      {/* Selection Indicator */}
+      {isSelected && (
+        <div className="absolute top-2 right-2 z-10 bg-primary rounded-full p-1">
+          <Check className="h-4 w-4 text-white" /> {/* Checkmark icon */}
+        </div>
+      )}
+
+      {/* Employee Image */}
+      <div className="relative w-full h-32">
+        <Image
+          src={(user.photo as string) || '/placeholder.svg'}
+          alt={"user's picture"}
+          fill
+          className="object-cover"
+          onClick={(e) => {
+            e.preventDefault();
+            window.open(user.photo as string, '_blank');
+          }}
+
+        />
+      </div>
+
+      {/* Card Content */}
+      <CardContent className="flex flex-col items-center space-y-1 text-center">
+        {/* Status Badge */}
+        <div className="py-2">
+          {renderHealthBadge(item.healthStatus)}
+        </div>
+        {/* Employee Details */}
+        <CardTitle>{user.name}</CardTitle>
+        <div className="text-md text-muted-foreground">{user.email}</div>
+
+        {/* Additional Info */}
+        <div className="grid grid-cols-2 gap-4 items-center text-sm mt-3 w-full">
+          <div>
+            <span className="block text-muted-foreground">Phone</span>
+            <span>{user.phone}</span>
+          </div>
+          <div>
+            <span className="block text-muted-foreground">Sex</span>
+            <span>{user.sex}</span>
+          </div>
+        </div>
+      </CardContent>
     </Card>
   );
 }

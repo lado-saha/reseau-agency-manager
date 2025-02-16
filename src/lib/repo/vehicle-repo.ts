@@ -66,9 +66,9 @@ export class VehicleRepository extends JsonRepository<Vehicle> {
         throw new Error("Vehicle with similar name already exists.");
       }
       let newVehicle = {
-        id: crypto.randomUUID(),
         ...vehicle,
-        ...auditCreate(adminId)
+        ...auditCreate(adminId),
+        id: crypto.randomUUID(),
       } satisfies Partial<Vehicle>;
 
       await fetch(`${API_URL}/api/data/vehicles`, {

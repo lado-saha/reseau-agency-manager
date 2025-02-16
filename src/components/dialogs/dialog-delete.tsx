@@ -48,9 +48,9 @@ export function DeleteDialog({
   return (
     <Dialog>
       <DialogTrigger>
-        <Button variant='destructive'>
-          <span className="hidden md:inline">{triggerText}</span>
+        <Button size="sm" variant='destructive'>
           {getIcon()}
+          <span className="hidden md:inline">{triggerText}</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">

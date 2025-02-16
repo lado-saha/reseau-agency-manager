@@ -2,11 +2,14 @@ import { AgencyEmployee, Employee, StationEmployee, EmployeeRole } from "@/lib/m
 import { JsonRepository, UserRepository } from "@/lib/repo/json-repository";
 import { API_URL } from "@/lib/utils";
 import { auditCreate, auditUpdate, SortingDirection } from "../models/helpers";
+import { DriverRepository } from "./driver-repo";
+import { Driver } from "../models/resource";
 
 // Generalized Base Employee Repository
 export class EmployeeRepository<T extends Employee<EmployeeRole>> extends JsonRepository<T> {
   private entityName: string
   private userRepo = new UserRepository();
+  //private driverRepo = new DriverRepository();
   constructor(fileName: string) {
     super(fileName);
     this.entityName = fileName.split('.')[0]
@@ -81,10 +84,12 @@ export class EmployeeRepository<T extends Employee<EmployeeRole>> extends JsonRe
   async addEmployee(
     employee: T,
     adminId: string,
+    agencyId: string,
   ): Promise<T> {
     const employees = await this.fetchData();
+    const empId = employee.id || 'new'
 
-    if (employee.id === 'new') {
+    if (empId=== 'new') {
       if (
         employees.some(
           (empl) => empl.orgId === employee.orgId && empl.user === employee.user
@@ -100,6 +105,10 @@ export class EmployeeRepository<T extends Employee<EmployeeRole>> extends JsonRe
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newEmpl),
       });
+
+      //if (employee.role === 'driver') {
+      //  await this.driverRepo.saveDriverInfo(employee as AgencyEmployee, adminId);
+      //}
       return newEmpl;
     } else {
       const index = employees.findIndex((empl) => empl.id === employee.id);
@@ -129,6 +138,7 @@ export class EmployeeRepository<T extends Employee<EmployeeRole>> extends JsonRe
   //
   async getByIds(ids: string[]): Promise<T[]> {
     const empls = (await this.fetchData()).filter(v => ids.includes(v.id));
+
     const userMap = new Map((await this.userRepo.getByIds(empls.map(v => v.user as string))).map(m => [m.id, m]));
     return empls.map(v => ({
       ...v,

@@ -3,7 +3,7 @@ import { auditCreate, auditUpdate, SortingDirection } from "../models/helpers";
 import { API_URL } from "../utils";
 import { JsonRepository } from "./json-repository";
 import { AgencyEmployeeRepository } from "./employee-repo";
-import { Driver } from "../models/resource";
+import { Driver, newResource } from "../models/resource";
 import { AgencyEmployee } from "../models/employee";
 
 export class DriverRepository extends JsonRepository<Driver> {
@@ -14,6 +14,7 @@ export class DriverRepository extends JsonRepository<Driver> {
   }
 
   private async enrichDrivers(drivers: Driver[]): Promise<Driver[]> {
+    console.log("called me 1");
     const emplMap = new Map((await this.emplRepo.getByIds(drivers.map(d => d.employee as string))).map(e => [e.id, e]));
     return drivers.map(driver => ({
       ...driver,
@@ -40,33 +41,32 @@ export class DriverRepository extends JsonRepository<Driver> {
       ...drivers,
       items: fullDrivers,
     };
-  } async getById(id: string): Promise<Driver | undefined> {
+  } 
+
+  async getById(id: string): Promise<Driver | undefined> {
     const driver = (await super.getById(id))!!
+
     const empl = await this.emplRepo.getById(driver?.employee as string)
     return { ...driver, employee: empl as AgencyEmployee }
   }
 
 
-  async saveDriverBasicInfo(
-    driverId: string = "new",
-    driver: Partial<Driver>,
-    adminId: string
-  ): Promise<Partial<Driver>> {
+  async saveDriverInfo(
+    driver: Driver | AgencyEmployee,
+    adminId: string,
+  ): Promise<Driver> {
     const drivers = await this.fetchData();
+    const driverId = driver?.id || 'new'
 
-    if (driverId === "new") {
-      if (
-        drivers.some(
-          (st) => st.name === driver.name
-        )
-      ) {
-        throw new Error("Driver with similar name already exists.");
-      }
+    if ((driver as Driver).license === undefined) {// We are saving from employee
+      const empl = driver as AgencyEmployee
+
       let newDriver = {
-        id: crypto.randomUUID(),
-        ...driver,
-        ...auditCreate(adminId)
-      } satisfies Partial<Driver>;
+        ...newResource(crypto.randomUUID(), empl.orgId, adminId),
+        employee: empl.id,
+        license: '',
+        ...auditCreate(adminId),
+      } satisfies Driver;
 
       await fetch(`${API_URL}/api/data/drivers`, {
         method: "POST",
@@ -78,18 +78,18 @@ export class DriverRepository extends JsonRepository<Driver> {
       return newDriver;
     } else {
       // We are updating an existing driver
-      const driverIndex = vehicles.findIndex((vehicle) => vehicle.id === vehicleId);
+      const driverIndex = drivers.findIndex((d) => d.id === driverId);
 
       if (driverIndex === -1) {
         throw new Error(`Driver with id ${driverId} not found.`);
       }
 
-      const newDriver = { ...drivers[vehicleIndex], ...vehicle, ...auditUpdate(adminId) };
+      const newDriver = { ...drivers[driverIndex], ...driver, ...auditUpdate(adminId) };
 
       await fetch(`${API_URL}/api/data/drivers`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newDriver satisfies Partial<Vehicle>),
+        body: JSON.stringify(newDriver satisfies Driver),
       });
 
       return newDriver

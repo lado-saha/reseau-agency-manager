@@ -55,7 +55,7 @@ export function EmployeeDetailView<T extends EmployeeRole>({
           router.back(); // Navigates back to the previous page
           setTimeout(() => {
             router.refresh();
-          }, 1000); // Give some time for navigation before refreshing
+          }, 500); // Give some time for navigation before refreshing
 
         }}
       />

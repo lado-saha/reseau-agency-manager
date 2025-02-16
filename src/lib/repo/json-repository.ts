@@ -33,9 +33,9 @@ export abstract class JsonRepository<T> implements IRepository<T> {
     return await response.json();
   }
 
-  async getByIds(ids: string[]): Promise<T[]> {
-    return (await this.fetchData()).filter(o => ids.includes((o as any).id))
-  }
+  //async getByIds(ids: string[]): Promise<T[]> {
+  //  return (await this.fetchData()).filter(o => ids.includes((o as any).id))
+  //}
 
   async getAllFiltered(
     search: string,

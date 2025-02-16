@@ -127,6 +127,7 @@ export function DropdownMenuEmployee<T extends EmployeeRole>(
       </DropdownMenuItem>
 
       <DeleteDialog
+        mode='archive'
         title="Fire Employee"
         triggerText='Fire Employee'
         description={`Are you sure you want to fire ${(employee?.user as User).name}? This action cannot be undone.`}

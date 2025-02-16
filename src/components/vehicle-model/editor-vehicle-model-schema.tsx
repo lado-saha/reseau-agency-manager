@@ -9,10 +9,11 @@ import {
   ArrowRight,
   MinusCircleIcon,
   PlusCircleIcon,
-  ShipWheelIcon
+  ShipWheelIcon,
+  TrashIcon
 } from 'lucide-react';
 
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 
 export type CellAction = 'add' | 'delete';
 // We should perform the action on what? the row or the column
@@ -219,17 +220,28 @@ export default function VehicleModelLayoutEditor({
 }
 
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"; // Import shadcn Popover
-import Image from 'next/image';
+import { TripResource } from '@/lib/models/trip';
+import { convertBitmaskToMatrix, Driver, Vehicle, VehicleModel } from '@/lib/models/resource';
+import { PassengerGridItem } from '../trip/item-passenger';
+import { SearchDialogGeneric } from '../dialogs/search-dialog';
+import { searchDriver } from '@/lib/actions';
+import { DriverSearchItem } from '../driver/item-driver';
 
 export function VehicleModelLiveView({
-  matrix,
-  setMatrixChangeAction,
+  tripResource,
+  setDriverChangeAction,
   setSeatCountChangeAction,
 }: {
-  matrix: number[][];
-  setMatrixChangeAction: Dispatch<SetStateAction<number[][]>>;
+  tripResource: TripResource
+  setDriverChangeAction: (d: Driver) => void,
   setSeatCountChangeAction: (newCount: number) => void;
 }) {
+  const vehicle = (tripResource.vehicle as Vehicle)
+  const [driver, setDriver] = useState<Driver | undefined>(tripResource?.driver as Driver)
+  const model = (vehicle.model as VehicleModel)
+  const matrix = convertBitmaskToMatrix(model)
+  const passengers = tripResource.passengers
+
   let seatCounter = 1;
   const seatNumberMatrix = matrix.map((row) =>
     row.map((cell) => (cell === 1 ? seatCounter++ : null))
@@ -237,11 +249,6 @@ export function VehicleModelLiveView({
 
   const handleCellClick = (rowIndex: number, colIndex: number) => {
     setSeatCountChangeAction(seatCounter);
-    setMatrixChangeAction((prevMatrix) => {
-      const newMatrix = [...prevMatrix];
-      newMatrix[rowIndex][colIndex] = newMatrix[rowIndex][colIndex] === 1 ? 0 : 1;
-      return newMatrix;
-    });
   };
 
   return (
@@ -257,7 +264,7 @@ export function VehicleModelLiveView({
           {row.map((cell, colIndex) => {
             const isSeat = cell === 1;
             const seatNumber = seatNumberMatrix[rowIndex][colIndex];
-            const isOccupied = Math.random() < 0.5;
+            const passenger = passengers.find((p) => p.seatNumber === seatNumber)
 
             if (colIndex === 0 && rowIndex === 0) {
               return (
@@ -265,24 +272,36 @@ export function VehicleModelLiveView({
                   <PopoverTrigger asChild>
                     <Card
                       onClick={() => handleCellClick(rowIndex, colIndex)}
-                      className={`relative flex items-center justify-center w-10 h-10 rounded-md cursor-pointer`}
+                      className={`relative flex items-center justify-center w-10 h-10 rounded-md cursor-pointer glow-animation-${driver?.id ? 'positive' : 'negative'}`}
                     >
-                      <ShipWheelIcon className="text-red-500" />
+                      <ShipWheelIcon className={driver?.id ? `text-green-500` : `text-red-500`} />
                     </Card>
                   </PopoverTrigger>
-                  <PopoverContent className="w-48 p-2">
-                    <div className="flex flex-col items-center gap-2">
-                      <img
-                        src="/path/to/driver-image.jpg" // Replace with your image path
-                        alt="Driver"
-                        className="w-16 h-16 rounded-full object-cover"
-                      />
-                      <h3 className="text-sm font-semibold">Driver</h3>
-                      <p className="text-xs ">Seat 1</p>
-                    </div>
+                  <PopoverContent className="w-fit p-0">
+                    {!driver?.id ? (<SearchDialogGeneric
+                      selectionMode="single"
+                      triggerText="Choose the driver"
+                      fetchItemsAction={searchDriver}
+                      onSelectAction={(selectedItems) => {
+                        setDriverChangeAction(selectedItems[0])
+                        setDriver(
+                          selectedItems[0]
+                        );
+                      }}
+                      renderItemAction={(item, isSelected, onCheckedChange) => (
+                        <DriverSearchItem
+                          key={item.id}
+                          item={item}
+                          isSelected={isSelected}
+                          onCheckedChange={onCheckedChange}
+                        />
+                      )}
+                    />) : (
+                      <DriverSearchItem item={driver} isSelected={false} onCheckedChange={() => { }} />
+                    )
+                    }
                   </PopoverContent>
-                </Popover>
-              );
+                </Popover>);
             }
 
             return (
@@ -292,7 +311,7 @@ export function VehicleModelLiveView({
                     onClick={() => handleCellClick(rowIndex, colIndex)}
                     className={`relative flex items-center justify-center w-10 h-10 rounded-md transition-all duration-200 
                       ${isSeat
-                        ? `cursor-pointer ${isOccupied && "bg-green-400 hover:bg-green-500 border-none"}`
+                        ? `cursor-pointer ${passenger && "bg-green-400 hover:bg-green-500 border-none"}`
                         : "border-none shadow-none cursor-cell"
                       }`}
                   >
@@ -303,23 +322,15 @@ export function VehicleModelLiveView({
                     )}
                   </Card>
                 </PopoverTrigger>
-                <PopoverContent className="w-32 p-2">
-                  <div className="flex flex-col items-center gap-4">
-                    <div className="relative w-16 h-16 rounded-full border flex items-center justify-center overflow-hidden">
-                      <Image
-                        src={"/path/image"}
-                        alt="No"
-                        layout="fill"
-                        objectFit="cover"
-                      />
-                    </div>
-                    <h3 className="text-sm font-semibold">Seat {seatNumber}</h3>
-                    <p className="text-xs">
-                      {isOccupied ? "Occupied" : "Available"}
-                    </p>
+                {passenger &&
+                  <PopoverContent className="p-2">
+                    <div>
 
-                  </div>
-                </PopoverContent>
+                      <PassengerGridItem passenger={passenger} />
+                    
+                    </div>
+                  </PopoverContent>
+                }
               </Popover>
             );
           })}

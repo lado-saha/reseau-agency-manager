@@ -164,9 +164,31 @@
     "email": "armel@gmail.com",
     "passwordHash": "$2a$10$rc6/ctfEmMOFxxLJ0CLYR.5SOuFAkAVsJMtXG9XpqM0D1NaIRfh5e",
     "sex": "male",
-    "photo": "",
+    "photo": "/storage/1738941073869-avis_recherche.jpeg",
     "phone": "+237670709391",
     "signupComplete": false,
+    "recruitable": true
+  },
+    {
+    "id": "4ad76243-6652-49bc-97d1-e19c9061105c",
+    "name": "Jack Ma",
+    "email": "jackma@gmail.com",
+    "passwordHash": "$2a$10$rc6/ctfEmMOFxxLJ0CLYR.5SOuFAkAVsJMtXG9XpqM0D1NaIRfh5e",
+    "sex": "male",
+    "photo": "/storage/1738941073869-avis_recherche.jpeg",
+    "phone": "+237670709390",
+    "signupComplete": true,
+    "recruitable": true
+  },
+   {
+    "id": "4ad76243-6652-49bc-97d1-e19c90611045",
+    "name": "Bill Gate",
+    "email": "billgate@gmail.com",
+    "passwordHash": "$2a$10$rc6/ctfEmMOFxxLJ0CLYR.5SOuFAkAVsJMtXG9XpqM0D1NaIRfh5e",
+    "sex": "male",
+    "photo": "/storage/1738941073869-avis_recherche.jpeg",
+    "phone": "+237670709390",
+    "signupComplete": true,
     "recruitable": true
   }
 ]
