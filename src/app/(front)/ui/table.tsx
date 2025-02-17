@@ -1,7 +1,7 @@
 // app/ui/table.tsx
 
 
-import { Trip } from '@/app/lib/data';
+import { Trip } from '@/app-front/lib/data';
 import Link from 'next/link';
 import Image from 'next/image';
 

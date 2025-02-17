@@ -1,15 +1,13 @@
-import { fetchDetail } from "@/app/lib/data";
+import { fetchDetail } from "@/app-front/lib/data";
 import { notFound } from 'next/navigation';
-import VoyageHeader from '@/app/voyage/[detail]/component/voyageHeader';
-import AgenceInfo from '@/app/voyage/[detail]/component/agenceInfo';
-import BusInfo from '@/app/voyage/[detail]/component/busInfo';
-import VoyageInfo from '@/app/voyage/[detail]/component/voyageInfo';
-import ChauffeurInfo from '@/app/voyage/[detail]/component/chauffeurInfo';
-import SelectSeatButton from '@/app/voyage/[detail]/component/selectseatButton';
+import VoyageHeader from '@/app-front/voyage/[detail]/component/voyageHeader';
+import AgenceInfo from '@/app-front/voyage/[detail]/component/agenceInfo';
+import BusInfo from '@/app-front/voyage/[detail]/component/busInfo';
+import VoyageInfo from '@/app-front/voyage/[detail]/component/voyageInfo';
+import ChauffeurInfo from '@/app-front/voyage/[detail]/component/chauffeurInfo';
+import SelectSeatButton from '@/app-front/voyage/[detail]/component/selectseatButton';
 
-
-
-export default async function Page({ params }: { params: { detail: string } }) {
+export default async function Page({ params }: { params: Promise<{ detail: string }> }) {
   const { detail } = await params;
   const tableau = await fetchDetail(detail);
 
@@ -24,12 +22,11 @@ export default async function Page({ params }: { params: { detail: string } }) {
           <VoyageHeader 
             departure={element.departure}
             destination={element.destination}
-            
           />
 
           <div className="flex justify-center mt-8">
             <SelectSeatButton 
-            id={element.id}
+              id={element.id}
             />
           </div>
 
@@ -63,8 +60,6 @@ export default async function Page({ params }: { params: { detail: string } }) {
               rating={element.rating}
             />
           </div>
-
-          
         </div>
       ))}
     </div>

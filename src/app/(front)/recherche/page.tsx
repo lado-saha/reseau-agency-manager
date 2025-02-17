@@ -1,6 +1,6 @@
-import Search from '@/app/ui/search';
-import Table from '@/app/ui/table';
-import { searchTrips } from '@/app/lib/data';
+import Search from '@/app-front/ui/search';
+import Table from '@/app-front/ui/table';
+import { searchTrips } from '@/app-front/lib/data';
 
 interface SearchParamsType {
   departure?: string;
@@ -12,28 +12,28 @@ interface SearchParamsType {
 }
 
 export default async function Page({
-  searchParams = {},
+  searchParams,
 }: {
-  searchParams?: SearchParamsType;
+  searchParams: Promise<SearchParamsType>;
 }) {
-  // Pas besoin de Promise.resolve ici car searchParams est déjà un objet
-  
-  const ceci = await Promise.resolve(searchParams || {});
-  const departure = ceci?.departure || '';
-  const destination = ceci?.destination || '';
-  const agency = ceci?.agency || '';
-  const heure = ceci?.heure || '';
-  const date = ceci?.date || '';
-  const typeVoyage = ceci?.typeVoyage || '';
+  // Await the searchParams promise
+  const params = await searchParams;
 
+  // Destructure the resolved searchParams
+  const departure = params.departure || '';
+  const destination = params.destination || '';
+  const agency = params.agency || '';
+  const heure = params.heure || '';
+  const date = params.date || '';
+  const typeVoyage = params.typeVoyage || '';
+
+  // Fetch trips based on search parameters
   const trips = await searchTrips(departure, destination, agency, heure, date, typeVoyage);
-  
+
   return (
     <main className="p-8">
       <h1 className="text-2xl font-bold text-blue-900 mb-8">Recherche de voyages</h1>
       <div className="space-y-8">
-        
-        
         <Search />
         {trips.length > 0 ? (
           <Table trips={trips} />

@@ -20,7 +20,7 @@ export default function Grid({valeur}:
 
   let visibleIndex = 0;
 
-  const handleClick = (index) => {
+  const handleClick = (index: number) => {
     if (!validated) {
       const newClicked = [...clicked];
       newClicked[index] = !newClicked[index];
@@ -31,7 +31,7 @@ export default function Grid({valeur}:
 
   const handleValidate = () => {
     setValidated(true);
-    {/*router.push("@/app/recherche");*/}
+    {/*router.push("@/app-front/recherche");*/}
   };
 
   return (

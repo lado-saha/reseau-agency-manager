@@ -60,11 +60,12 @@ export default function StationLayout({
       {showSidebar && (
         <AppSidebar
           user={{
-            name: session?.user?.name!,
-            email: session?.user?.email!,
+            name: session?.user?.name ?? '',
+            email: session?.user?.email??'',
             passwordHash: '',
-            id: session?.user?.id!,phone:'', photo: '',recruitable: false, sex:'male',signupComplete:false
+            id: session?.user?.id ?? '',phone:'', photo: '',recruitable: false, sex:'male',signupComplete:false
           }}
+
           showCalendar={['vehicles'].includes(currentPage)}
           urlPaths={[]}
           choices={[{ logo: PersonStandingIcon, name: 'Joe', plan: 'jsd' }]}

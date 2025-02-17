@@ -232,7 +232,7 @@ export function getDateFilterablePaths(agencyId: string): string[] {
     (url) =>
       URL_PATHS_AGENCY.some((section) =>
         section.items?.some(
-          (subItem) => subItem.url.replace(':agencyId', agencyId) === url && subItem.dateFilterable
+          (subItem) => subItem.url.replace(':agencyId', agencyId) === url && false
         )
       )
   );

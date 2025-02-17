@@ -1,5 +1,5 @@
 import { User } from 'lucide-react';
-import RatingStars from '@/app/voyage/[detail]/component/ratingStars';
+import RatingStars from '@/app-front/voyage/[detail]/component/ratingStars';
 import Image from 'next/image';
 
 interface ChauffeurInfoProps {

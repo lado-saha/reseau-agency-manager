@@ -46,13 +46,13 @@ export default async function Page(props: {
         />
       }
     >
-      <VehicleListView
+      {/* <VehicleListView
         stations={vehicles}
         offset={newOffset}
         totalStations={totalCount}
         sortDirection={sortingDirection}
         sortOption={sortingOption}
-      />
+      /> */}
     </Suspense>
   );
 }

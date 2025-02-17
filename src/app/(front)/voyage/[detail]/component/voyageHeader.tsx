@@ -1,4 +1,4 @@
-/*import RatingStars from '@/app/voyage/[detail]/component/ratingStars';*/
+/*import RatingStars from '@/app-front/voyage/[detail]/component/ratingStars';*/
 
 export default function VoyageHeader({ 
   departure, 

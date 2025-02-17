@@ -40,18 +40,19 @@ export const trips: Trip[] = [
     date: "2024-02-15",
     image: "/front/douala.jpeg",
     image_bus: "/noblesse.jpeg",
-  image_agence: "/noblesse.jpeg",
-  heure: "18:00",
-  typeVoyage: "classique",
-  bus: "Mercedes",
-  immatriculation: "LT023GH",
-  nb_place: 70,
-  nom_chauffeur: "Babana",
-  rating: 5,
-  arret: "Melon",
-  image_chauffeur: "/chauffeur.jpeg",
-  localisation: "Douala-Akwa, Yaounde-Mvan"
+    image_agence: "/noblesse.jpeg",
+    heure: "18:00",
+    typeVoyage: "classique",
+    bus: "Mercedes",
+    immatriculation: "LT023GH",
+    nb_place: 70,
+    nom_chauffeur: "Babana",
+    rating: 5,
+    arret: "Melon",
+    image_chauffeur: "/chauffeur.jpeg",
+    localisation: "Douala-Akwa, Yaounde-Mvan"
   },
+
   {
     id: "2",
     departure: "Limbe",
@@ -61,17 +62,17 @@ export const trips: Trip[] = [
     date: "2024-03-20",
     image: "/front/ebolowa.jpg",
     image_bus: "/busgeneral.jpg",
-  image_agence: "/general.jpeg",
-   heure: "11:00",
-   typeVoyage: "classique",
-  bus: "Mercedes",
-  immatriculation: "LT023GH",
-  nb_place: 70,
-  nom_chauffeur: "Babana",
-  rating: 5,
-  arret: "Melon",
-  image_chauffeur: "/chauffeur.jpeg",
-  localisation: "Douala-Akwa, Yaounde-Mvan"
+    image_agence: "/general.jpeg",
+    heure: "11:00",
+    typeVoyage: "classique",
+    bus: "Mercedes",
+    immatriculation: "LT023GH",
+    nb_place: 70,
+    nom_chauffeur: "Babana",
+    rating: 5,
+    arret: "Melon",
+    image_chauffeur: "/chauffeur.jpeg",
+    localisation: "Douala-Akwa, Yaounde-Mvan"
   },
   {
     id: "3",
@@ -81,18 +82,18 @@ export const trips: Trip[] = [
     price: 4000,
     date: "2024-04-10",
     image: "/front/yaounde.jpeg",
-    image_bus:  "/busgeneral.jpg",
-  image_agence: "/general.jpeg",
-   heure: "22:00",
-   typeVoyage: "classique",
-  bus: "Mercedes",
-  immatriculation: "LT023GH",
-  nb_place: 70,
-  nom_chauffeur: "Babana",
-  rating: 5,
-  arret: "Melon",
-  image_chauffeur: "/chauffeur.jpeg",
-  localisation: "Douala-Akwa, Yaounde-Mvan"
+    image_bus: "/busgeneral.jpg",
+    image_agence: "/general.jpeg",
+    heure: "22:00",
+    typeVoyage: "classique",
+    bus: "Mercedes",
+    immatriculation: "LT023GH",
+    nb_place: 70,
+    nom_chauffeur: "Babana",
+    rating: 5,
+    arret: "Melon",
+    image_chauffeur: "/chauffeur.jpeg",
+    localisation: "Douala-Akwa, Yaounde-Mvan"
 
   },
   {
@@ -105,17 +106,17 @@ export const trips: Trip[] = [
     image: "/front/maroua.jpg",
     image_bus: "/bustouristique.jpg",
     image_agence: "/touristique.jpg",
-     heure: "14:00",
-     typeVoyage: "classique",
-  bus: "Mercedes",
-  immatriculation: "LT023GH",
-  nb_place: 70,
-  nom_chauffeur: "Babana",
-  rating: 5,
-  arret: "Melon",
-  image_chauffeur: "/chauffeur.jpeg",
-  localisation: "Douala-Akwa, Yaounde-Mvan"
-    
+    heure: "14:00",
+    typeVoyage: "classique",
+    bus: "Mercedes",
+    immatriculation: "LT023GH",
+    nb_place: 70,
+    nom_chauffeur: "Babana",
+    rating: 5,
+    arret: "Melon",
+    image_chauffeur: "/chauffeur.jpeg",
+    localisation: "Douala-Akwa, Yaounde-Mvan"
+
   },
   {
     id: "5",
@@ -126,18 +127,18 @@ export const trips: Trip[] = [
     date: "2024-04-10",
     image: "/front/limbe.jpg",
     image_bus: "/busglobal.jpg",
-  image_agence: "/global.jpeg",
-   heure: "06:30",
-   typeVoyage: "vip",
-  bus: "Mercedes",
-  immatriculation: "LT023GH",
-  nb_place: 70,
-  nom_chauffeur: "Babana",
-  rating: 5,
-  arret: "Melon",
-  image_chauffeur: "/chauffeur.jpeg",
-  localisation: "Douala-Akwa, Yaounde-Mvan"
-    
+    image_agence: "/global.jpeg",
+    heure: "06:30",
+    typeVoyage: "vip",
+    bus: "Mercedes",
+    immatriculation: "LT023GH",
+    nb_place: 70,
+    nom_chauffeur: "Babana",
+    rating: 5,
+    arret: "Melon",
+    image_chauffeur: "/chauffeur.jpeg",
+    localisation: "Douala-Akwa, Yaounde-Mvan"
+
   },
   {
     id: "6",
@@ -148,18 +149,18 @@ export const trips: Trip[] = [
     date: "2024-04-10",
     image: "/front/buea.webp",
     image_bus: "/busglobal.jpg",
-  image_agence: "/global.jpeg",
-   heure: "08:00",
-   typeVoyage: "classique",
-  bus: "Mercedes",
-  immatriculation: "LT023GH",
-  nb_place: 70,
-  nom_chauffeur: "Babana",
-  rating: 5,
-  arret: "Melon",
-  image_chauffeur: "/chauffeur.jpeg",
-  localisation: "Douala-Akwa, Yaounde-Mvan"
-    
+    image_agence: "/global.jpeg",
+    heure: "08:00",
+    typeVoyage: "classique",
+    bus: "Mercedes",
+    immatriculation: "LT023GH",
+    nb_place: 70,
+    nom_chauffeur: "Babana",
+    rating: 5,
+    arret: "Melon",
+    image_chauffeur: "/chauffeur.jpeg",
+    localisation: "Douala-Akwa, Yaounde-Mvan"
+
   },
   {
     id: "7",
@@ -170,17 +171,17 @@ export const trips: Trip[] = [
     date: "2024-04-10",
     image: "/front/dschang.jpg",
     image_bus: "/busgeneral.jpg",
-  image_agence:  "/general.jpeg",
-   heure: "12:00",
-   typeVoyage: "classique",
-  bus: "Mercedes",
-  immatriculation: "LT023GH",
-  nb_place: 70,
-  nom_chauffeur: "Babana",
-  rating: 5,
-  arret: "Melon",
-  image_chauffeur: "/chauffeur.jpeg",
-  localisation: "Douala-Akwa, Yaounde-Mvan"
+    image_agence: "/general.jpeg",
+    heure: "12:00",
+    typeVoyage: "classique",
+    bus: "Mercedes",
+    immatriculation: "LT023GH",
+    nb_place: 70,
+    nom_chauffeur: "Babana",
+    rating: 5,
+    arret: "Melon",
+    image_chauffeur: "/chauffeur.jpeg",
+    localisation: "Douala-Akwa, Yaounde-Mvan"
   },
   {
     id: "8",
@@ -191,18 +192,18 @@ export const trips: Trip[] = [
     date: "2024-04-10",
     image: "/front/bangangte.jpeg",
     image_bus: "/noblesse.jpeg",
-  image_agence: "/noblesse.jpeg",
-     heure: "10:30",
-     typeVoyage: "vip",
-  bus: "Mercedes",
-  immatriculation: "LT023GH",
-  nb_place: 70,
-  nom_chauffeur: "Babana",
-  rating: 5,
-  arret: "Melon",
-  image_chauffeur: "/chauffeur.jpeg",
-  localisation: "Douala-Akwa, Yaounde-Mvan"
-     
+    image_agence: "/noblesse.jpeg",
+    heure: "10:30",
+    typeVoyage: "vip",
+    bus: "Mercedes",
+    immatriculation: "LT023GH",
+    nb_place: 70,
+    nom_chauffeur: "Babana",
+    rating: 5,
+    arret: "Melon",
+    image_chauffeur: "/chauffeur.jpeg",
+    localisation: "Douala-Akwa, Yaounde-Mvan"
+
   }
 
 ];
@@ -218,34 +219,34 @@ export async function searchTrips(
   const filteredTrips = trips.filter(trip => {
     const matchDeparture = !departureQuery ||
       trip.departure.toLowerCase().includes(departureQuery.toLowerCase());
-    
+
     const matchDestination = !destinationQuery ||
       trip.destination.toLowerCase().includes(destinationQuery.toLowerCase());
-    
+
     const matchAgency = !agencyQuery ||
       trip.agency.toLowerCase().includes(agencyQuery.toLowerCase());
-    
+
     const matchHeure = !heureQuery ||
       trip.heure.includes(heureQuery);
-    
+
     const matchDate = !dateQuery ||
       new Date(trip.date).toISOString().split('T')[0] === dateQuery;
-    
+
     const matchTypeVoyage = !typeVoyageQuery ||
       trip.typeVoyage.toLowerCase() === typeVoyageQuery.toLowerCase();
 
-    return matchDeparture && matchDestination && matchAgency && 
-           matchHeure && matchDate && matchTypeVoyage;
+    return matchDeparture && matchDestination && matchAgency &&
+      matchHeure && matchDate && matchTypeVoyage;
   });
 
   // Simuler un délai d'API
   await new Promise(resolve => setTimeout(resolve, 500));
-  
+
   return filteredTrips;
 }
 
 export async function fetchDetail(numb: string) {
-  const filterId = trips.filter(trip =>{
+  const filterId = trips.filter(trip => {
     const matchId = trip.id.includes(numb);
 
     return matchId;

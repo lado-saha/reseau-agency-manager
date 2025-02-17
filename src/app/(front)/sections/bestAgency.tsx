@@ -27,7 +27,7 @@ const BestAgency = () => {
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
   useEffect(() => {
-    let interval;
+    let interval: any;
     if (isAutoPlaying) {
       interval = setInterval(() => {
         setCurrentIndex((prevIndex) => 
@@ -50,7 +50,7 @@ const BestAgency = () => {
     );
   };
 
-  const goToSlide = (index) => {
+  const goToSlide = (index: number) => {
     setCurrentIndex(index);
   };
 
