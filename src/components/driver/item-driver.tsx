@@ -109,7 +109,8 @@ export function DriverTableItem({
   viewOnMapAction
 }: DriverItemProps) {
 
-  const fromCity = ((driver.tenant as Station).address as PlaceAddress).city
+  //const fromCity = ((driver.tenant as Station).address as PlaceAddress).city
+  const fromCity =  driver.tenant ? ((driver.tenant as Station).address as PlaceAddress).city : undefined
   const toCity = driver.nextTenant ? ((driver.nextTenant as Station).address as PlaceAddress).city : undefined
 
   const renderAdditionalFields = () => {
@@ -125,13 +126,13 @@ export function DriverTableItem({
         return (
           <>
             <TableCell>{toCity ?? 'None'}</TableCell> {/*To town*/}
-            <TableCell>{format(driver.lastStatusSwitchTime as Date, 'PP')}</TableCell> {/*Departure time*/}
+            <TableCell>{format(driver?.lastStatusSwitchTime as Date ?? new Date(), 'PP')}</TableCell> {/*Departure time*/}
           </>
         );
       case 'stationed': // Tenant === Me ()
         return (
           <>
-            <TableCell>{format(driver.tenancyStartedTime as Date, 'PP')}</TableCell> {/*Arrived on*/}
+            <TableCell>{format(driver?.tenancyStartedTime as Date ?? new Date(), 'PP')}</TableCell> {/*Arrived on*/}
           </>
         );
       default:
@@ -293,8 +294,7 @@ export function DriverGridItem({
   const employee = (driver.employee as AgencyEmployee)
   const user = employee.user as User
 
-
-  const fromCity = ((driver.tenant as Station).address as PlaceAddress).city
+  const fromCity =  driver.tenant ? ((driver.tenant as Station).address as PlaceAddress).city : undefined
   const toCity = driver.nextTenant ? ((driver.nextTenant as Station).address as PlaceAddress).city : undefined
 
   const renderAdditionalFields = () => {

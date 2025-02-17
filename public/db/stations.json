@@ -34,5 +34,17 @@
     "createdBy": "afd35be5-6642-4c68-87d4-3230ca9d2e4b",
     "updatedBy": "afd35be5-6642-4c68-87d4-3230ca9d2e4b",
     "address": "4e2368cf-9f1b-4fff-ad82-8adbe80a3464"
+  },
+  {
+    "id": "c0a570cf-0b10-45d7-8760-0bd23808e207",
+    "name": "Avenir Voyages Dschang",
+    "chief": "afd35be5-6642-4c68-87d4-3230ca9d2e4b",
+    "agency": "a820da8d-be78-48ea-87d8-0a510d241ad7",
+    "entrancePhoto": "/storage/1739805880727-Screenshot-from-2025-02-15-23-49-16.png",
+    "createdOn": "2025-02-17T15:24:40.808Z",
+    "updatedOn": "2025-02-17T15:24:58.443Z",
+    "createdBy": "2831d880-1dae-43fb-8403-168a59b748c4",
+    "updatedBy": "2831d880-1dae-43fb-8403-168a59b748c4",
+    "address": "cfa8bfdb-bd17-4243-9648-f4f1edd40b4a"
   }
 ]

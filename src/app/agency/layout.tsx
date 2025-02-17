@@ -26,7 +26,7 @@ export default function AgencyLayout({ children }: { children: React.ReactNode }
   const agencyId = segments[1];
 
   // Hide sidebar when any dynamic ID is "new"
-  const hideSidebar = segments.some((segment) => segment === 'new');
+  const hideSidebar = segments.some((segment) => segment === 'news');
 
   useEffect(() => {
     if (status === 'authenticated' && session?.user) {

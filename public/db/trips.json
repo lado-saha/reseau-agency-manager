@@ -1,2 +1,18 @@
 [
+  {
+    "id": "10e748d7-3cf4-4a27-b0bf-3aceb00eb0ac",
+    "fromStation": "db4c5fb1-7d4a-4ba9-92b2-b3bf6e570746",
+    "toStation": "c0a570cf-0b10-45d7-8760-0bd23808e207",
+    "status": "scheduled",
+    "departureTime": "2025-02-17T07:00:00.000Z",
+    "expectedArrivalTime": "2025-02-17T09:00:00.000Z",
+    "seatPrice": 50690,
+    "isVip": false,
+    "notes": "Oposd",
+    "resources": [],
+    "createdOn": "2025-02-17T15:48:18.434Z",
+    "updatedOn": "2025-02-17T15:48:18.434Z",
+    "createdBy": "2831d880-1dae-43fb-8403-168a59b748c4",
+    "updatedBy": "2831d880-1dae-43fb-8403-168a59b748c4"
+  }
 ]

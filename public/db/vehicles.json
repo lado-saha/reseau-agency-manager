@@ -34,5 +34,23 @@
     "status": "free",
     "latitude": "3.8450584",
     "longitude": "11.492106224039158"
+  },
+  {
+    "id": "ad0e40e8-47e3-4e68-9fd7-d052888bb72e",
+    "manufacturer": "fdsafsadf",
+    "productionYear": 1887,
+    "registrationNumber": "2134213",
+    "healthStatus": "good",
+    "tenant": "b8d84407-0636-4576-8f8f-58ff38dba399",
+    "model": "2",
+    "ownerId": "2831d880-1dae-43fb-8403-168a59b748c4",
+    "tenancyStartedTime": "2025-02-17T15:26:02.100Z",
+    "createdOn": "2025-02-17T15:26:02.099Z",
+    "updatedOn": "2025-02-17T15:26:02.100Z",
+    "createdBy": "a820da8d-be78-48ea-87d8-0a510d241ad7",
+    "updatedBy": "a820da8d-be78-48ea-87d8-0a510d241ad7",
+    "status": "free",
+    "latitude": "3.8450901898731735",
+    "longitude": "11.51522420205153"
   }
 ]

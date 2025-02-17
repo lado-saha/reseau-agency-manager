@@ -28,5 +28,15 @@
     "latitude": "3.846975121946703",
     "longitude": "11.502635527683898",
     "id": "4e2368cf-9f1b-4fff-ad82-8adbe80a3464"
+  },
+  {
+    "road": "Rue 7.197",
+    "suburb": "Étoug-ébé",
+    "city": "Communauté urbaine de Yaoundé",
+    "state": "Centre",
+    "country": "Cameroun",
+    "latitude": "3.8552406",
+    "longitude": "11.4699452",
+    "id": "cfa8bfdb-bd17-4243-9648-f4f1edd40b4a"
   }
 ]

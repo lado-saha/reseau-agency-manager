@@ -28,5 +28,35 @@
     "longitude": 0,
     "employee": "02e32a7c-3703-4e1c-a8b5-6775725072f1",
     "license": ""
+  },
+  {
+    "id": "5045c0e3-540c-4eb2-bdf3-8e4b4fa3177f",
+    "healthStatus": "good",
+    "ownerId": "a820da8d-be78-48ea-87d8-0a510d241ad7",
+    "usageCount": 0,
+    "status": "free",
+    "createdOn": "2025-02-17T15:43:09.131Z",
+    "updatedOn": "2025-02-17T15:43:09.131Z",
+    "createdBy": "2831d880-1dae-43fb-8403-168a59b748c4",
+    "updatedBy": "2831d880-1dae-43fb-8403-168a59b748c4",
+    "latitude": 0,
+    "longitude": 0,
+    "employee": "6c7d8e90-2345-6789-ab12-cd34ef56gh78",
+    "license": ""
+  },
+  {
+    "id": "54a0a323-935a-4ab4-a26d-adf447378ef0",
+    "healthStatus": "good",
+    "ownerId": "a820da8d-be78-48ea-87d8-0a510d241ad7",
+    "usageCount": 0,
+    "status": "free",
+    "createdOn": "2025-02-17T15:43:20.973Z",
+    "updatedOn": "2025-02-17T15:43:20.973Z",
+    "createdBy": "2831d880-1dae-43fb-8403-168a59b748c4",
+    "updatedBy": "2831d880-1dae-43fb-8403-168a59b748c4",
+    "latitude": 0,
+    "longitude": 0,
+    "employee": "5c6d7890-1234-5678-ab90-cd12ef34gh56",
+    "license": ""
   }
 ]

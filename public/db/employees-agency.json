@@ -69,22 +69,22 @@
     "id": "5c6d7890-1234-5678-ab90-cd12ef34gh56",
     "user": "e5f67890-1234-5678-ab90-cd12ef34gh56",
     "orgId": "a820da8d-be78-48ea-87d8-0a510d241ad7",
-    "role": "owner",
+    "role": "driver",
     "createdOn": "2024-12-10T12:50:09.170Z",
-    "updatedOn": "2024-12-10T12:50:09.170Z",
+    "updatedOn": "2025-02-17T15:43:20.274Z",
     "createdBy": "admin",
-    "updatedBy": "admin",
+    "updatedBy": "2831d880-1dae-43fb-8403-168a59b748c4",
     "salary": 2000000
   },
   {
     "id": "6c7d8e90-2345-6789-ab12-cd34ef56gh78",
     "user": "f6789012-3456-7890-ab12-cd34ef56gh78",
     "orgId": "a820da8d-be78-48ea-87d8-0a510d241ad7",
-    "role": "manager",
+    "role": "driver",
     "createdOn": "2024-12-10T12:50:09.170Z",
-    "updatedOn": "2024-12-10T12:50:09.170Z",
+    "updatedOn": "2025-02-17T15:43:08.424Z",
     "createdBy": "admin",
-    "updatedBy": "admin",
+    "updatedBy": "2831d880-1dae-43fb-8403-168a59b748c4",
     "salary": 750000
   },
   {
