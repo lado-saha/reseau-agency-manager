@@ -214,9 +214,9 @@ export function TableVehicles({
               <TableHead>Model</TableHead>
               <TableHead>Registration Number</TableHead>
               {tab === 'all' && <TableHead>Status</TableHead>}
+              <TableHead>Seat Count</TableHead>
               <TableHead>Production Year</TableHead>
               <TableHead>Health Status</TableHead>
-              <TableHead>Seat Count</TableHead>
               <TableHead>Fuel Type</TableHead>
               <TableHead>Luggage Spaces</TableHead>
               {RenderTableHeaders(tab)}

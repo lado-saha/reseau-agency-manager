@@ -30,7 +30,7 @@ import {
   TableVehicles,
   GridVehicles
 } from '@/components/vehicle/table-vehicles';
-import { Vehicle } from '@/lib/models/resource';
+import { getResourceTenantStatus, ResourceStatus, Vehicle } from '@/lib/models/resource';
 import {
   SortingDirection,
   sortVehicles,
@@ -80,7 +80,7 @@ export default function VehicleListView({
     vehicles.length >= 1 ? vehicles[0].latitude : 0,
     vehicles.length >= 1 ? vehicles[0].longitude : 0
   ]);
-  const [mapZoom, setMapZoom] = useState(15);
+  const [mapZoom, setMapZoom] = useState(10);
   // Sorting
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -102,8 +102,7 @@ export default function VehicleListView({
     router.replace(`${pathname}?${params.toString()}`);
   };
 
-
-  const filteredVehicles = () => vehicles = tab !== 'all' ? vehicles.filter(v => v.status.toString() === tab) : vehicles
+  const filteredVehicles = () => vehicles = tab !== 'all' ? vehicles.filter(v => getResourceTenantStatus(v, currentId) === (tab as ResourceStatus | undefined)) : vehicles
 
   function navToDetailView(id: string): void {
     router.push(`${pathname}/${id}`);

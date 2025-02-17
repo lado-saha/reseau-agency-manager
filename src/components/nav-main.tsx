@@ -24,26 +24,22 @@ import {
 
 export function NavMain({ items }: { items: UrlPath[] }) {
   const pathname = usePathname(); // Get the current pathname
-
-  const agencyId = () => {
-    const index = pathname.split('/').findIndex(v => v === 'agency')
-   
-    return pathname.split('/')[index + 1]
-  }
+  const segments = pathname.split('/');
+  const agencyId = segments[2];
 
   const updateItems = items.map(i => {
-    const url = i.url.replace(':agencyId', agencyId())
-    const items = i.items?.map(it => it.url.replace(":agencyId", agencyId()))
-    return {...i, url, items: items} as UrlPath
-  })
+    const url = i.url.replace(':agencyId', agencyId);
+    const items = i.items?.map(it => it.url.replace(':agencyId', agencyId));
+    return { ...i, url, items: items } as UrlPath;
+  });
 
   // Function to determine if the item URL is active
   const isParentActive = (url: string) => {
-    return pathname.split('?')[0].startsWith(url);
+    return pathname.split('?')[0] === url;
   };
 
   const isChildActive = (url: string) => {
-    return true // Match exact or prefix URL
+    return pathname.split('?')[0] === url;
   };
 
   return (
@@ -53,41 +49,21 @@ export function NavMain({ items }: { items: UrlPath[] }) {
         {updateItems.map((item) => (
           <Collapsible
             key={item.title}
+            className={isParentActive(item.url) ? 'bg-primary rounded-sm ' : ''}
             asChild
             defaultOpen={isParentActive(item.url)}
           >
             <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip={item.title}>
-                <a href={item.url.replace(':agencyId', agencyId())}>
+              <SidebarMenuButton
+                asChild
+                tooltip={item.title}
+                className={isParentActive(item.url) ? 'text-primary-foreground pl-8' : ''}
+              >
+                <a href={item.url.replace(':agencyId', agencyId)}>
                   <item.icon />
                   <span>{item.title}</span>
                 </a>
               </SidebarMenuButton>
-              {item.items?.length ? (
-                <>
-                  <CollapsibleTrigger asChild>
-                    <SidebarMenuAction className="data-[state=open]:rotate-90">
-                      <ChevronRight />
-                      <span className="sr-only">Toggle</span>
-                    </SidebarMenuAction>
-                  </CollapsibleTrigger>
-                  <CollapsibleContent>
-                    <SidebarMenuSub>
-                      {item.items?.map((subItem) => (
-                        <SidebarMenuSubItem key={subItem.title}>
-                          <SidebarMenuSubButton asChild>
-                            <a
-                              href={subItem.url}
-                              className={'font-bold bg-sidebar-accent'}>
-                              <span>{subItem.title}</span>
-                            </a>
-                          </SidebarMenuSubButton>
-                        </SidebarMenuSubItem>
-                      ))}
-                    </SidebarMenuSub>
-                  </CollapsibleContent>
-                </>
-              ) : null}
             </SidebarMenuItem>
           </Collapsible>
         ))}
@@ -95,3 +71,30 @@ export function NavMain({ items }: { items: UrlPath[] }) {
     </SidebarGroup>
   );
 }
+ //{item.items?.length ? (
+ //               <>
+ //                 <CollapsibleTrigger asChild>
+ //                   <SidebarMenuAction className="data-[state=open]:rotate-90">
+ //                     <ChevronRight />
+ //                     <span className="sr-only">Toggle</span>
+ //                   </SidebarMenuAction>
+ //                 </CollapsibleTrigger>
+ //                 <CollapsibleContent>
+ //                   <SidebarMenuSub>
+ //                     {item.items?.map((subItem) => (
+ //                       <SidebarMenuSubItem key={subItem.title}>
+ //                         <SidebarMenuSubButton
+ //                           asChild
+ //                           className={isChildActive(subItem.url) ? 'bg-sidebar-primary' : ''}
+ //                         >
+ //                           <a href={subItem.url}>
+ //                             <span>{subItem.title}</span>
+ //                           </a>
+ //                         </SidebarMenuSubButton>
+ //                       </SidebarMenuSubItem>
+ //                     ))}
+ //                   </SidebarMenuSub>
+ //                 </CollapsibleContent>
+ //               </>
+ //             ) : null}
+

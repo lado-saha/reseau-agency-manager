@@ -12,6 +12,7 @@ const LABELS: Record<string, string> = {
   station: 'Stations',
   trip: 'Trips',
   vehicle: 'Vehicles',
+  profile: 'Profile',
   model: 'Vehicle Models',
   agency: 'Agencies'
 };

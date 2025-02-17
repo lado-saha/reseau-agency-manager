@@ -5,7 +5,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "lint:fix": "next lint --fix"
+    "lint:fix": "next lint --fix",
+    "check" :"tsc --noEmit"
   },
   "dependencies": {
     "react-icons": "^5.4.0",

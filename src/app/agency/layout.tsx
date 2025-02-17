@@ -18,6 +18,7 @@ import { User } from '@/lib/models/user';
 import BreadcrumbComponent from '@/components/layout-breadcrumb';
 
 export default function AgencyLayout({ children }: { children: React.ReactNode }) {
+
   const pathname = usePathname();
   const { data: session, status } = useSession();
   const [user, setUser] = useState<User | null>(null);
@@ -43,22 +44,21 @@ export default function AgencyLayout({ children }: { children: React.ReactNode }
     }
   }, [status, session]);
 
-  //if (status === 'unauthenticated') return <div>Unauthorized. Please log in.</div>;
-  if (!user) return <Loading message="Fetching user data..." variant="card" />;
+  if (!user) return <Loading message="Fetching user data..." variant="full-screen" />;
 
   const showSidebar = !hideSidebar;
   const showCalendar = getDateFilterablePaths(agencyId).includes(pathname.split('?')[0].split('/').pop() || '');
 
   return (
     <SidebarProvider className="bg-sidebar">
-      {!hideSidebar && (
+      {!hideSidebar && user ? (
         <AppSidebar
           urlPaths={URL_PATHS_AGENCY}
           choices={[{ logo: CompassIcon, name: 'General Voyage', plan: 'Construire un futur' }]}
           user={user}
           showCalendar={showCalendar}
         />
-      )}
+      ) : !user ? (<Loading message="Fetching user data..." variant="inline" />) : (<></>)}
 
       <SidebarInset className={`flex flex-col ${showSidebar ? 'rounded-3xl m-6 p-2 shadow-lg' : ''} sm:gap-4 sm:py-4`}>
         <header className="sticky top-0 z-30 flex h-14 items-center gap-5 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">

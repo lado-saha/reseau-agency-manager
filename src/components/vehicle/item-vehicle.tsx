@@ -162,7 +162,6 @@ export function VehicleTableItem({
       <TableCell>{`${(vehicle.model as VehicleModel).seatCount}`}</TableCell>
       <TableCell>{vehicle.productionYear}</TableCell>
       <TableCell>{renderHealthBadge(vehicle.healthStatus)}</TableCell>
-      <TableCell>{model.seatCount}</TableCell>
       <TableCell>{model.fuelType}</TableCell >
       <TableCell>
         {ListBadges({ items: model.luggageSpaces })}

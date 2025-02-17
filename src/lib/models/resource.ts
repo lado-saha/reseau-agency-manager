@@ -11,12 +11,9 @@ export interface Resource extends Audit, GPSPosition {
   id: string; // Unique identifier for the resource (UUID or similar)
   healthStatus: HealthStatus; // Current status of the resource
   ownerId: string; // The original and permanent owner of the resource
-
   tenant?: Station| string; // Optional: Temporary owner's ID (if rented or borrowed)
   nextTenant?: Station | string; // Optional: Temporary owner's ID (if rented or borrowed)
-
   lastStatusSwitchTime?: Date | string,
-
   tenancyStartedTime?: Date | string; // Optional: Start time of temporary ownership
   tenancyEndTime?: Date | string; // Optional: End time of temporary ownership
   usageCount: number; // Total number of times the resource has been used 
