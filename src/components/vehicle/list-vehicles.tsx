@@ -77,8 +77,8 @@ export default function VehicleListView({
   >('tableview');
   const [tab, setTab] = useState<TabsVehicle>('all');
   const [mapCenter, setMapCenter] = useState([
-    vehicles.length > 1 ? vehicles[0].latitude : 0,
-    vehicles.length > 1 ? vehicles[0].longitude : 0
+    vehicles.length >= 1 ? vehicles[0].latitude : 0,
+    vehicles.length >= 1 ? vehicles[0].longitude : 0
   ]);
   const [mapZoom, setMapZoom] = useState(15);
   // Sorting

@@ -81,6 +81,9 @@ export async function authenticateUser(
   }
 }
 
+export async function getResourceTenant(tenantId: string): Promise<Station|undefined> {
+  return await stationRepo.getById(tenantId)
+}
 export async function createUserAction(user: User): Promise<User> {
   return await userRepo.createUser(user)
 }
@@ -146,8 +149,8 @@ export async function deleteEmployee<T extends EmployeeRole>(
   }
 }
 
-export async function saveVehicleBasicInfo(id: string, vehicle: Partial<Vehicle>, adminId: string,): Promise<Partial<Vehicle>> {
-  return await vehicleRepo.saveVehicleBasicInfo(id, vehicle, adminId)
+export async function saveVehicleBasicInfo(id: string, vehicle: Partial<Vehicle>, tenant: Station, agencyId:string, adminId: string,): Promise<Partial<Vehicle>> {
+  return await vehicleRepo.saveVehicleBasicInfo(id, vehicle, tenant, agencyId, adminId)
 }
 export async function saveDriverInfo(adminId: string, driver: Driver | AgencyEmployee): Promise<Driver> {
   return await driverRepo.saveDriverInfo(driver, adminId)

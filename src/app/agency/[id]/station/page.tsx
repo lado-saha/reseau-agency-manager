@@ -32,7 +32,7 @@ export default async function Page(props: {
     newOffset,
     totalCount
   } = await repo.getAll(search, offset, sortingOption, sortingDirection);
-  // console.log(`Search Parameters: ${JSON.stringify(stations[0])}`);
+
   return (
     <Suspense
       fallback={

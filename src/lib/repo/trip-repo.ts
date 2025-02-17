@@ -176,72 +176,13 @@ export class TripRepository extends JsonRepository<Trip> {
 
     if (resIndex !== -1) {
       // Update the existing resource
-      const oldVehicleId = trips[tripIndex].resources[resIndex].vehicle as string;
-      const newVehicleId = lightTripResource.vehicle as string;
-
-      const oldDriverId = trips[tripIndex].resources[resIndex].driver as string;
-      const newDriverId = lightTripResource.driver as string;
-
-      // Handle vehicle changes
-      if (oldVehicleId !== newVehicleId) {
-        // Release the old vehicle
-        const oldVehicle = (await this.vehicleRepo.getById(oldVehicleId))!!;
-        await this.vehicleRepo.saveVehicleBasicInfo(oldVehicleId, {
-          ...oldVehicle,
-          tenancyEndTime: undefined,
-          status: "free",
-        }, adminId);
-
-        // Assign the new vehicle
-        const newVehicle = (await this.vehicleRepo.getById(newVehicleId))!!;
-        await this.vehicleRepo.saveVehicleBasicInfo(newVehicleId, {
-          ...newVehicle,
-          tenancyEndTime: trips[tripIndex].expectedArrivalTime,
-          status: "scheduled",
-        }, adminId);
-      }
-
-      // Handle driver changes
-      if (oldDriverId !== newDriverId) {
-        // Release the old driver
-        const oldDriver = (await this.driverRepo.getById(oldDriverId))!!;
-        await this.driverRepo.saveDriverInfo({
-          ...oldDriver,
-          tenancyEndTime: undefined,
-          status: "free",
-        }, adminId);
-
-        // Assign the new driver
-        const newDriver = (await this.driverRepo.getById(newDriverId))!!;
-        await this.driverRepo.saveDriverInfo({
-          ...newDriver,
-          tenancyEndTime: trips[tripIndex].expectedArrivalTime,
-          status: "scheduled",
-        }, adminId);
-      }
-
+   
       // Update the resource
       trips[tripIndex].resources[resIndex] = lightTripResource;
     } else {
       // Assign the new vehicle
-      const newVehicleId = lightTripResource.vehicle as string;
-      const newVehicle = (await this.vehicleRepo.getById(newVehicleId))!!;
-      await this.vehicleRepo.saveVehicleBasicInfo(newVehicleId, {
-        ...newVehicle,
-        tenancyEndTime: trips[tripIndex].expectedArrivalTime,
-        status: "scheduled",
-      }, adminId);
-
-      // Assign the new driver
-      const newDriverId = lightTripResource.driver as string;
-      const newDriver = (await this.driverRepo.getById(newDriverId))!!;
-      await this.driverRepo.saveDriverInfo({
-        ...newDriver,
-        tenancyEndTime: trips[tripIndex].expectedArrivalTime,
-        status: "scheduled",
-      }, adminId);
-
-      // Add the new resource
+   
+          // Add the new resource
       trips[tripIndex].resources.push(lightTripResource);
     }
 

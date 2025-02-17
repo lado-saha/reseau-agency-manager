@@ -224,7 +224,7 @@ export function StationSearchItem({
       {/* Card Content */}
       <CardContent className="p-4 flex flex-col items-center text-center space-y-2">
         <CardTitle className="text-lg font-semibold">{item.name}</CardTitle>
-        <p className="text-sm text-muted-foreground">{formatAddress(item.address as PlaceAddress)}</p>
+        <p className="text-sm text-muted-foreground">{item.address ? formatAddress(item.address as PlaceAddress):'None'}</p>
 
         <div className="grid grid-cols-2 gap-4 text-sm w-full border-t pt-3">
           <span className="text-muted-foreground">Chief Name</span>

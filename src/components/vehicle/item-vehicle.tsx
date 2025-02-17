@@ -108,7 +108,7 @@ export function VehicleTableItem({
 }: VehicleItemProps) {
 
   const fromCity = ((vehicle.tenant as Station).address as PlaceAddress).city
-  const toCity = ((vehicle.nextTenant as Station).address as PlaceAddress).city
+  const toCity = vehicle.nextTenant ? ((vehicle.nextTenant as Station).address as PlaceAddress).city : undefined
 
   const renderAdditionalFields = () => {
     switch (tab) {
@@ -122,7 +122,7 @@ export function VehicleTableItem({
       case 'outgoing': // Tenant === Me (currentId)
         return (
           <>
-            <TableCell>{toCity}</TableCell> {/*To town*/}
+            <TableCell>{toCity ?? 'None'}</TableCell> {/*To town*/}
             <TableCell>{format(vehicle.lastStatusSwitchTime as Date, 'PP')}</TableCell> {/*Departure time*/}
           </>
         );
@@ -300,7 +300,7 @@ export function VehicleGridItem({
   const model = (vehicle.model as VehicleModel)
 
   const fromCity = ((vehicle.tenant as Station).address as PlaceAddress).city
-  const toCity = ((vehicle.nextTenant as Station).address as PlaceAddress).city
+  const toCity = vehicle.nextTenant ? ((vehicle.nextTenant as Station).address as PlaceAddress).city : undefined
 
   const renderAdditionalFields = () => {
     switch (tab) {
@@ -322,7 +322,7 @@ export function VehicleGridItem({
           <>
             <div>
               <span className="block text-muted-foreground">Destination</span>
-              <span>{toCity}</span>
+              <span>{toCity ?? 'None'}</span>
             </div>
             <div>
               <span className="block text-muted-foreground">Departure time</span>
@@ -362,18 +362,6 @@ export function VehicleGridItem({
       </DropdownMenu>
 
       {/* Vehicle Image */}
-      <div className="relative w-full h-32">
-        <Image
-          src={model.modelPhoto as string || '/placeholder.svg'}
-          alt="Vehicle image"
-          fill
-          className="object-cover"
-          onClick={(e) => {
-            e.preventDefault();
-            window.open(model.modelPhoto as string, '_blank');
-          }}
-        />
-      </div>
 
       <div className="relative w-full h-32">
         <Image
@@ -423,7 +411,7 @@ export function VehicleGridItem({
 
           {/* Luggage Spaces */}
           <div>
-            <span className="block text-muted-foreground">Luggage</span>
+            <span className="block text-muted-foreground items-center">Luggage</span>
             <ListBadges items={model.luggageSpaces} />
           </div>
 

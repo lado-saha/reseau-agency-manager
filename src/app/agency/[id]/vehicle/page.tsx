@@ -3,8 +3,6 @@ import { Suspense } from 'react';
 import { Metadata } from 'next';
 import { PAGE_OFFSET } from '@/lib/utils';
 import Loading from '../../loading';
-import { StationRepository } from '@/lib/repo/station-repo';
-import StationListView from '@/components/station/list-station';
 import { VehicleRepository } from '@/lib/repo/vehicle-repo';
 import VehicleListView from '@/components/vehicle/list-vehicles';
 
@@ -35,7 +33,7 @@ export default async function Page(props: {
     newOffset,
     totalCount
   } = await repo.getAll(search, offset, sortingOption, sortingDirection);
-  // console.log(`Search Parameters: ${JSON.stringify(stations[0])}`);
+
   return (
     <Suspense
       fallback={
@@ -46,13 +44,14 @@ export default async function Page(props: {
         />
       }
     >
-      {/* <VehicleListView
-        stations={vehicles}
+      <VehicleListView
+        vehicles={vehicles}
         offset={newOffset}
-        totalStations={totalCount}
+        totalVehicles={totalCount}
         sortDirection={sortingDirection}
         sortOption={sortingOption}
-      /> */}
+        isSuperAdmin={true}
+        currentId={"b8d84407-0636-4576-8f8f-58ff38dba399"}      />
     </Suspense>
   );
 }

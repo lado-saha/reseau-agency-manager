@@ -1,12 +1,17 @@
-import { monitorEventLoopDelay } from "perf_hooks";
+import { stat } from "fs";
 import { auditCreate, auditUpdate, SortingDirection } from "../models/helpers";
-import { Vehicle, VehicleModel } from "../models/resource";
+import { RESOURCE_STATUS, Vehicle, VehicleModel } from "../models/resource";
+import { Station } from "../models/station";
 import { API_URL } from "../utils";
-import { JsonRepository } from "./json-repository";
+import { JsonRepository, UserRepository } from "./json-repository";
+import { PlaceAddress } from "./osm-place-repo";
+import { StationRepository } from "./station-repo";
 import { VehicleModelRepository } from "./vechicle-model-repo";
 
 export class VehicleRepository extends JsonRepository<Vehicle> {
   private modelRepo = new VehicleModelRepository()
+  private stationRepo = new StationRepository()
+  private userRepo = new UserRepository()
 
   constructor() {
     super('vehicles.json');
@@ -15,6 +20,8 @@ export class VehicleRepository extends JsonRepository<Vehicle> {
   private async enrichVehicles(vehicles: Vehicle[]): Promise<Vehicle[]> {
     // Extract model IDs from the vehicles
     const modelMap = new Map((await this.modelRepo.getByIds(vehicles.map(v => v.model as string))).map(m => [m.id, m]))
+    const fromTenant = new Map((await this.stationRepo.getByIds(vehicles.map(v => v.tenant as string))).map(m => [m.id, m]))
+    const toTenant = new Map((await this.stationRepo.getByIds(vehicles.filter(s => s.nextTenant).map(v => v.tenant as string))).map(m => [m.id, m]))
 
     // Map vehicles to include full model details
     return vehicles.map(vehicle => ({
@@ -22,6 +29,10 @@ export class VehicleRepository extends JsonRepository<Vehicle> {
       model: modelMap.get(vehicle.model as string) ?? (() => {
         throw new Error(`Unknown model found for vehicle ${vehicle.registrationNumber}`);
       })(),
+      tenant: fromTenant.get(vehicle.tenant as string) ?? (() => {
+        throw new Error(`Unknown tenant found for vehicle ${vehicle.registrationNumber}`);
+      })(),
+      nextTenant: toTenant.get(vehicle.nextTenant as string | '') ?? undefined
     }));
   }
 
@@ -42,17 +53,21 @@ export class VehicleRepository extends JsonRepository<Vehicle> {
       ...vehicles,
       items: fullVehicles,
     };
-  } async getById(id: string): Promise<Vehicle | undefined> {
+  }
+
+  async getById(id: string): Promise<Vehicle | undefined> {
     const vehicle = (await super.getById(id))!
-    const model = await this.modelRepo.getById(vehicle?.model as string)
-    return { ...vehicle, model: model as VehicleModel }
+    const newVehicle = (await this.enrichVehicles([vehicle]))[0]
+    return { ...newVehicle }
   }
 
 
   async saveVehicleBasicInfo(
     id: string = "new",
     vehicle: Partial<Vehicle>,
-    adminId: string
+    tenant: Station,
+    adminId: string,
+    agencyId: string
   ): Promise<Partial<Vehicle>> {
     const vehicles = await this.fetchData();
 
@@ -64,10 +79,12 @@ export class VehicleRepository extends JsonRepository<Vehicle> {
       ) {
         throw new Error("Vehicle with similar registration number already exists.");
       }
+      const addresss = tenant.address as PlaceAddress
       const newVehicle = {
         ...vehicle,
         ...auditCreate(adminId),
         id: crypto.randomUUID(),
+        ownerId: agencyId, status: 'free', latitude: addresss.latitude, longitude: addresss.longitude, tenant: tenant.id, tenancyStartedTime: new Date()
       } satisfies Partial<Vehicle>;
 
       await fetch(`${API_URL}/api/data/vehicles`, {
@@ -86,7 +103,7 @@ export class VehicleRepository extends JsonRepository<Vehicle> {
         throw new Error(`Vehicle with id ${id} not found.`);
       }
 
-      const newVehicle = { ...vehicles[vehicleIndex], ...vehicle, ...auditUpdate(adminId) };
+      const newVehicle = { ...vehicles[vehicleIndex], ...vehicle, tenant: tenant.id, ...auditUpdate(adminId) };
 
       await fetch(`${API_URL}/api/data/vehicles`, {
         method: "PUT",

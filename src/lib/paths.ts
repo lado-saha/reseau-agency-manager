@@ -1,3 +1,4 @@
+import { SettingsIcon } from '@/components/icons';
 import {
   Settings2,
   LayoutDashboard,
@@ -7,7 +8,11 @@ import {
   Users,
   UsersIcon,
   Building2Icon,
-  LucideIcon
+  LucideIcon,
+  ShipWheelIcon,
+  Settings2Icon,
+  SendIcon,
+  GridIcon
 } from 'lucide-react';
 type UrlPathItem = {
   title: string;
@@ -24,6 +29,7 @@ export type UrlPath = {
   icon: LucideIcon;
   isActive?: boolean;
   items?: UrlPathItem[]; // Nested items can also have searchable and dateFilterable
+  searchable?: boolean
 
 };
 export type Choice = {
@@ -166,10 +172,10 @@ export const searchablePathsStation = flattenedPaths.filter(
 ); // Filter out empty or placeholder URLs
 
 
-export const URL_PATHS_AGENCY = [
+export const URL_PATHS_AGENCY: UrlPath[] = [
   {
     title: 'Dashboard',
-    url: '/agency/:agencyId/dashboard',
+    url: '/agency/:agencyId',
     icon: LayoutDashboard
   },
   {
@@ -189,13 +195,19 @@ export const URL_PATHS_AGENCY = [
   {
     title: 'Trips',
     url: '/agency/:agencyId/trip',
-    icon: BusIcon,
+    icon: SendIcon,
     searchable: true, // ✅ Searchable root
     items: [
-      //{
-      //  title: 'Trip Details',
       //  url: '/agency/:agencyId/trip/:tripId'
       //}
+    ]
+  },
+  {
+    title: 'Vehicles Model',
+    url: '/agency/:agencyId/vehicle/model',
+    icon: GridIcon,
+    searchable: true, // ✅ Searchable root
+    items: [
     ]
   },
   {
@@ -204,13 +216,26 @@ export const URL_PATHS_AGENCY = [
     icon: BusIcon,
     searchable: true, // ✅ Searchable root
     items: [
-      {
-        title: 'Vehicle Models',
-        url: '/agency/:agencyId/vehicle/model',
-        searchable: true // ✅ Searchable root
-      },
     ]
-  }
+  },
+
+  {
+    title: 'Drivers',
+    url: '/agency/:agencyId/drivers',
+    icon: ShipWheelIcon,
+    searchable: true, // ✅ Searchable root
+    items: [
+    ]
+  },
+  {
+    title: 'Profile',
+    url: '/agency/:agencyId/profile',
+    icon: Settings2Icon,
+    searchable: false, // ✅ Searchable root
+    items: []
+  },
+
+
 ];
 
 export function getAgencyPaths(agencyId: string): string[] {

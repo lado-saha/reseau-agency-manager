@@ -92,7 +92,7 @@ export class StationRepository extends JsonRepository<Station> {
 
     // Map stations to include chiefs and addresses
     const itemsWithChiefs = stations.items.map(station => {
-      const chief = chiefMap.get(station.chief as string)!;
+      const chief = chiefMap.get(station.chief as string)!!;
       const address = addressMap.get(station.address as string)!;
 
       return {

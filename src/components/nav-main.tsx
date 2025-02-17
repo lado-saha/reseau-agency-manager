@@ -3,6 +3,7 @@
 import { UrlPath } from '@/lib/paths';
 import { ChevronRight, type LucideIcon } from 'lucide-react';
 import { usePathname } from 'next/navigation';
+import path from 'path';
 
 import {
   Collapsible,
@@ -24,18 +25,32 @@ import {
 export function NavMain({ items }: { items: UrlPath[] }) {
   const pathname = usePathname(); // Get the current pathname
 
+  const agencyId = () => {
+    const index = pathname.split('/').findIndex(v => v === 'agency')
+   
+    return pathname.split('/')[index + 1]
+  }
+
+  const updateItems = items.map(i => {
+    const url = i.url.replace(':agencyId', agencyId())
+    const items = i.items?.map(it => it.url.replace(":agencyId", agencyId()))
+    return {...i, url, items: items} as UrlPath
+  })
+
   // Function to determine if the item URL is active
   const isParentActive = (url: string) => {
     return pathname.split('?')[0].startsWith(url);
   };
+
   const isChildActive = (url: string) => {
-    return pathname.split('?')[0].split('/').pop() === url.split('/').pop(); // Match exact or prefix URL
+    return true // Match exact or prefix URL
   };
+
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Station's Platform</SidebarGroupLabel>
       <SidebarMenu>
-        {items.map((item) => (
+        {updateItems.map((item) => (
           <Collapsible
             key={item.title}
             asChild
@@ -43,7 +58,7 @@ export function NavMain({ items }: { items: UrlPath[] }) {
           >
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip={item.title}>
-                <a href={item.url}>
+                <a href={item.url.replace(':agencyId', agencyId())}>
                   <item.icon />
                   <span>{item.title}</span>
                 </a>
@@ -63,11 +78,7 @@ export function NavMain({ items }: { items: UrlPath[] }) {
                           <SidebarMenuSubButton asChild>
                             <a
                               href={subItem.url}
-                              className={` ${isChildActive(subItem.url)
-                                  ? 'font-bold bg-sidebar-accent' // Active: White text, shadow, and background for contrast
-                                  : 'hover:font-bold hover:bg-primary' // Hover: White text, shadow, and background on hover
-                                }`}
-                            >
+                              className={'font-bold bg-sidebar-accent'}>
                               <span>{subItem.title}</span>
                             </a>
                           </SidebarMenuSubButton>

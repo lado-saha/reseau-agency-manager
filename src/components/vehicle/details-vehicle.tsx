@@ -14,7 +14,7 @@ import { Vehicle } from '@/lib/models/resource';
 export function VehicleDetailView({
   originalVehicle,
   adminId,
-  agencyId, 
+  agencyId,
   id
 }: {
   originalVehicle: Vehicle | undefined;
@@ -80,26 +80,10 @@ export function VehicleDetailView({
               agencyId={agencyId}
               oldVehicle={vehicle}
               onSubmitCompleteAction={(newId, data) => {
-                //  if (!vehicle) {
-                //    setVehicle({
-                //      ...STATION_EMPTY,
-                //      id: newId,
-                //      ...data
-                //    });
-                //  } else {
-                //    setVehicle({
-                //      ...vehicle,
-                //      ...data
-                //    });
-                //  }
-                //
-                //  // Automatically navigate to the next tab in creation mode
-                //  if (mode === 'creation-mode') {
-                //    setShowTab2(true);
-                //    setTab('resource-info');
-                //  }
-                //
-                //  console.log('Vehicle Data: ', JSON.stringify(data));
+                router.back(); // Navigates back to the previous page
+                setTimeout(() => {
+                  router.refresh();
+                }, 500); // Give some time for navigation before refreshing
               }}
             />
           ) : (

@@ -50,7 +50,7 @@ export function NavUser({ user }: { user: User }) {
                 {/* Check if the user has a photo */}
                 {user.photo ? (
                   <Image
-                    src={concatUrl(user.photo as string)} // Use the concatenated URL if photo exists
+                    src={user.photo as string} // Use the concatenated URL if photo exists
                     alt={user.name}
                     width={40} // Adjust size as needed
                     height={40} // Adjust size as needed

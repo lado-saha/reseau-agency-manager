@@ -12,7 +12,7 @@ import {
   FormDescription,
 } from '@/components/ui/form';
 import { Check, ChevronsUpDown, EyeIcon, TrashIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import {
   Card,
@@ -25,12 +25,18 @@ import { convertBitmaskToMatrix, HEALTH_STATUS, HEALTH_STATUS_OPTIONS, Vehicle, 
 import { ErrorDialog } from '../dialogs/dialog-error';
 import VehicleModelLayoutEditor from '../vehicle-model/editor-vehicle-model-schema';
 import { auditUpdOrNew } from '@/lib/models/helpers';
-import { saveVehicleBasicInfo, searchVehicleModel } from '@/lib/actions';
+import { getResourceTenant, saveVehicleBasicInfo, searchStation, searchVehicleModel } from '@/lib/actions';
 import { SearchDialogGeneric } from '../dialogs/search-dialog';
 import { VehicleModelSearchItem } from '../vehicle-model/item-vehicle-model';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '../ui/command';
 import { cn } from '@/lib/utils';
+import { Station } from '@/lib/models/station';
+import { StationSearchItem } from '../station/item-station';
+import { stat } from 'fs';
+import { Oldenburg } from 'next/font/google';
+import { Addresses } from 'next/dist/build/turborepo-access-trace/types';
+import { PlaceAddress } from '@/lib/repo/osm-place-repo';
 
 // Define the form schema using zod
 const schema = z.object({
@@ -60,7 +66,7 @@ type FormValues = z.infer<typeof schema>;
 
 export function VehicleBasicInfoForm({
   id,
-  oldVehicle: originalVehicle,
+  oldVehicle,
   onSubmitCompleteAction,
   adminId,
   agencyId,
@@ -71,18 +77,20 @@ export function VehicleBasicInfoForm({
   adminId: string;
   agencyId: string;
 }) {
-  const [vehicleModel, setVehicleModel] = useState<VehicleModel | undefined>(originalVehicle?.model as VehicleModel);
+  const [vehicleModel, setVehicleModel] = useState<VehicleModel | undefined>(oldVehicle?.model as VehicleModel);
+  const [tenant, setTenant] = useState<Station | undefined>(oldVehicle?.tenant as Station)
   const [errorMessage, setErrorMessage] = useState('')
   const [isPending, setIsPending] = useState<boolean>(false);
+
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
     mode: 'all',
     defaultValues: {
-      manufacturer: originalVehicle?.manufacturer || '',
-      productionYear: originalVehicle?.productionYear || 1887,
-      registrationNumber: originalVehicle?.registrationNumber || '',
-      healthStatus: originalVehicle?.healthStatus || 'good'
+      manufacturer: oldVehicle?.manufacturer || '',
+      productionYear: oldVehicle?.productionYear || 1887,
+      registrationNumber: oldVehicle?.registrationNumber || '',
+      healthStatus: oldVehicle?.healthStatus || 'good'
     },
   });
 
@@ -94,13 +102,22 @@ export function VehicleBasicInfoForm({
         return;
       }
 
+      if (!tenant) {
+        setErrorMessage('During creation, we must assign a vehicle to a station (tenant)')
+        return
+      }
+
       const newVehicle = await saveVehicleBasicInfo(id, {
         id: id,
-        manufacturer: data.manufacturer, productionYear: data.productionYear, registrationNumber: data.registrationNumber, healthStatus: data.healthStatus,
-        model: vehicleModel.id,
-        ...auditUpdOrNew(adminId, originalVehicle)
+        manufacturer: data.manufacturer,
+        productionYear: data.productionYear,
+        registrationNumber: data.registrationNumber,
+        healthStatus: data.healthStatus,
+        tenant: tenant.id, model: vehicleModel.id, ownerId: agencyId,
+        tenancyStartedTime: new Date(),
+        ...auditUpdOrNew(adminId, oldVehicle),
 
-      }, adminId)
+      }, tenant, agencyId, adminId)
 
       onSubmitCompleteAction(newVehicle.id!, newVehicle);
     } catch (error) {
@@ -202,6 +219,10 @@ export function VehicleBasicInfoForm({
                 </div>
 
               </div>
+
+
+
+
 
               {/* Registration Number */}
               <FormField
@@ -333,9 +354,34 @@ export function VehicleBasicInfoForm({
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
-                )}
-              />
+                )} />
+              <div className="flex flex-col gap-2 items-center">
 
+
+                {id === 'new' && <SearchDialogGeneric
+                  triggerText="Set initial Owner Station"
+                  fetchItemsAction={searchStation}// Pass function instead of repo
+                  onSelectAction={(selectedItems) => setTenant(selectedItems[0])}
+                  renderItemAction={(item, isSelected, onCheckedChange) => (
+                    <StationSearchItem
+                      isPhotoVisible={true}
+                      key={item.id}
+                      item={item}
+                      isSelected={isSelected}
+                      onCheckedChange={onCheckedChange}
+                    />
+                  )}
+                />
+                }
+                {tenant ? <StationSearchItem
+                  isPhotoVisible={true}
+                  key={tenant.id}
+                  item={tenant}
+                  isSelected={true}
+                  onCheckedChange={() => { }}
+                /> : <span>Free resource</span>
+                }
+              </div>
 
 
               {/* Submit Button */}
