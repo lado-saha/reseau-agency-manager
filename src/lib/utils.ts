@@ -29,12 +29,7 @@ export function concatPublic(path: string): string {
   return url
 }
 
-export const API_URL =
-  process.env.NODE_ENV === 'production'
-    ? `https://your-production-url.com` // Production URL here
-    : `http://localhost:3000`; // Local development URL
-
-
+export const API_URL =`${process.env.NEXT_PUBLIC_API_URL}`
 
 export async function getBlobURL(filePath: string) {
   // Fetch the file from the server (public folder) and create a Blob URL
