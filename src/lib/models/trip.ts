@@ -20,9 +20,9 @@ export interface Trip extends Audit {
   fromStation: Station | string; // Origin station
   toStation: Station | string; // Destination station
   resources: TripResource[]; // List of vehicles and drivers assigned to the trip
-  departureDateTime: Date; // Scheduled departure date and time
-  expectedDateTime: Date; // Scheduled departure date and time
-  arrivalDateTime?: Date; // Optional: Expected arrival date and time
+  departureTime: Date; // Scheduled departure date and time
+  expectedArrivalTime: Date; // Scheduled departure date and time
+  arrivalTime?: Date; // Optional: Expected arrival date and time
   status: TripStatus,
   seatPrice: number,
   isVip: boolean,

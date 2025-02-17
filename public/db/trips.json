@@ -1,18 +1,57 @@
 [
   {
-    "id": "144b08f5-819e-4e8d-8e17-55c34182d811",
+    "id": "ec1a5143-c405-4e5d-83b6-387b7c4ab44a",
+    "fromStation": "db4c5fb1-7d4a-4ba9-92b2-b3bf6e570746",
+    "toStation": "db4c5fb1-7d4a-4ba9-92b2-b3bf6e570746",
+    "status": "scheduled",
+    "departureDateTime": "2025-02-16T07:00:00.000Z",
+    "expectedDateTime": "2025-02-16T09:00:00.000Z",
+    "seatPrice": 109,
+    "isVip": false,
+    "notes": "",
+    "resources": [],
+    "createdOn": "2025-02-16T19:53:16.801Z",
+    "updatedOn": "2025-02-16T19:53:16.801Z",
+    "createdBy": "2831d880-1dae-43fb-8403-168a59b748c4",
+    "updatedBy": "2831d880-1dae-43fb-8403-168a59b748c4"
+  },
+  {
+    "id": "2833f0b5-9216-4637-8272-5e0ddf27ef6c",
     "fromStation": "db4c5fb1-7d4a-4ba9-92b2-b3bf6e570746",
     "toStation": "b8d84407-0636-4576-8f8f-58ff38dba399",
     "status": "scheduled",
-    "departureDateTime": "2025-02-21T07:00:00.000Z",
-    "expectedDateTime": "2025-02-15T09:00:00.000Z",
-    "seatPrice": 5000,
-    "isVip": true,
-    "notes": "This trip needs to travel from afds.",
+    "departureDateTime": "2025-02-16T07:00:00.000Z",
+    "expectedDateTime": "2025-02-16T09:00:00.000Z",
+    "seatPrice": 23,
+    "isVip": false,
+    "notes": "",
     "resources": [],
-    "createdOn": "2025-02-15T21:14:03.334Z",
-    "updatedOn": "2025-02-15T21:32:32.597Z",
-    "createdBy": "afd35be5-6642-4c68-87d4-3230ca9d2e4b",
-    "updatedBy": "afd35be5-6642-4c68-87d4-3230ca9d2e4b"
+    "createdOn": "2025-02-16T19:55:53.314Z",
+    "updatedOn": "2025-02-16T19:55:53.314Z",
+    "createdBy": "2831d880-1dae-43fb-8403-168a59b748c4",
+    "updatedBy": "2831d880-1dae-43fb-8403-168a59b748c4"
+  },
+  {
+    "id": "4518ac46-0a63-4762-9bc7-7fe68a39a3fa",
+    "fromStation": "db4c5fb1-7d4a-4ba9-92b2-b3bf6e570746",
+    "toStation": "db4c5fb1-7d4a-4ba9-92b2-b3bf6e570746",
+    "status": "scheduled",
+    "departureDateTime": "2025-02-16T07:00:00.000Z",
+    "expectedDateTime": "2025-02-16T09:00:00.000Z",
+    "seatPrice": 21,
+    "isVip": false,
+    "notes": "",
+    "resources": [
+      {
+        "index": 0,
+        "vehicle": "123",
+        "driver": "bcefec7e-4e67-473c-bdfa-e2d51e935526",
+        "passengers": []
+      }
+    ],
+    "createdOn": "2025-02-16T19:57:17.268Z",
+    "updatedOn": "2025-02-16T19:57:49.474Z",
+    "createdBy": "2831d880-1dae-43fb-8403-168a59b748c4",
+    "updatedBy": "2831d880-1dae-43fb-8403-168a59b748c4"
   }
 ]

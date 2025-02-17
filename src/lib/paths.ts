@@ -166,136 +166,76 @@ export const searchablePathsStation = flattenedPaths.filter(
 ); // Filter out empty or placeholder URLs
 
 
-export const URL_PATHS_AGENCY: UrlPath[] = [
+export const URL_PATHS_AGENCY = [
   {
     title: 'Dashboard',
-    url: '/dashboard',
+    url: '/agency/:agencyId/dashboard',
     icon: LayoutDashboard
-  },
-  {
-    title: 'Live View',
-    url: '/live-view',
-    icon: LayoutDashboard
-  },
-  {
-    title: 'Stations',
-    url: '/stations',
-    icon: Building2Icon,
-    items: [
-      {
-        title: 'Stations Overview',
-        url: '/stations'
-      },
-      {
-        title: 'Station Settings',
-        url: '/stations/settings'
-      }
-    ]
-  },
-  {
-    title: 'Fleet',
-    url: '/vehicles',
-    icon: BusIcon,
-    items: [
-      {
-        title: 'Vehicles Overview',
-        url: '/vehicles',
-        searchable: true,
-        dateFilterable: true
-      },
-      {
-        title: 'Vehicle Models',
-        url: '/vehicles/models',
-        searchable: true
-      }
-    ]
-  },
-  {
-    title: 'Drivers',
-    url: '/drivers',
-    icon: Users,
-    items: [
-      {
-        title: 'Driver Directory',
-        url: '/drivers',
-        searchable: true
-      },
-      {
-        title: 'Driver Settings',
-        url: '/drivers/settings'
-      }
-    ]
   },
   {
     title: 'Employees',
-    url: 'employees',
+    url: '/agency/:agencyId/employees',
     icon: UsersIcon,
+    searchable: true, // ✅ Searchable root
+    items: []
+  },
+  {
+    title: 'Stations',
+    url: '/agency/:agencyId/station',
+    icon: Building2Icon,
+    searchable: true, // ✅ Searchable root
+    items: []
+  },
+  {
+    title: 'Trips',
+    url: '/agency/:agencyId/trip',
+    icon: BusIcon,
+    searchable: true, // ✅ Searchable root
     items: [
-      {
-        title: 'Employee Directory',
-        url: 'employees',
-        searchable: true
-      },
-      {
-        title: 'Employee Settings',
-        url: '/employees/settings'
-      }
+      //{
+      //  title: 'Trip Details',
+      //  url: '/agency/:agencyId/trip/:tripId'
+      //}
     ]
   },
   {
-    title: 'Finances',
-    url: '/finances',
-    icon: Wallet2Icon,
+    title: 'Vehicles',
+    url: '/agency/:agencyId/vehicle',
+    icon: BusIcon,
+    searchable: true, // ✅ Searchable root
     items: [
       {
-        title: 'Finance Overview',
-        url: '/finances',
-        searchable: true,
-        dateFilterable: true
+        title: 'Vehicle Models',
+        url: '/agency/:agencyId/vehicle/model',
+        searchable: true // ✅ Searchable root
       },
-      {
-        title: 'Finance Settings',
-        url: '/finances/settings'
-      }
-    ]
-  },
-  {
-    title: 'Profile',
-    url: '/profile',
-    icon: Settings2,
-    items: [
-      {
-        title: 'Profile Settings',
-        url: '/profile/settings'
-      }
     ]
   }
 ];
-// Flatten paths for easy access
-export const flattenedPathsAgency: string[] = [
-  ...URL_PATHS_AGENCY.flatMap((item) => [
-    item.url,  // Parent path
-    ...(item.items?.map((subItem) => subItem.url) || []) // Nested item paths
-  ]),
-];
 
-// Filter paths based on searchability
-export const searchablePathsAgency = flattenedPathsAgency.filter(
-  (url) =>
-    URL_PATHS_AGENCY.some((section) =>
-      section.items?.some(
-        (subItem) => subItem.url === url && subItem.searchable
-      )
-    )
-);
+export function getAgencyPaths(agencyId: string): string[] {
+  return URL_PATHS_AGENCY.flatMap((item) => [
+    item.url.replace(':agencyId', agencyId), // ✅ Replace agencyId
+    ...(item.items?.map((subItem) => subItem.url.replace(':agencyId', agencyId)) || [])
+  ]);
+}
 
-// Filter paths based on date filterability
-export const dateFilterablePathAgency = flattenedPathsAgency.filter(
-  (url) =>
+export function getSearchablePaths(agencyId: string): string[] {
+  return getAgencyPaths(agencyId).filter((url) =>
     URL_PATHS_AGENCY.some((section) =>
-      section.items?.some(
-        (subItem) => subItem.url === url && subItem.dateFilterable
-      )
+      section.searchable && section.url.replace(':agencyId', agencyId) === url
     )
-);
+  );
+}
+export function getDateFilterablePaths(agencyId: string): string[] {
+  return getAgencyPaths(agencyId).filter(
+    (url) =>
+      URL_PATHS_AGENCY.some((section) =>
+        section.items?.some(
+          (subItem) => subItem.url.replace(':agencyId', agencyId) === url && subItem.dateFilterable
+        )
+      )
+  );
+}
+
 

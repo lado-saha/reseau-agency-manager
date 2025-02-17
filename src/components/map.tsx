@@ -17,7 +17,7 @@ import 'leaflet-defaulticon-compatibility';
 
 import { LatLngExpression, LatLngTuple } from 'leaflet';
 import { PropsVehicles } from '@/components/vehicle/table-vehicles';
-import { VehicleGridItem, VehicleMapTooltip } from '@/components/vehicle/item-vehicle';
+import { VehicleGridItem, VehicleMapTooltip } from './vehicle/item-vehicle';
 
 export interface MapProps {
   posix: LatLngExpression | LatLngTuple;
@@ -48,10 +48,12 @@ export function LocationListener({
 }
 
 export default function MapVehicles({
-  stations: vehicles,
+  vehicles,
   offset,
   totalVehicles,
-  currentTab,
+  viewOnMapAction,
+  tab,
+  currentId, detailsAction,
   posix,
   zoom,
   onCenterChangeAction: onCenterChange,
@@ -74,33 +76,35 @@ export default function MapVehicles({
       <LocationListener
         onCenterChangeAction={onCenterChange}
         onZoomChangeAction={onZoomChange}
-
       />
 
       {/* Vehicle Markers */}
       {vehicles.map((vehicle) => (
         <Marker
-          key={vehicle.immatriculation}
+          key={vehicle.registrationNumber}
           position={
-            [vehicle.positionGps.latitude, vehicle.positionGps.longitude] ||
+            [vehicle.latitude, vehicle.longitude] ||
             posix
           } // Fallback to map center if location is undefined
         >
-          {/* <Popup>Hey ! I study here</Popup> */}
           {/* Tooltip with Vehicle Info */}
           <Tooltip permanent direction="top" offset={[-15, 0]}>
             <VehicleMapTooltip
+              currentId={currentId}
               vehicle={vehicle}
-              currentTab={currentTab}
-              viewOnMap={() => { }}
-
+              tab={tab}
+              viewOnMapAction={() => { }}
+              detailsAction={detailsAction}
             />
           </Tooltip>
           <Popup keepInView={true} closeButton={false} autoPan={true}>
             <VehicleGridItem
-              viewOnMap={() => { }}
+              viewOnMapAction={viewOnMapAction}
+              key={vehicle.registrationNumber}
               vehicle={vehicle}
-              currentTab={currentTab}
+              tab={tab}
+              currentId={currentId}
+              detailsAction={detailsAction}
             />
           </Popup>
         </Marker>

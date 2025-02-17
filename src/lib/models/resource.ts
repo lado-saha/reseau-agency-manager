@@ -1,7 +1,7 @@
 import { Audit, auditCreate } from "@/lib/models/helpers";
 import { GPSPosition } from "../repo/osm-place-repo";
 import { AgencyEmployee } from "./employee";
-import { userAgent } from "next/server";
+import { Station } from "./station";
 
 /**
  * Represents a general resource that can be owned, transferred, andmaintained.
@@ -11,10 +11,15 @@ export interface Resource extends Audit, GPSPosition {
   id: string; // Unique identifier for the resource (UUID or similar)
   healthStatus: HealthStatus; // Current status of the resource
   ownerId: string; // The original and permanent owner of the resource
-  tenantId?: string; // Optional: Temporary owner's ID (if rented or borrowed)
-  tenancyStartTime?: Date | string; // Optional: Start time of temporary ownership
+
+  tenant?: Station| string; // Optional: Temporary owner's ID (if rented or borrowed)
+  nextTenant?: Station | string; // Optional: Temporary owner's ID (if rented or borrowed)
+
+  lastStatusSwitchTime?: Date | string,
+
+  tenancyStartedTime?: Date | string; // Optional: Start time of temporary ownership
   tenancyEndTime?: Date | string; // Optional: End time of temporary ownership
-  usageCount: number; // Total number of times the resource has been used (lifetime or resettable?)
+  usageCount: number; // Total number of times the resource has been used 
   status: ResourceStatus
 }
 
@@ -26,7 +31,6 @@ export function newResource(id: string, agencyId: string, adminId: string): Reso
     usageCount: 0,
     status: 'free',
     ...auditCreate(adminId), latitude: 0, longitude: 0
-
   }
 }
 
@@ -78,6 +82,26 @@ export interface Driver extends Resource {
   license: string
 }
 
+export type ResourceStatusToTenant = 'incoming' | 'outgoing' | 'stationed'
+
+
+export function getResourceTenantStatus(resource: Resource, currentId: string): ResourceStatusToTenant| undefined {
+  if (resource.status === 'free') {
+    return 'stationed'; // Resource is free and stationed at the current location
+  }
+
+  if (resource.status === 'scheduled' || resource.status === 'in-progress') {
+    if (resource.tenant === currentId) {
+      return 'outgoing'; // Resource is assigned to the current station but is leaving
+    }
+    if (resource.nextTenant === currentId) {
+      return 'incoming'; // Resource is assigned to the current station and is arriving
+    }
+  }
+
+  // Default to 'stationed' if no conditions match
+  return undefined;
+}
 /**
  * Defines the possible fuel types for a vehicle.
  */
@@ -144,32 +168,3 @@ export function calculateNumberOfSeats(matrix: number[][]): number {
   return count;
 }
 
-
-//// Driver export class using Resource via composition and including its own audit info
-//export class Driver {
-//  resource?: Resource; // Composed Resource object
-//  name: string; // Driver's name
-//  licenseNumber: string; // Driver's license number
-//  contactInfo: { phone: string; email?: string }; // Driver's contact information
-//  auditInfo: Audit; // Driver-specific audit information
-//
-//  constructor(
-//    resourceId: string,
-//    permanentOwnerId: string,
-//    name: string,
-//    licenseNumber: string,
-//    contactInfo: { phone: string; email?: string },
-//    createdBy: string
-//  ) {
-//    this.resource = {}
-//    //   resourceId,
-//    //   permanentOwnerId,
-//    //   false,
-//    //   createdBy
-//    // );
-//    this.name = name;
-//    this.licenseNumber = licenseNumber;
-//    this.contactInfo = contactInfo;
-//    this.auditInfo = new Audit(createdBy); // Initialize driver-specific audit info
-//  }
-//}

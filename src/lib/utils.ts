@@ -24,7 +24,7 @@ export function concatUrl(path: string): string {
 }
 
 export function concatPublic(path: string): string {
-  const url = `{path}`;
+  const url = `${path}`;
   console.log(url)
   return url
 }

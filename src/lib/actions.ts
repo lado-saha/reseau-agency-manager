@@ -16,7 +16,7 @@ import { PlaceAddress } from './repo/osm-place-repo';
 import { VehicleModelRepository } from './repo/vechicle-model-repo';
 import { Driver, Vehicle, VehicleModel } from './models/resource';
 import { VehicleRepository } from './repo/vehicle-repo';
-import { Trip } from './models/trip';
+import { Trip, TripResource } from './models/trip';
 import { TripRepository } from './repo/trip-repo';
 import { DriverRepository } from './repo/driver-repo';
 
@@ -100,17 +100,16 @@ export async function saveEmployee<T extends EmployeeRole>(
   // Check if the roles list includes any Agency roles or Station roles
   if (areArraysEqual(roles, agencyEmplRoles)) {
     // If the role is an Agency role, call the appropriate repository
-    return await agencyEmpRepo.addEmployee(
-      employee as Employee<AgencyEmployeeRole>,
+    return (await agencyEmpRepo.addEmployee(
+      employee as unknown as Employee<AgencyEmployeeRole>, // Assert to the correct type
       currentUserId
-    );
+    )) as unknown as Employee<T>; // Assert back to the expected return type
   } else {
-    return await stationEmpRepo.addEmployee(
-      employee as Employee<StationEmployeeRole>,
+    return (await stationEmpRepo.addEmployee(
+      employee as unknown as Employee<StationEmployeeRole>, // Assert to the correct type
       currentUserId
-    );
+    )) as unknown as Employee<T>; // Assert back to the expected return type
   }
-
 }
 
 export async function saveVehicleModel(
@@ -123,13 +122,14 @@ export async function saveVehicleModel(
 export async function searchEmployeeByEmail<T extends EmployeeRole>(orgId: string, email: string, roles: T[]): Promise<Employee<T>> {
   if (areArraysEqual(roles, agencyEmplRoles)) {
     // If the role is an Agency role, call the appropriate repository
-    return await agencyEmpRepo.getByUserEmail<AgencyEmployeeRole>(
+    return (await agencyEmpRepo.getByUserEmail<AgencyEmployeeRole>(
       email, orgId
-    );
+    )) as unknown as Employee<T>;
   } else {
-    return await stationEmpRepo.getByUserEmail<StationEmployeeRole>(
+    return (await stationEmpRepo.getByUserEmail<StationEmployeeRole>(
       email, orgId
-    );
+    )) as unknown as Employee<T>;
+
   }
 }
 
@@ -153,10 +153,16 @@ export async function saveDriverInfo(adminId: string, driver: Driver | AgencyEmp
   return await driverRepo.saveDriverInfo(driver, adminId)
 }
 
-export async function saveTripBasicInfo(id: string, agencyId: string, trip: Trip, adminId: string,): Promise<Trip> {
-  return await tripRepo.saveTripBasicInfo(id, agencyId, trip, adminId)
+export async function saveTripInfo(id: string, agencyId: string, trip: Trip, adminId: string,): Promise<Trip> {
+  return await tripRepo.saveTripInfo(id, agencyId, trip, adminId)
+}
+export async function saveTripResourceInfo(id: string, agencyId: string, tripResource: TripResource, adminId: string,): Promise<Trip> {
+  return await tripRepo.saveTripResourceInfo(id, agencyId, tripResource, adminId)
 }
 
+export async function deleteTripResourceInfo(id: string, agencyId: string, index: number, adminId: string): Promise<Trip> {
+  return await tripRepo.deleteTripResourceInfo(id, agencyId, index, adminId)
+}
 export async function searchVehicleModel(query: string) {
   return (await vehicleModelRepo.getAll(query, 0)).items;
 }

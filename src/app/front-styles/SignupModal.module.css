@@ -1,0 +1,158 @@
+/* styles/SignupModal.module.css */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .modalContent {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 400px; /* Limite la largeur à 400px max */
+    box-sizing: border-box; /* Pour que le padding n'ajoute pas de largeur supplémentaire */
+  }
+  
+  .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .formGroup {
+    margin-bottom: 15px;
+  }
+  
+  .formGroup label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .formGroup input,
+  .formGroup select {
+    width: 95%; /* Remplacer 95% par 100% pour garantir que l'input prend toute la largeur */
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .formFooter {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    gap: 10px; /* Ajouté pour créer un petit écart entre les boutons */
+  }
+  
+  .cancelButton,
+  .submitButton {
+    width: 100%; /* Par défaut, les boutons prennent toute la largeur */
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center; /* Pour centrer le texte dans le bouton */
+  }
+  
+  .cancelButton {
+    background-color: #f44336;
+    background-color: #1e8fff;
+    color: white;
+    border: none;
+  }
+  
+  .submitButton {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+  }
+  
+  .submitButton:hover {
+    background-color: #1e88e5;
+   /* background-color: #45a049;*/
+  }
+  
+  .cancelButton:hover {
+    background-color: #e53935;
+  }
+  
+  .loginLink {
+    text-align: center;
+    margin-top: 15px;
+  }
+  
+  .loginLink a {
+    color: #1e88e5;
+    text-decoration: none;
+  }
+  
+  .loginLink a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Responsivité - Appareils mobiles et tablettes */
+  @media (max-width: 768px) {
+    .modalContent {
+      width: 90%; /* Le modal prendra 90% de la largeur de l'écran sur les petits écrans */
+      max-width: 350px; /* On limite la largeur à 350px sur petits écrans */
+    }
+  
+    .formFooter {
+      flex-direction: column; /* Sur petits écrans, les boutons seront empilés verticalement */
+      align-items: center; /* Centrer les boutons */
+    }
+  
+    .cancelButton,
+    .submitButton {
+      width: 100%; /* Les boutons prennent toute la largeur sur petits écrans */
+      margin-bottom: 10px; /* Espacement entre les boutons */
+    }
+  
+    .formGroup input,
+    .formGroup select {
+      font-size: 14px; /* Réduire la taille de police pour mieux s'adapter */
+      padding: 12px; /* Augmenter le padding des champs sur petits écrans pour plus de confort */
+    }
+  
+    .formGroup label {
+      font-size: 14px; /* Réduire la taille de police des labels pour mieux s'adapter */
+    }
+  
+    .loginLink {
+      font-size: 14px; /* Réduire la taille du texte du lien de connexion */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .modalContent {
+      width: 95%; /* Le modal prendra 95% de la largeur sur très petits écrans */
+      max-width: 280px; /* Limiter la largeur à 280px max */
+    }
+  
+    .formGroup input,
+    .formGroup select {
+      font-size: 13px; /* Réduire encore la taille de police pour mieux s'adapter sur de très petits écrans */
+      padding: 14px; /* Ajouter un padding supplémentaire pour l'ergonomie */
+    }
+  
+    .cancelButton,
+    .submitButton {
+      padding: 12px; /* Augmenter légèrement la taille des boutons pour l'ergonomie sur petits écrans */
+      font-size: 14px; /* Ajuster la taille de police des boutons */
+    }
+  
+    .loginLink a {
+      font-size: 13px; /* Réduire la taille du texte du lien */
+    }
+  }
+  

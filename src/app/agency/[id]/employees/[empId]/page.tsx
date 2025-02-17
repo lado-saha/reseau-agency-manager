@@ -22,7 +22,6 @@ export default async function Page({ params, searchParams }: { params: Params, s
   const { email } = await searchParams;
 
   const repo = new AgencyEmployeeRepository();
-  let originalModel: Employee<AgencyEmployeeRole> | undefined;
   const isNew = id === 'new';
   const session = await auth();
 
@@ -30,7 +29,7 @@ export default async function Page({ params, searchParams }: { params: Params, s
     redirect('/auth/login'); // Redirect unauthorized users
   }
 
-  const userId = session.user?.id!!;
+  const userId = session.user?.id!;
 
   if (isNew) {
     return (
@@ -44,7 +43,7 @@ export default async function Page({ params, searchParams }: { params: Params, s
     );
   }
 
-  originalModel = await repo.getById(id);
+  const originalModel = await repo.getById(id);
   if (originalModel === undefined) {
     return notFound();
   }

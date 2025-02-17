@@ -88,8 +88,8 @@ export function DatePicker() {
 
   const formatRange = (range: DateRange) =>
     range.to
-      ? `${formatDate(range.from!!)} - ${formatDate(range.to)}`
-      : `${formatDate(range.from!!)} - ...`;
+      ? `${formatDate(range.from!)} - ${formatDate(range.to)}`
+      : `${formatDate(range.from!)} - ...`;
 
   const title =
     selectedMode === 'single'

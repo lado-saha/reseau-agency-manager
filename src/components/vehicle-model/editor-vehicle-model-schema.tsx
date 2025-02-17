@@ -72,7 +72,7 @@ export default function VehicleModelLayoutEditor({
       if (prevMatrix.length === 1 && action === 'delete') {
         return prevMatrix; // Do nothing
       }
-      let newMatrix = [...prevMatrix]; // Copy the current matrix
+      const newMatrix = [...prevMatrix]; // Copy the current matrix
 
       if (action === 'add') {
         // Create a new row with the same number of columns as the existing rows
@@ -277,16 +277,22 @@ export function VehicleModelLiveView({
                       <ShipWheelIcon className={driver?.id ? `text-green-500` : `text-red-500`} />
                     </Card>
                   </PopoverTrigger>
-                  <PopoverContent className="w-fit p-0">
-                    {!driver?.id ? (<SearchDialogGeneric
+                  <PopoverContent className="w-fit p-0 flex flex-col gap-2  items-center justify-center">
+                    {driver?.id && (
+                      <DriverSearchItem
+                        item={driver}
+                        isSelected={false}
+                        onCheckedChange={() => { }}
+                      />
+                    )}
+                    <SearchDialogGeneric
                       selectionMode="single"
                       triggerText="Choose the driver"
                       fetchItemsAction={searchDriver}
                       onSelectAction={(selectedItems) => {
-                        setDriverChangeAction(selectedItems[0])
-                        setDriver(
-                          selectedItems[0]
-                        );
+                        const selectedDriver = selectedItems[0];
+                        setDriverChangeAction(selectedDriver);
+                        setDriver(selectedDriver);
                       }}
                       renderItemAction={(item, isSelected, onCheckedChange) => (
                         <DriverSearchItem
@@ -296,11 +302,9 @@ export function VehicleModelLiveView({
                           onCheckedChange={onCheckedChange}
                         />
                       )}
-                    />) : (
-                      <DriverSearchItem item={driver} isSelected={false} onCheckedChange={() => { }} />
-                    )
-                    }
-                  </PopoverContent>
+                    />
+                  </PopoverContent> 
+
                 </Popover>);
             }
 
@@ -327,7 +331,7 @@ export function VehicleModelLiveView({
                     <div>
 
                       <PassengerGridItem passenger={passenger} />
-                    
+
                     </div>
                   </PopoverContent>
                 }

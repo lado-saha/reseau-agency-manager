@@ -1,0 +1,265 @@
+/* SearchPage.module.css */
+
+/* Global styles */
+.searchPage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 94vh; /* Placer le contenu au centre verticalement */
+  padding: 20px;
+  background: #f2f2f2;
+  flex-direction: column;
+  text-align: center;
+}
+
+.searchPage h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+/* Toggle buttons */
+.toggleButtons {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.toggleButtons label {
+  font-size: 1.1rem;
+  cursor: pointer;
+  font-weight: 500;
+  color: #555;
+}
+
+/* Search bar */
+.searchBar {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.searchBar input {
+  width: 80%;
+  max-width: 600px; /* Augmenter la taille du champ de recherche */
+  padding: 15px;
+  font-size: 1.2rem; /* Augmenter la taille de la police */
+  border: 1px solid #ccc;
+  border-radius: 30px; /* Bordure arrondie pour un effet plus fluide */
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.searchBar input:focus {
+  border-color: #007BFF; /* Changer la couleur du contour lorsqu'on clique */
+}
+
+.searchButton {
+  background-color: #007BFF;
+  border: none;
+  border-radius: 50%;
+  padding: 15px;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.searchButton:hover {
+  background-color: #0056b3;
+}
+
+/* History section */
+.recentSearches {
+  margin-top: 20px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 800px;
+  margin: 20px auto;
+}
+
+.searchList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.historyTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.historyTable th, .historyTable td {
+  padding: 12px 15px;
+  text-align: left;
+}
+
+.historyTable th {
+  background-color: #f4f4f4;
+  color: #333;
+  font-weight: bold;
+}
+
+.historyTable td {
+  border-bottom: 1px solid #ddd;
+}
+
+.historyRow {
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.historyRow:hover {
+  background-color: #f0f0f0;
+}
+
+.showMoreButton {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #5c6bc0;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+.showMoreButton:hover {
+  background-color: #3f51b5;
+}
+
+.toggleHistoryButton {
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.toggleHistoryButton:hover {
+  background-color: #388e3c;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .searchPage {
+    padding: 10px;
+  }
+
+  .searchBar input {
+    width: 100%;
+  }
+
+  .recentSearches {
+    padding: 15px;
+    max-width: 100%;
+  }
+
+  .historyTable th, .historyTable td {
+    font-size: 0.9rem;
+    padding: 8px 10px;
+  }
+
+  .showMoreButton {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+
+  .toggleHistoryButton {
+    font-size: 0.9rem;
+    padding: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .historyTable th, .historyTable td {
+    font-size: 0.8rem;
+    padding: 6px 8px;
+  }
+
+  .showMoreButton {
+    font-size: 0.8rem;
+    padding: 6px;
+  }
+
+  .toggleHistoryButton {
+    font-size: 0.8rem;
+    padding: 6px;
+  }
+}
+
+
+.recentSearches {
+  margin-top: 20px;
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  max-height: 300px; /* Hauteur fixe pour le conteneur */
+  overflow-y: auto; /* Scrollbar interne */
+}
+
+.scrollableList {
+  max-height: 100%; /* Limiter la hauteur de la liste */
+}
+
+.historyTable {
+  width: 100%; /* Adapter à tout type d'écran */
+  border-collapse: collapse;
+}
+
+.historyTable thead th {
+  position: sticky;
+  top: 0; /* Rendre l'entête toujours visible */
+  background-color: #f1f1f1;
+  text-align: left;
+  padding: 10px;
+  font-size: 1rem;
+  color: #333;
+}
+
+.historyTable tbody tr:hover {
+  background-color: #f5f5f5; /* Ajout d’un effet au survol */
+}
+
+.historyTable td, .historyTable th {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.historyTable td {
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .historyTable td, .historyTable th {
+    font-size: 0.8rem;
+    padding: 6px;
+  }
+}
+
+.showMoreButton {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #5c6bc0;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.showMoreButton:hover {
+  background-color: #3f51b5;
+}
+

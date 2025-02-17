@@ -14,7 +14,7 @@ const montserrat = Montserrat({
 });
 
 export const metadata = {
-  title: 'Tripbook',
+  title: 'Travelo',
   description:
     'Trip paradise'
 };
@@ -32,7 +32,7 @@ export default async function RootLayout({
   return (
     <html
       lang={locale}
-      className={montserrat.variable}
+      className={`${montserrat.variable} antialiased`}
       suppressHydrationWarning
     >
       <body className="flex min-h-screen w-full flex-col">

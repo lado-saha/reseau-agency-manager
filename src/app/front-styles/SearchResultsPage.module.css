@@ -1,0 +1,22 @@
+.pageContainer {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background: #f2f2f2;
+    min-height: 100vh;
+  }
+  
+  .mainContent {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  @media (max-width: 768px) {
+    .mainContent {
+      flex-direction: column;
+    }
+  }
+  
+
+
+  

@@ -1,0 +1,81 @@
+.container {
+  text-align: center;
+  padding: 20px;
+  margin-top: 0px;
+}
+
+.container h1{
+  text-align: center;
+  margin-top: 60px;
+}
+
+
+.seatsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); /* Grille flexible */
+  gap: 10px; /* Espacement entre les sièges */
+  justify-content: center; /* Centrer horizontalement */
+  align-items: center; /* Centrer verticalement */
+  margin: 20px auto;
+  max-width: 800px; /* Largeur maximale de la grille */
+}
+
+.seat {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 5px;
+  text-align: center;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.available {
+  background-color: #4CAF50; /* Vert pour disponible */
+}
+
+.unavailable {
+  background-color: #ccc; /* Gris pour non disponible */
+  cursor: not-allowed;
+}
+
+.seat:hover {
+  transform: scale(1.1);
+}
+
+.selectedSeats {
+  margin-top: 20px;
+}
+
+.reserveButton {
+  background-color: #008CBA;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.reserveButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Style de la popup */
+.confirmationPopup {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: rgba(0, 128, 0, 0.9); /* Vert foncé */
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+
+

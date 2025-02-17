@@ -129,7 +129,7 @@ export function VehicleModelForm({
           name: data.name, seatLayout: convertMatrixToBitmask(matrix),
           agencyId: agencyId, columns: matrix[0].length, fuelType: data.fuelType,
           luggageSpaces: data.luggageSpaces,
-          modelPhoto: selectedModelPhoto ? selectedModelPhoto : modelPhotoPreview!!,
+          modelPhoto: selectedModelPhoto ? selectedModelPhoto : modelPhotoPreview!,
           ...auditUpdOrNew(adminId, originalModel)
         }, adminId)
       onSubmitCompleteAction(newModel.id, newModel);

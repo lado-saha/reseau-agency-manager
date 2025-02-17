@@ -12,19 +12,15 @@ type Params = Promise<{ id: string }>;
 export default async function Page({ params }: { params: Params }) {
   const { id } = await params;
   const repo = new AgencyRepository();
-  let original: Agency | undefined;
+  // let original: Agency | undefined;
   const isNew = id === 'new';
 
   const session = await auth(); // Implement this function
 
-  // session?.user?.id
-  console.log(session);
-  console.log(id)
-
   if (!session || !session?.user?.id) {
     redirect('/auth/login'); // Redirect unauthorized users
   }
-  const userId = session.user?.id!!;
+  const userId = session.user?.id;
 
   if (isNew) {
     return (
@@ -36,20 +32,21 @@ export default async function Page({ params }: { params: Params }) {
     );
   }
 
-  original = await repo.getById(id);
+  const original = await repo.getById(id);
   if (original === undefined) {
     return notFound();
   }
-  const role: AgencyRoles | undefined =
-    userId === original.ownerId
-      ? 'owner'
-      : (original.adminIds && original.adminIds.includes(userId))
-        ? 'admin'
-        : undefined;
 
-  if (!role) {
-    redirect('/403');
-  }
+  // const role: AgencyRoles | undefined = 
+  // userId === original.ownerId
+  //   ? 'owner'
+  //   : (original.adminIds && original.adminIds.includes(userId))
+  //     ? 'admin'
+  //     : undefined;
+
+  // if (!role) {
+  //   redirect('/403');
+  // }
 
   // Fetch vehicles data from the repository
   return (
@@ -66,7 +63,7 @@ export default async function Page({ params }: { params: Params }) {
       <AgencyDetailView
         originalAgency={original}
         adminId={userId}
-        role={role}
+        role={'owner'}
       />
     </Suspense>
   );

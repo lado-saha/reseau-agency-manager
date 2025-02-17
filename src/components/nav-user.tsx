@@ -86,11 +86,11 @@ export function NavUser({ user }: { user: User }) {
                   {user.photo ? (
                     <Image
                       src={user.photo as string} // Use the concatenated URL if photo exists
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation()
-                        window.open(user.photo as string, '_blank');
-                      }}
+                      //onClick={(e) => {
+                      //  e.preventDefault();
+                      //  e.stopPropagation()
+                      //  window.open(user.photo as string, '_blank');
+                      //}}
                       alt={user.name}
                       width={40} // Adjust size as needed
                       height={40} // Adjust size as needed
@@ -110,7 +110,7 @@ export function NavUser({ user }: { user: User }) {
                     {user.email}
                   </span>
                   <span className="italic truncate font-semibold text-primary">
-                    {user.role}
+                    {/* {user.role} */}
                   </span>
                 </div>
               </div>

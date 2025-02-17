@@ -10,49 +10,48 @@ import {
 } from '@/components/ui/dropdown-menu';
 import {
   AlertCircle,
-  AlertTriangle,
-  ArrowDown,
   ArrowDownCircle,
-  ArrowUp,
   ArrowUpCircle,
   Check,
   CheckCircle2,
   CircleParkingIcon,
-  Hammer,
-  Home,
-  HomeIcon,
-  LucideMessageCircleWarning,
   MoreHorizontal,
   MoreVertical,
-  MoveRight,
-  ParkingCircle,
-  PauseCircleIcon,
-  Wrench,
   WrenchIcon
 } from 'lucide-react';
 import { TableCell, TableRow } from '@/components/ui/table';
-import { HealthStatus, Vehicle, VehicleModel } from '@/lib/models/resource';
+import { getResourceTenantStatus, HealthStatus, Resource, ResourceStatus, ResourceStatusToTenant, Vehicle, VehicleModel } from '@/lib/models/resource';
 import { TabsVehicle } from '@/lib/models/helpers';
 import { format } from 'date-fns';
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
   CardTitle
 } from '@/components/ui/card';
 import { SearchItemProps } from '@/lib/utils';
 import { ListBadges } from '../list-badges';
+import { Station } from '@/lib/models/station';
+import { PlaceAddress } from '@/lib/repo/osm-place-repo';
 
 interface VehicleItemProps {
-  vehicle: Vehicle;
-  currentTab: TabsVehicle;
-  viewOnMap: (lat: number, lon: number) => void;
+  tab: TabsVehicle;
+  vehicle: Vehicle,
+  currentId: string,
+  viewOnMapAction: (latitude: number, longitude: number) => void
+  detailsAction: (id: string) => void
 }
 
-function renderStatusBadge(vehicle: Vehicle) {
-  switch (vehicle.status) {
+function renderStatusBadge(resource: Resource, currentId: string) {
+  const tenantStatus = getResourceTenantStatus(resource, currentId);
+
+  switch (tenantStatus) {
+    case 'stationed':
+      return (
+        <Badge variant="default" className="items-center bg-gray-500 text-white">
+          <CircleParkingIcon className="mr-2 h-4 w-4" />
+          <span className="text-sm">Stationed</span>
+        </Badge>
+      );
     case 'outgoing':
       return (
         <Badge variant="destructive" className="items-center">
@@ -62,26 +61,13 @@ function renderStatusBadge(vehicle: Vehicle) {
       );
     case 'incoming':
       return (
-        <Badge
-          variant="default"
-          className="items-center bg-green-500 text-white"
-        >
+        <Badge variant="default" className="items-center bg-green-500 text-white">
           <ArrowDownCircle className="mr-2 h-4 w-4" />
           <span className="text-sm">Incoming</span>
         </Badge>
       );
-    case 'stationed':
-      return (
-        <Badge
-          variant="default"
-          className="items-center bg-gray-500 text-white"
-        >
-          <CircleParkingIcon className="mr-2 h-4 w-4" />
-          <span className="text-sm">Stationed</span>
-        </Badge>
-      );
     default:
-      return null;
+      return null; // Fallback for unexpected cases
   }
 }
 
@@ -115,32 +101,35 @@ export function renderHealthBadge(healthStatus: HealthStatus) {
 
 export function VehicleTableItem({
   vehicle,
-  currentTab,
-  viewOnMap
+  tab,
+  currentId,
+  detailsAction,
+  viewOnMapAction
 }: VehicleItemProps) {
+
+  const fromCity = ((vehicle.tenant as Station).address as PlaceAddress).city
+  const toCity = ((vehicle.nextTenant as Station).address as PlaceAddress).city
+
   const renderAdditionalFields = () => {
-    switch (currentTab) {
-      case 'incoming':
+    switch (tab) {
+      case 'incoming': // Next Tenant == Me (currentId)
         return (
           <>
-            <TableCell>{vehicle.origin}</TableCell>
-            <TableCell>{vehicle.departureTime}</TableCell>
-            <TableCell>{vehicle.estimatedArrivalTime}</TableCell>
+            <TableCell>{fromCity}</TableCell> {/*From*/}
+            <TableCell>{format(vehicle.tenancyEndTime as Date, 'PP')}</TableCell> {/*Will arrived at*/}
           </>
         );
-      case 'outgoing':
+      case 'outgoing': // Tenant === Me (currentId)
         return (
           <>
-            <TableCell>{vehicle.destination}</TableCell>
-            <TableCell>{vehicle.departureTime}</TableCell>
-            <TableCell>{vehicle.estimatedArrivalTime}</TableCell>
+            <TableCell>{toCity}</TableCell> {/*To town*/}
+            <TableCell>{format(vehicle.lastStatusSwitchTime as Date, 'PP')}</TableCell> {/*Departure time*/}
           </>
         );
-      case 'stationed':
+      case 'stationed': // Tenant === Me ()
         return (
           <>
-            <TableCell>{vehicle.arrivedOn}</TableCell>
-            <TableCell>{vehicle.arrivedFrom}</TableCell>
+            <TableCell>{format(vehicle.tenancyStartedTime as Date, 'PP')}</TableCell> {/*Arrived on*/}
           </>
         );
       default:
@@ -148,6 +137,7 @@ export function VehicleTableItem({
     }
   };
 
+  const model = vehicle.model as VehicleModel; // Assuming item.model is already resolved to VehicleModel
   return (
     <TableRow>
       {/* Vehicle Image */}
@@ -156,25 +146,28 @@ export function VehicleTableItem({
           alt="Vehicle image"
           className="aspect-square rounded-md object-cover"
           height="64"
-          src={vehicle.imageUrl || '/placeholder.svg'}
+          src={(vehicle.model as VehicleModel).modelPhoto as string || '/placeholder.svg'}
           width="64"
         />
       </TableCell>
 
       {/* Vehicle Details */}
-      <TableCell className="font-medium">{vehicle.model}</TableCell>
-      <TableCell>{vehicle.immatriculation}</TableCell>
-      {currentTab === 'all' ? (
-        <TableCell>{renderStatusBadge(vehicle)}</TableCell>
+      <TableCell className="font-medium">{(vehicle.model as VehicleModel).name}</TableCell>
+      <TableCell>{vehicle.registrationNumber}</TableCell>
+      {tab === 'all' ? (
+        <TableCell>{renderStatusBadge(vehicle, currentId)}</TableCell>
       ) : (
         <></>
       )}
-      <TableCell>{`${12}/${vehicle.nbSeats}`}</TableCell>
-      <TableCell>{renderHealthBadge(vehicle)}</TableCell>
-
-      {/* Additional Info */}
+      <TableCell>{`${(vehicle.model as VehicleModel).seatCount}`}</TableCell>
+      <TableCell>{vehicle.productionYear}</TableCell>
+      <TableCell>{renderHealthBadge(vehicle.healthStatus)}</TableCell>
+      <TableCell>{model.seatCount}</TableCell>
+      <TableCell>{model.fuelType}</TableCell >
+      <TableCell>
+        {ListBadges({ items: model.luggageSpaces })}
+      </TableCell>
       {renderAdditionalFields()}
-
       {/* Action Menu */}
       <TableCell>
         <DropdownMenu>
@@ -184,35 +177,39 @@ export function VehicleTableItem({
               <span className="sr-only">Toggle menu</span>
             </Button>
           </DropdownMenuTrigger>
-          {DropdownMenuVehicle(vehicle, viewOnMap)}
+          {DropdownMenuVehicle({ vehicle, viewOnMapAction, detailsAction, currentId, tab })}
         </DropdownMenu>
       </TableCell>
-    </TableRow>
+    </TableRow >
   );
 }
-
-function DropdownMenuVehicle(
-  vehicle: Vehicle,
-  viewOnMap: (latitude: number, longitude: number) => void
+function DropdownMenuVehicle({
+  vehicle,
+  viewOnMapAction,
+  detailsAction,
+  currentId,
+  tab
+}: VehicleItemProps
 ) {
   return (
     <DropdownMenuContent align="end">
       <DropdownMenuLabel>Actions</DropdownMenuLabel>
-      <DropdownMenuItem>
-        <button
-          type="submit"
-          onClick={() =>
-            viewOnMap(
-              vehicle.positionGps.latitude,
-              vehicle.positionGps.longitude
-            )
-          }
-        >
-          See on Map
-        </button>
+      <DropdownMenuItem className="cursor-pointer h-8 my-1" onClick={() =>
+        viewOnMapAction(
+          vehicle.latitude,
+          vehicle.longitude,
+        )
+      }>
+        <span className='w-full h-full text-start my-2'>See on Map</span>
+      </DropdownMenuItem>
+
+      <DropdownMenuItem className='cursor-pointer h-8 my-1' onClick={() =>
+        detailsAction(vehicle.id)
+      }>
+        <span className='w-full h-full text-start my-2'>Details</span>
       </DropdownMenuItem>
     </DropdownMenuContent>
-  );
+  )
 }
 
 
@@ -293,11 +290,60 @@ export function VehicleSearchItem({
       </CardContent>
     </Card>
   );
-} export function VehicleGridItem({
+}
+
+export function VehicleGridItem({
   vehicle,
-  currentTab,
-  viewOnMap
+  tab,
+  viewOnMapAction, detailsAction, currentId
 }: VehicleItemProps) {
+  const model = (vehicle.model as VehicleModel)
+
+  const fromCity = ((vehicle.tenant as Station).address as PlaceAddress).city
+  const toCity = ((vehicle.nextTenant as Station).address as PlaceAddress).city
+
+  const renderAdditionalFields = () => {
+    switch (tab) {
+      case 'incoming': // Next Tenant == Me (currentId)
+        return (
+          <>
+            <div>
+              <span className="block text-muted-foreground">Origin</span>
+              <span>{fromCity}</span>
+            </div>
+            <div>
+              <span className="block text-muted-foreground">Arrival Time</span>
+              <span>{format(vehicle.tenancyEndTime as Date, 'PP')}</span>
+            </div>
+          </>
+        );
+      case 'outgoing': // Tenant === Me (currentId)
+        return (
+          <>
+            <div>
+              <span className="block text-muted-foreground">Destination</span>
+              <span>{toCity}</span>
+            </div>
+            <div>
+              <span className="block text-muted-foreground">Departure time</span>
+              <span>{format(vehicle.lastStatusSwitchTime as Date, 'PP')}</span>
+            </div>
+          </>
+        );
+      case 'stationed': // Tenant === Me
+        return (
+          <>
+            <div>
+              <span className="block text-muted-foreground">Arrived on</span>
+              <span>{format(vehicle.tenancyStartedTime as Date, 'PP')}</span>
+            </div>
+          </>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <Card className="relative overflow-hidden shadow-md">
       {/* More Button */}
@@ -312,16 +358,33 @@ export function VehicleSearchItem({
             <MoreVertical className="h-5 w-5" />
           </Button>
         </DropdownMenuTrigger>
-        {DropdownMenuVehicle(vehicle, viewOnMap)}
+        {DropdownMenuVehicle({ vehicle, viewOnMapAction, detailsAction, currentId, tab })}
       </DropdownMenu>
 
       {/* Vehicle Image */}
       <div className="relative w-full h-32">
         <Image
-          src={vehicle.imageUrl || '/placeholder.svg'}
+          src={model.modelPhoto as string || '/placeholder.svg'}
           alt="Vehicle image"
           fill
           className="object-cover"
+          onClick={(e) => {
+            e.preventDefault();
+            window.open(model.modelPhoto as string, '_blank');
+          }}
+        />
+      </div>
+
+      <div className="relative w-full h-32">
+        <Image
+          src={model.modelPhoto as string || '/placeholder.svg'}
+          alt="Vehicle image"
+          fill
+          className="object-cover"
+          onClick={(e) => {
+            e.preventDefault();
+            window.open(model.modelPhoto as string, '_blank');
+          }}
         />
       </div>
 
@@ -329,68 +392,42 @@ export function VehicleSearchItem({
       <CardContent className="flex flex-col items-center space-y-1 text-center">
         {/* Status Badge */}
         <div className="py-2">
-          {currentTab === 'all' ? renderStatusBadge(vehicle) : null}
+          {tab === 'all' ? renderStatusBadge(vehicle, currentId) : null}
         </div>
 
         {/* Vehicle Details */}
-        <CardTitle>{vehicle.immatriculation}</CardTitle>
-        <div className="text-md text-muted-foreground">{vehicle.model}</div>
+        <CardTitle>{vehicle.registrationNumber}</CardTitle>
+        <div className="text-md text-muted-foreground">{model.name}</div>
 
         {/* Health Badge */}
-        <div>{renderHealthBadge(vehicle)}</div>
+        <div>{renderHealthBadge(vehicle.healthStatus)}</div>
 
         {/* Additional Info */}
         <div className="grid grid-cols-2 gap-4 items-center text-sm mt-3 w-full">
           <div>
-            <span className="block text-muted-foreground">Seats</span>
-            <span>{`${12}/${vehicle.nbSeats}`}</span>
+            <span className="block text-muted-foreground">Year</span>
+            <span>{vehicle.productionYear}</span>
           </div>
-          {currentTab === 'incoming' && (
-            <>
-              <div>
-                <span className="block text-muted-foreground">Origin</span>
-                <span>{vehicle.origin}</span>
-              </div>
-              <div>
-                <span className="block text-muted-foreground">Departure</span>
-                <span>{vehicle.departureTime}</span>
-              </div>
-              <div>
-                <span className="block text-muted-foreground">Arrival</span>
-                <span>{vehicle.estimatedArrivalTime}</span>
-              </div>
-            </>
-          )}
-          {currentTab === 'outgoing' && (
-            <>
-              <div>
-                <span className="block text-muted-foreground">Destination</span>
-                <span>{vehicle.destination}</span>
-              </div>
-              <div>
-                <span className="block text-muted-foreground">Departure</span>
-                <span>{vehicle.departureTime}</span>
-              </div>
-              <div>
-                <span className="block text-muted-foreground">Arrival</span>
-                <span>{vehicle.estimatedArrivalTime}</span>
-              </div>
-            </>
-          )}
-          {currentTab === 'stationed' && (
-            <>
-              <div>
-                <span className="block text-muted-foreground">Arrived On</span>
-                <span>{vehicle.arrivedOn}</span>
-              </div>
-              <div>
-                <span className="block text-muted-foreground">
-                  Arrived From
-                </span>
-                <span>{vehicle.arrivedFrom}</span>
-              </div>
-            </>
-          )}
+
+          {/* Seat Count */}
+          <div>
+            <span className="block text-muted-foreground">Seats</span>
+            <span>{model.seatCount}</span>
+          </div>
+
+          {/* Fuel Type */}
+          <div>
+            <span className="block text-muted-foreground">Fuel</span>
+            <span>{model.fuelType}</span>
+          </div>
+
+          {/* Luggage Spaces */}
+          <div>
+            <span className="block text-muted-foreground">Luggage</span>
+            <ListBadges items={model.luggageSpaces} />
+          </div>
+
+          {renderAdditionalFields()}
         </div>
       </CardContent>
 
@@ -401,9 +438,9 @@ export function VehicleSearchItem({
           <span>Last Updated On</span>
         </div>
         <div className="flex justify-between">
-          <span>{format(vehicle.auditInfo.createdOn, 'Pp')}</span>
+          <span>{format(vehicle.createdOn, 'Pp')}</span>
           <span className="text-end">
-            {format(vehicle.auditInfo.updatedOn, 'Pp')}
+            {format(vehicle.updatedOn, 'Pp')}
           </span>
         </div>
       </div>
@@ -411,16 +448,18 @@ export function VehicleSearchItem({
   );
 }
 
-export function VehicleMapTooltip({ vehicle, currentTab }: VehicleItemProps) {
+export function VehicleMapTooltip({ vehicle, tab, detailsAction, currentId, viewOnMapAction }: VehicleItemProps) {
+
+  const model = (vehicle.model as VehicleModel)
   return (
     <Card className="flex flex-col items-center text-center stroke-none border-none p-1">
       {/* Status Badge */}
-      <div>{currentTab === 'all' ? renderStatusBadge(vehicle) : null}</div>
+      <div>{tab === 'all' ? renderStatusBadge(vehicle, currentId) : null}</div>
       {/* Vehicle Details */}
-      <span className="text-sm">{vehicle.immatriculation}</span>
-      <div className="text-sm text-muted-foreground">{vehicle.model}</div>
-      <span>{`${12}/${vehicle.nbSeats}`}</span>
-      {renderHealthBadge(vehicle)}
+      <span className="text-sm">{vehicle.registrationNumber}</span>
+      <div className="text-sm text-muted-foreground">{model.name}</div>
+      <span>{`${model.seatCount}`}</span>
+      {renderHealthBadge(vehicle.healthStatus)}
     </Card>
   );
 }

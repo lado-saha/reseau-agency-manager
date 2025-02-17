@@ -9,6 +9,7 @@ import { convertBitmaskToMatrix, Driver, Vehicle, VehicleModel } from '@/lib/mod
 import { Passenger, TripResource } from '@/lib/models/trip';
 import { User } from '@/lib/models/user';
 import { fetchStationById, fetchVehicleById } from '@/lib/actions';
+import { AgencyEmployee } from '@/lib/models/employee';
 
 export default function InteractiveSeatLayout({
   editable = false,
@@ -66,6 +67,7 @@ export default function InteractiveSeatLayout({
       </Card>
     );
   };
+  const user = ((selectedDriver?.employee as AgencyEmployee)?.user as User)
 
   return (
     <div
@@ -88,12 +90,12 @@ export default function InteractiveSeatLayout({
           </DialogHeader>
           {selectedDriver ? (
             <div>
-              <p>Name: {(selectedDriver.user as User).name}</p>
-              <p>Email: {(selectedDriver.user as User).email}</p>
+              <p>Name: {user.name}</p>
+              <p>Email: {user .email}</p>
             </div>
           ) : selectedSeat ? (
             <div>
-              <p>Name: {(selectedSeat.user as User).name}</p>
+              <p>Name: {user.name}</p>
               <p>Seat Number: {selectedSeat.seatNumber}</p>
             </div>
           ) : null}

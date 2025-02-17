@@ -8,11 +8,11 @@ const getFilePath = (entity: string) =>
 
 export async function POST(
   request: Request,
-  { params }: { params: { entity: string } } // Extract entity from URL
+  { params }: { params: Promise<{ entity: string }> } // Extract entity from URL
 ) {
   try {
     const data = await request.json();
-    const entity = params.entity; // Extract entity from URL parameters
+    const {entity} = await params
     const filePath = getFilePath(entity);
     let entities;
 
@@ -30,7 +30,7 @@ export async function POST(
     return NextResponse.json({ message: `${entity} created successfully` });
   } catch (error) {
     return NextResponse.json(
-      { message: `Error creating ${params.entity}`, error: (error as Error).message },
+      { message: `Error creating ${(await params).entity}`, error: (error as Error).message },
       { status: 500 }
     );
   }
@@ -38,11 +38,11 @@ export async function POST(
 
 export async function PUT(
   request: Request,
-  { params }: { params: { entity: string } }
+  { params }: { params: Promise<{ entity: string }> }
 ) {
   try {
     const data = await request.json();
-    const entity = params.entity;
+    const {entity} = await params;
     const filePath = getFilePath(entity);
     let entities;
 
@@ -71,7 +71,7 @@ export async function PUT(
     return NextResponse.json({ message: `${entity} updated successfully` });
   } catch (error) {
     return NextResponse.json(
-      { message: `Error updating ${params.entity}`, error: (error as Error).message },
+      { message: `Error updating ${(await params).entity}`, error: (error as Error).message },
       { status: 500 }
     );
   }
@@ -79,7 +79,7 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { entity: string } }
+  { params }: { params: Promise<{ entity: string }> }
 ) {
   try {
     const { searchParams } = new URL(request.url);
@@ -92,7 +92,7 @@ export async function DELETE(
       );
     }
 
-    const entity = params.entity;
+    const {entity }= await params
     const filePath = getFilePath(entity);
     let entities;
 
@@ -120,7 +120,7 @@ export async function DELETE(
     return NextResponse.json({ message: `${entity} deleted successfully` });
   } catch (error) {
     return NextResponse.json(
-      { message: `Error deleting ${params.entity}`, error: (error as Error).message },
+      { message: `Error deleting ${(await params).entity}`, error: (error as Error).message },
       { status: 500 }
     );
   }

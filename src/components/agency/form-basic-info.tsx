@@ -45,7 +45,7 @@ import {
   CardDescription,
   CardContent
 } from '../ui/card';
-import { AgencyBasicInfo, AgencyRoles } from '@/lib/models/agency';
+import { AgencyBasicInfo, AgencyRoles, LEGAL_STRUCTURE, LEGAL_STRUCTURE_OPTIONS } from '@/lib/models/agency';
 import { saveAgencyBasicInfo } from '@/lib/actions';
 import { ErrorDialog } from '../dialogs/dialog-error';
 
@@ -54,7 +54,7 @@ const agencyInfoSchema = z.object({
   businessName: z.string().nonempty('Business name is required.'),
   slogan: z.string().optional(),
   headquartersAddress: z.string().nonempty('Headquarters address is required.'),
-  legalStructure: z.enum(['llc', 'ltd', 'sole-proprietor', 'corp'], {
+  legalStructure: z.enum(LEGAL_STRUCTURE, {
     message: 'Please select a legal structure.'
   }),
   phones: z.array(
@@ -88,12 +88,6 @@ const agencyInfoSchema = z.object({
 
 type BasicInfoFormValue = z.infer<typeof agencyInfoSchema>;
 
-const legalStructures = [
-  { value: 'llc', label: 'LLC' },
-  { value: 'ltd', label: 'LTD' },
-  { value: 'sole-proprietor', label: 'Sole Proprietorship' },
-  { value: 'corp', label: 'Corporation' }
-];
 
 export function BasicInfoForm({
   id,
@@ -106,11 +100,11 @@ export function BasicInfoForm({
   onSubmitCompleteAction: (newId: string, data: AgencyBasicInfo) => void;
   adminId: string;
 }) {
-  const [imagePreview, setImagePreview] = useState<string | null>(
-    oldBasicInfo?.logo
+  const [imagePreview, setImagePreview] = useState<string | undefined>(
+    oldBasicInfo?.logo as string 
   );
   const [errorMessage, setErrorMessage] = useState('');
-  const [selectedLogo, setSelectedLogo] = useState<File | null>(null);
+  const [selectedLogo, setSelectedLogo] = useState<File | undefined>(undefined);
   const [isPending, setIsPending] = useState<boolean>(false);
 
   // Set up useForm with zod resolver for validation
@@ -147,8 +141,8 @@ export function BasicInfoForm({
 
   // Reset file input when removing logo
   const handleRemoveLogo = () => {
-    setImagePreview(null);
-    setSelectedLogo(null);
+    setImagePreview(undefined);
+    setSelectedLogo(undefined);
     const fileInput = document.getElementById(
       'logo-upload'
     ) as HTMLInputElement;
@@ -192,7 +186,7 @@ export function BasicInfoForm({
           phones: data.phones.flatMap((phone) => phone.value),
           headquartersAddress: data.headquartersAddress,
           legalStructure: data.legalStructure,
-          logo: selectedLogo ? selectedLogo : imagePreview!!,
+          logo: selectedLogo ? selectedLogo : imagePreview!,
           physicalCreationDate: new Date(data.physicalCreationDate),
           slogan: data.slogan
         },
@@ -372,7 +366,7 @@ export function BasicInfoForm({
                             )}
                           >
                             {field.value
-                              ? legalStructures.find(
+                              ? LEGAL_STRUCTURE_OPTIONS.find(
                                 (ls) => ls.value === field.value
                               )?.label
                               : 'Select Legal Structure'}
@@ -391,7 +385,7 @@ export function BasicInfoForm({
                               No legal structure found.
                             </CommandEmpty>
                             <CommandGroup>
-                              {legalStructures.map((ls) => (
+                              {LEGAL_STRUCTURE_OPTIONS.map((ls) => (
                                 <CommandItem
                                   key={ls.value}
                                   onSelect={() =>

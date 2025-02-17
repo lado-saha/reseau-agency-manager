@@ -34,7 +34,7 @@ import { cn } from '@/lib/utils';
 import { StationSearchItem } from '../station/item-station';
 import { Trip, TRIP_STATUS, TRIP_STATUS_OPTIONS, TripStatus } from '@/lib/models/trip';
 import { Station } from '@/lib/models/station';
-import { fetchStationById, saveTripBasicInfo, searchStation } from '@/lib/actions';
+import { fetchStationById, saveTripInfo, searchStation } from '@/lib/actions';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '../ui/command';
 import { Textarea } from '../ui/textarea'; // Added for the notes field
 
@@ -88,10 +88,10 @@ export function TripBasicInfoForm({
     resolver: zodResolver(schema),
     mode: 'all',
     defaultValues: {
-      departureDate: originalTrip?.departureDateTime || new Date(),
-      departureTime: originalTrip?.departureDateTime ? format(originalTrip.departureDateTime, 'HH:mm') : '08:00',
-      arrivalDate: originalTrip?.arrivalDateTime || new Date(),
-      arrivalTime: originalTrip?.arrivalDateTime ? format(originalTrip.arrivalDateTime, 'HH:mm') : '10:00',
+      departureDate: originalTrip?.departureTime || new Date(),
+      departureTime: originalTrip?.departureTime ? format(originalTrip.departureTime, 'HH:mm') : '08:00',
+      arrivalDate: originalTrip?.arrivalTime || new Date(),
+      arrivalTime: originalTrip?.arrivalTime ? format(originalTrip.arrivalTime, 'HH:mm') : '10:00',
       tripStatus: originalTrip?.status || 'scheduled',
       isVip: originalTrip?.isVip || false,
       notes: originalTrip?.notes || '',
@@ -129,13 +129,13 @@ export function TripBasicInfoForm({
 
       // Create the new trip object
 
-      const newTrip = await saveTripBasicInfo(id, agencyId, {
+      const newTrip = await saveTripInfo(id, agencyId, {
         id: id,
         fromStation: fromStation?.id || '',
         toStation: toStation?.id || '',
         status: data.tripStatus,
-        departureDateTime,
-        expectedDateTime: arrivalDateTime, // If needed
+        departureTime: departureDateTime,
+        expectedArrivalTime: arrivalDateTime, // If needed
         seatPrice: data.seatPrice,
         isVip: data.isVip,
         notes: data.notes || '',

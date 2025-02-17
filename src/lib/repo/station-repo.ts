@@ -41,7 +41,7 @@ export class StationRepository extends JsonRepository<Station> {
   }
 
   async getById(id: string): Promise<Station | undefined> {
-    const station = (await super.getById(id))!!
+    const station = (await super.getById(id))!
     const chief = await this.userRepo.getById(station?.chief as string)
     const address = await this.placeRepo.getById(station?.address as string)
     return { ...station, chief: chief as User, address: address as PlaceAddress }
@@ -92,8 +92,8 @@ export class StationRepository extends JsonRepository<Station> {
 
     // Map stations to include chiefs and addresses
     const itemsWithChiefs = stations.items.map(station => {
-      const chief = chiefMap.get(station.chief as string)!!;
-      const address = addressMap.get(station.address as string)!!;
+      const chief = chiefMap.get(station.chief as string)!;
+      const address = addressMap.get(station.address as string)!;
 
       return {
         ...station,
@@ -133,7 +133,7 @@ export class StationRepository extends JsonRepository<Station> {
         station.entrancePhoto = fileUrl
       }
 
-      let newStation = {
+      const newStation = {
         id: crypto.randomUUID(),
         ...station,
         ...auditCreate(adminId)

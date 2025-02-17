@@ -35,38 +35,6 @@ export function AgencyDetailView({
     originalAgency !== undefined ? 'edit-mode' : 'creation-mode';
 
   const [agency, setAgency] = useState(originalAgency);
-  // originalAgency = {
-  //   id: 'new',
-  //   basicInfo: {
-  //     businessName: 'Example Travel Agency',
-  //     logo: '/storage/1738591589237-what-I-wanter.png', // Replace with an actual image URL
-  //     slogan: 'Your gateway to the world!',
-  //     headquartersAddress: '123 Main Street, Cityville, Country',
-  //     legalStructure: 'llc',
-  //     phones: ['+1234567890', '+1987654321'],
-  //     emails: ['info@exampletravel.com', 'support@exampletravel.com'],
-  //     physicalCreationDate: new Date('2015-06-15')
-  //   },
-  //   legalDocs: {
-  //     businessRegistration: '/storage/1738591589237-what-I-wanter.png',
-  //     nationalIDBack: '/storage/1738591589237-what-I-wanter.png',
-  //     taxClearance: '/storage/data-mining.pdf',
-  //     nationalIDFront: '/storage/rec.pdf',
-  //     travelLicense: '/storage/1738591589237-what-I-wanter.png',
-  //     insuranceCertificate: '/storage/rec.pdf'
-  //   },
-  //   socialMedia: {
-  //     facebook: 'facebook ',
-  //     twitter: 'twitter ',
-  //     instagram: 'instagram ',
-  //     linkedIn: 'linkedIn ',
-  //     whatsapp: 'whatsapp ',
-  //     tiktok: 'tiktok ',
-  //     youtube: 'youtube ',
-  //     telegram: 'telegram'
-  //   }
-  // };
-
   const [tab, setTab] = useState<'basic-info' | 'legal-info' | 'social-media'>(
     'basic-info'
   );

@@ -62,7 +62,7 @@ export default function AddressForm({ id, originalAddress, onSaveAction }: Addre
 
   const handleSubmit = (data: PlaceAddress) => {
     setIsPending(true);
-    onSaveAction({ ...data, latitude: originalAddress?.latitude!!, longitude: originalAddress?.longitude!!, id: id });
+    onSaveAction({ ...data, latitude: originalAddress?.latitude ?? 0, longitude: originalAddress?.longitude ?? 0, id: id });
     setIsPending(false);
   };
 

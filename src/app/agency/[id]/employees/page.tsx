@@ -8,7 +8,6 @@ import Loading from '../../loading';
 import {
   AgencyEmployee,
   AgencyEmployeeRole,
-  Employee
 } from '@/lib/models/employee';
 
 export const metadata: Metadata = {

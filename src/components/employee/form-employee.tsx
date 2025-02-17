@@ -52,9 +52,8 @@ import { ErrorDialog } from '../dialogs/dialog-error';
 import { usePathname, useRouter } from 'next/navigation';
 
 // Fix the schema to dynamically select the correct one based on the provided roles
-const getRoleSchema = <T extends EmployeeRole>(roles: T[]) => {
-  return z.enum(roles); // Dynamically creates the enum schema based on the roles array
-
+const getRoleSchema = <T extends EmployeeRole>(roles:[T, ...T[]]) => {
+  return z.enum(roles); // Use a tuple to ensure at least one element
 };
 
 const roleMap = <T extends EmployeeRole>(
@@ -62,13 +61,13 @@ const roleMap = <T extends EmployeeRole>(
 ): { value: T; label: string }[] => {
   return roles.map((r) => ({
     value: r,
-    label: roleLabels[r]!! // Add fallback in case roleLabel is missing
+    label: roleLabels[r]! // Add fallback in case roleLabel is missing
   }));
 };
 
 const employeeSchema = <T extends EmployeeRole>(roles: T[]) =>
   z.object({
-    role: getRoleSchema(roles),
+    role: getRoleSchema(['chief', ...roles]),
     salary: z.coerce
       .number()
       .min(0, 'Salary must be a number greater or equals to 0'), // Ensures salary is positive
@@ -143,7 +142,7 @@ export function EmployeeForm<T extends EmployeeRole>({
     setIsPending(true);
     try {
       if (user) {
-        const audit = id === 'new' ? auditCreate(adminId) : { ...auditUpdate(adminId), createdBy: oldEmployee!!.createdBy, createdOn: oldEmployee!!.createdOn } satisfies Audit
+        const audit = id === 'new' ? auditCreate(adminId) : { ...auditUpdate(adminId), createdBy: oldEmployee!.createdBy, createdOn: oldEmployee!.createdOn } satisfies Audit
 
         const newEmpl = await saveEmployee<T>(
           {
@@ -264,8 +263,8 @@ export function EmployeeForm<T extends EmployeeRole>({
                       </div>
                     </FormControl>
                     <FormDescription>
-                      Enter a valid email address and click "Search" to find an
-                      existing employee or "Create" to register the employee before searching
+                      Enter a valid email address and click 'Search' to find an
+                      existing employee or 'Create' to register the employee before searching
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -347,7 +346,7 @@ export function EmployeeForm<T extends EmployeeRole>({
                       />
                     </FormControl>
                     <FormDescription>
-                      Specify the employee's monthly salary in FCFA.
+                      Specify the employee\'s monthly salary in FCFA.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>

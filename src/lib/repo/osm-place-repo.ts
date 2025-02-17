@@ -42,7 +42,7 @@ export class PlaceRepository extends JsonRepository<PlaceAddress> {
 
     if (place.id === "new") {
       // Notice that logo is a File when we have changed else it remains a string
-      let newPlace = {
+      const newPlace = {
         ...place,
         id: crypto.randomUUID(),
       } satisfies PlaceAddress;

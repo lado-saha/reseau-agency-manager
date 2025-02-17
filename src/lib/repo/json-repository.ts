@@ -83,7 +83,7 @@ export abstract class JsonRepository<T> implements IRepository<T> {
     // Filtering
     const filteredData = search
       ? data.filter((item) =>
-        Object.values(item).some((value) =>
+        Object.values(item as any).some((value) =>
           value?.toString().toLowerCase().includes(search.toLowerCase())
         )
       )

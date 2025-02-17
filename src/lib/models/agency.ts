@@ -3,6 +3,7 @@
  */
 import { Audit, GeoLocation } from '@/lib/models/helpers';
 import { LucideFastForward } from 'lucide-react';
+import { ExportAppOptions } from 'next/dist/export/types';
 
 // Agency export class with audit information
 
@@ -17,6 +18,15 @@ export interface AgencyBasicInfo {
   emails: string[];
   physicalCreationDate: Date
 }
+
+export type LegalStructure =  "llc" | "ltd" | "sole-proprietor" | "corp";
+export const LEGAL_STRUCTURE = ['llc', 'ltd', 'sole-proprietor', 'corp'] as const
+export const LEGAL_STRUCTURE_OPTIONS = [
+  { value: 'llc', label: 'LLC' },
+  { value: 'ltd', label: 'LTD' },
+  { value: 'sole-proprietor', label: 'Sole Proprietorship' },
+  { value: 'corp', label: 'Corporation' }
+] as const;
 
 // Interface for legal documents
 export interface AgencyLegalDocuments {

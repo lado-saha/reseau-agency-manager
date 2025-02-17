@@ -1,16 +1,14 @@
 import { Trip, TripResource } from "@/lib/models/trip";
 import { JsonRepository, UserRepository } from "./json-repository";
 import { API_URL } from "../utils";
-import { auditCreate, auditUpdate, SortingDirection } from "../models/helpers";
-import { PlaceAddress, PlaceRepository } from "./osm-place-repo";
-import { User } from "../models/user";
+import { auditUpdate, SortingDirection } from "../models/helpers";
 import { AgencyRepository } from "./agency-repo";
-import { tripModelRepository } from "./vechicle-model-repo";
-import { tripRepository } from "./trip-repo";
 import { StationRepository } from "./station-repo";
-import { AgencyEmployeeRepository, StationEmployeeRepository } from "./employee-repo";
 import { VehicleRepository } from "./vehicle-repo";
 import { DriverRepository } from "./driver-repo";
+import { Driver, Vehicle } from "../models/resource";
+import { User } from "../models/user";
+import { throws } from "assert";
 
 export class TripRepository extends JsonRepository<Trip> {
   private userRepo = new UserRepository();
@@ -55,7 +53,8 @@ export class TripRepository extends JsonRepository<Trip> {
   }
 
   async getById(id: string): Promise<Trip | undefined> {
-    const trip = (await super.getById(id))!!
+    const trip = (await super.getById(id))
+    if (!trip) throw new Error("Trip not found")
 
     // Fetch fromStation and toStation in parallel
     const [fromStation, toStation] = await Promise.all([
@@ -105,8 +104,164 @@ export class TripRepository extends JsonRepository<Trip> {
       items: enrichedItems,
     };
   }
+  async deleteTripResourceInfo(
+    id: string,
+    agencyId: string,
+    index: number,
+    adminId: string
+  ): Promise<Trip> {
+    const trips = await this.fetchData();
 
-  async saveTripBasicInfo(
+    // Find the trip to update
+    const tripIndex = trips.findIndex((t) => t.id === id);
+    if (tripIndex === -1) {
+      throw new Error(`Trip with id ${id} not found.`);
+    }
+
+    // Find the resource index to delete
+    const resIndex = trips[tripIndex].resources.findIndex((t) => t.index === index);
+    if (resIndex === -1) {
+      throw new Error(`Resource #${index} not found.`);
+    }
+
+    // Remove the resource from the trip
+    trips[tripIndex].resources.splice(resIndex, 1);
+
+    // Create the updated trip object
+    const updatedTrip: Trip = {
+      ...trips[tripIndex],
+      ...auditUpdate(adminId),
+    };
+
+    // Save the updated trip to the server
+    await fetch(`${API_URL}/api/data/trips`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedTrip),
+    });
+
+    // Return the updated trip
+    return (await this.getById(id))!!;
+  }
+
+  async saveTripResourceInfo(
+    id: string,
+    agencyId: string,
+    tripResource: TripResource,
+    adminId: string
+  ): Promise<Trip> {
+    const trips = await this.fetchData();
+
+    // Find the trip to update
+    const tripIndex = trips.findIndex((t) => t.id === id);
+    if (tripIndex === -1) {
+      throw new Error(`Trip with id ${id} not found.`);
+    }
+
+    // Create a light version of the tripResource
+    const lightTripResource: TripResource = {
+      index: tripResource.index,
+      vehicle: (tripResource.vehicle as Vehicle).id,
+      driver: (tripResource.driver as Driver).id,
+      passengers: tripResource.passengers.map((passenger) => ({
+        user: (passenger.user as User).id,
+        seatNumber: passenger.seatNumber,
+      })),
+    };
+
+    // Find the resource index to update
+    const resIndex = trips[tripIndex].resources.findIndex(
+      (t) => t.index === tripResource.index
+    );
+
+    if (resIndex !== -1) {
+      // Update the existing resource
+      const oldVehicleId = trips[tripIndex].resources[resIndex].vehicle as string;
+      const newVehicleId = lightTripResource.vehicle as string;
+
+      const oldDriverId = trips[tripIndex].resources[resIndex].driver as string;
+      const newDriverId = lightTripResource.driver as string;
+
+      // Handle vehicle changes
+      if (oldVehicleId !== newVehicleId) {
+        // Release the old vehicle
+        const oldVehicle = (await this.vehicleRepo.getById(oldVehicleId))!!;
+        await this.vehicleRepo.saveVehicleBasicInfo(oldVehicleId, {
+          ...oldVehicle,
+          tenancyEndTime: undefined,
+          status: "free",
+        }, adminId);
+
+        // Assign the new vehicle
+        const newVehicle = (await this.vehicleRepo.getById(newVehicleId))!!;
+        await this.vehicleRepo.saveVehicleBasicInfo(newVehicleId, {
+          ...newVehicle,
+          tenancyEndTime: trips[tripIndex].expectedArrivalTime,
+          status: "scheduled",
+        }, adminId);
+      }
+
+      // Handle driver changes
+      if (oldDriverId !== newDriverId) {
+        // Release the old driver
+        const oldDriver = (await this.driverRepo.getById(oldDriverId))!!;
+        await this.driverRepo.saveDriverInfo({
+          ...oldDriver,
+          tenancyEndTime: undefined,
+          status: "free",
+        }, adminId);
+
+        // Assign the new driver
+        const newDriver = (await this.driverRepo.getById(newDriverId))!!;
+        await this.driverRepo.saveDriverInfo({
+          ...newDriver,
+          tenancyEndTime: trips[tripIndex].expectedArrivalTime,
+          status: "scheduled",
+        }, adminId);
+      }
+
+      // Update the resource
+      trips[tripIndex].resources[resIndex] = lightTripResource;
+    } else {
+      // Assign the new vehicle
+      const newVehicleId = lightTripResource.vehicle as string;
+      const newVehicle = (await this.vehicleRepo.getById(newVehicleId))!!;
+      await this.vehicleRepo.saveVehicleBasicInfo(newVehicleId, {
+        ...newVehicle,
+        tenancyEndTime: trips[tripIndex].expectedArrivalTime,
+        status: "scheduled",
+      }, adminId);
+
+      // Assign the new driver
+      const newDriverId = lightTripResource.driver as string;
+      const newDriver = (await this.driverRepo.getById(newDriverId))!!;
+      await this.driverRepo.saveDriverInfo({
+        ...newDriver,
+        tenancyEndTime: trips[tripIndex].expectedArrivalTime,
+        status: "scheduled",
+      }, adminId);
+
+      // Add the new resource
+      trips[tripIndex].resources.push(lightTripResource);
+    }
+
+    // Create the updated trip object
+    const updatedTrip: Trip = {
+      ...trips[tripIndex],
+      ...auditUpdate(adminId),
+    };
+
+    // Save the updated trip to the server
+    await fetch(`${API_URL}/api/data/trips`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedTrip),
+    });
+
+    return (await this.getById(id))!!; // Return the updated trip directly
+  }
+
+  async saveTripInfo(
     id: string,
     agencyId: string,
     trip: Trip,
@@ -114,15 +269,7 @@ export class TripRepository extends JsonRepository<Trip> {
   ): Promise<Trip> {
     const trips = await this.fetchData();
     if (id === "new") {
-      //if (
-      //  trips.some(
-      //    (st) => st.=== trip.name
-      //  )
-      //) {
-      //  throw new Error("Trip with similar name already exists.");
-      //}
-      // Notice that logo is a File when we have changed else it remains a string
-      let newTrip = {
+      const newTrip = {
         ...trip,
         id: crypto.randomUUID(),
       } satisfies Trip;

@@ -60,11 +60,10 @@ export default function StationLayout({
       {showSidebar && (
         <AppSidebar
           user={{
-            name: session?.user?.name!!,
-            email: session?.user?.email!!,
-            role: session?.user?.role!!,
+            name: session?.user?.name!,
+            email: session?.user?.email!,
             passwordHash: '',
-            id: session?.user?.id!!
+            id: session?.user?.id!,phone:'', photo: '',recruitable: false, sex:'male',signupComplete:false
           }}
           showCalendar={['vehicles'].includes(currentPage)}
           urlPaths={[]}

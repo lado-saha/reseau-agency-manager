@@ -45,7 +45,7 @@ export function LoginForm({
   ) => Promise<string | void>;
 } & React.ComponentPropsWithoutRef<'form'>) {
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || '/station/vehicles';
+  const callbackUrl = searchParams.get('callbackUrl') || '/agency'
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isPending, setIsPending] = useState<boolean>(false);
   // Set up useForm with zod resolver for validation

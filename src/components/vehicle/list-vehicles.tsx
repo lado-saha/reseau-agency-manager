@@ -21,13 +21,14 @@ import {
   ArrowUpCircle,
   SortAscIcon,
   SortDescIcon,
-  MapPinned
+  MapPinned,
+  PlusIcon
 } from 'lucide-react';
 import {
-  TableVehicles,
-  GridVehicles,
   vehicleTableSortingOptions,
-  PropsVehicles
+  PropsVehicles,
+  TableVehicles,
+  GridVehicles
 } from '@/components/vehicle/table-vehicles';
 import { Vehicle } from '@/lib/models/resource';
 import {
@@ -38,13 +39,17 @@ import {
 import Loading from '@/app/agency/loading';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
-export default function StationFleetView({
+export default function VehicleListView({
   vehicles,
   offset,
   totalVehicles,
   sortDirection,
-  sortOption
+  sortOption,
+  currentId,
+  isSuperAdmin
 }: {
+  isSuperAdmin: boolean
+  currentId: string,
   vehicles: Vehicle[];
   offset: number;
   totalVehicles: number;
@@ -66,17 +71,14 @@ export default function StationFleetView({
       }),
     []
   );
-  // const [sortingDirection, setSortingDirection] =
-  //   useState<SortingDirection>(initialSortDirection);
-  // StationFleetView;
-  // const [sortingOption, setSortingOption] = useState<string>(initialSortOption);
+
   const [currentView, setCurrentView] = useState<
     'mapview' | 'tableview' | 'gridview'
   >('tableview');
   const [tab, setTab] = useState<TabsVehicle>('all');
   const [mapCenter, setMapCenter] = useState([
-    vehicles.length > 1 ? vehicles[0].positionGps.latitude : 0,
-    vehicles.length > 1 ? vehicles[0].positionGps.longitude : 0
+    vehicles.length > 1 ? vehicles[0].latitude : 0,
+    vehicles.length > 1 ? vehicles[0].longitude : 0
   ]);
   const [mapZoom, setMapZoom] = useState(15);
   // Sorting
@@ -89,9 +91,7 @@ export default function StationFleetView({
   ) => {
     const params = new URLSearchParams(searchParams);
     params.set('page', '1');
-    // params.set('sortBy', sortingOption);
     params.set('direction', sortingDirection);
-    // params.set(paramKey, value);
     router.replace(`${pathname}?${params.toString()}`, { scroll: true });
   };
 
@@ -99,10 +99,20 @@ export default function StationFleetView({
     const params = new URLSearchParams(searchParams);
     params.set('page', '1');
     params.set('sortBy', sortingOption);
-    // params.set('direction', sortingDirection);
-    // params.set(paramKey, value);
     router.replace(`${pathname}?${params.toString()}`);
   };
+
+
+  const filteredVehicles = () => vehicles = tab !== 'all' ? vehicles.filter(v => v.status.toString() === tab) : vehicles
+
+  function navToDetailView(id: string): void {
+    router.push(`${pathname}/${id}`);
+  }
+
+  function handleNewClick(): void {
+    navToDetailView('new')
+  }
+
 
   function viewVehicleOnMap(lat: number, lon: number) {
     setMapCenter([lat, lon]);
@@ -140,6 +150,11 @@ export default function StationFleetView({
         </TabsList>
 
         <div className="ml-auto flex items-center gap-2">
+          {isSuperAdmin && <Button size="sm" className="h-8 gap-1" onClick={handleNewClick}>
+            <PlusIcon className="h-3.5 w-3.5" />
+            <span className="hidden md:inline">Add Vehicle</span>
+          </Button>}
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button size="sm" className="h-8 gap-1">
@@ -148,7 +163,7 @@ export default function StationFleetView({
                 ) : (
                   <SortDescIcon className="h-3.5 w-3.5" />
                 )}
-                <span className="sr-only sm:not-sr-only">Sort</span>
+                <span className="hidden md:inline">Sort</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -201,19 +216,19 @@ export default function StationFleetView({
                 {currentView === 'tableview' && (
                   <>
                     <TableIcon className="h-3.5 w-3.5" />
-                    <span className="sr-only sm:not-sr-only">Table View</span>
+                    <span className="hidden md:inline">Table View</span>
                   </>
                 )}
                 {currentView === 'mapview' && (
                   <>
                     <MapPinIcon className="h-3.5 w-3.5" />
-                    <span className="sr-only sm:not-sr-only">Map View</span>
+                    <span className="hidden md:inline">Map View</span>
                   </>
                 )}
                 {currentView === 'gridview' && (
                   <>
                     <LayoutGrid className="h-3.5 w-3.5" />
-                    <span className="sr-only sm:not-sr-only">Grid View</span>
+                    <span className="hidden md:inline">Grid View</span>
                   </>
                 )}
               </Button>
@@ -240,13 +255,15 @@ export default function StationFleetView({
       <TabsContent value={tab}>
         {currentView === 'mapview' ? (
           <MyMapVehicles
-            viewOnMap={() => {}}
+            currentId={currentId}
+            viewOnMapAction={() => { }}
             posix={[mapCenter[0], mapCenter[1]]}
             zoom={mapZoom}
-            stations={vehicles}
+            vehicles={filteredVehicles()}
             offset={0}
             totalVehicles={totalVehicles}
-            currentTab={tab}
+            detailsAction={navToDetailView}
+            tab={tab}
             onCenterChangeAction={(lat: number, lon: number) => {
               setMapCenter([lat, lon]);
             }}
@@ -256,19 +273,23 @@ export default function StationFleetView({
           />
         ) : currentView === 'tableview' ? (
           <TableVehicles
-            stations={vehicles}
+            vehicles={filteredVehicles()}
             totalVehicles={totalVehicles}
             offset={offset}
-            currentTab={tab}
-            viewOnMap={viewVehicleOnMap}
+            tab={tab}
+            viewOnMapAction={viewVehicleOnMap}
+            detailsAction={navToDetailView}
+            currentId={currentId}
           />
         ) : (
           <GridVehicles
-            stations={vehicles}
+            vehicles={filteredVehicles()}
             totalVehicles={totalVehicles}
             offset={offset}
-            currentTab={tab}
-            viewOnMap={viewVehicleOnMap}
+            tab={tab}
+            viewOnMapAction={viewVehicleOnMap}
+            detailsAction={navToDetailView}
+            currentId={currentId}
           />
         )}
       </TabsContent>

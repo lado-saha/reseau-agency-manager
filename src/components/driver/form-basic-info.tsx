@@ -74,9 +74,9 @@ export function DriverBasicInfoForm({
   const onSubmit = async (data: FormValues) => {
     setIsPending(true);
     try {
-      const newDriver = await saveDriverInfo(id, {
+      const newDriver = await saveDriverInfo( adminId, {
         ...driver, license: data.license, healthStatus: data.healthStatus
-      }, adminId)
+      })
       onSubmitCompleteAction(newDriver.id, newDriver);
     } catch (error) {
       setErrorMessage((error as Error).message);

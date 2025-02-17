@@ -13,7 +13,7 @@ type Params = Promise<{ vehicleId: string; id: string }>;
 export default async function Page({ params }: { params: Params }) {
   const { id,  vehicleId } = await params;
   const repo = new VehicleRepository();
-  let original: Vehicle | undefined;
+  // let original: Vehicle | undefined;
   const isNew = vehicleId === 'new';
   const session = await auth(); // Implement this function
 
@@ -21,7 +21,7 @@ export default async function Page({ params }: { params: Params }) {
   if (!session || !session?.user?.id) {
     redirect('/auth/login'); // Redirect unauthorized users
   }
-  const userId = session.user?.id!!;
+  const userId = session.user?.id!;
 
   if (isNew) {
     return (
@@ -34,7 +34,7 @@ export default async function Page({ params }: { params: Params }) {
     );
   }
 
-  original = await repo.getById(vehicleId);
+  const original = await repo.getById(vehicleId);
   
   if (original === undefined) {
     return notFound();

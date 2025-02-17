@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "strict": true,
     "target": "es2017",
     "lib": [
       "dom",
@@ -8,7 +9,10 @@
     ],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": true,
+    // "strict": true,
+    // "noImplicitAny": false,
+    // "strictNullChecks": false,
+    // "strictFunctionTypes": false,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
@@ -28,6 +32,9 @@
       ],
       "@/*": [
         "src/*"
+      ], 
+      "@/app/*": [
+        "src/app/(front)/*"
       ]
     },
     "plugins": [
@@ -38,10 +45,11 @@
   },
   "include": [
     "next-env.d.ts",
-    // "global.d.ts",
+    "src/next-auth.d.ts", // "global.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

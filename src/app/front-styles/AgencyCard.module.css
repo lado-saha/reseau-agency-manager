@@ -1,0 +1,40 @@
+.agencyCard {
+    display: flex;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    margin-top: 70px;
+    align-items: center;
+  }
+  
+  .agencyImage {
+    width: 115px;
+    height: 115px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 50px;
+  } 
+  
+  .agencyDetails h2 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+  }
+  
+  .agencyDetails p {
+    margin: 5px 0;
+    font-size: 1rem;
+  }
+  
+  @media (max-width: 768px) {
+    .agencyCard {
+      flex-direction: column;
+      text-align: center;
+    }
+  
+    .agencyImage {
+      margin-bottom: 10px;
+    }
+  }
+  

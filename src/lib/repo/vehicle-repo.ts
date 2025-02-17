@@ -12,7 +12,6 @@ export class VehicleRepository extends JsonRepository<Vehicle> {
     super('vehicles.json');
   }
 
-
   private async enrichVehicles(vehicles: Vehicle[]): Promise<Vehicle[]> {
     // Extract model IDs from the vehicles
     const modelMap = new Map((await this.modelRepo.getByIds(vehicles.map(v => v.model as string))).map(m => [m.id, m]))
@@ -44,28 +43,28 @@ export class VehicleRepository extends JsonRepository<Vehicle> {
       items: fullVehicles,
     };
   } async getById(id: string): Promise<Vehicle | undefined> {
-    const vehicle = (await super.getById(id))!!
+    const vehicle = (await super.getById(id))!
     const model = await this.modelRepo.getById(vehicle?.model as string)
     return { ...vehicle, model: model as VehicleModel }
   }
 
 
   async saveVehicleBasicInfo(
-    vehicleId: string = "new",
+    id: string = "new",
     vehicle: Partial<Vehicle>,
     adminId: string
   ): Promise<Partial<Vehicle>> {
     const vehicles = await this.fetchData();
 
-    if (vehicleId === "new") {
+    if (id === "new") {
       if (
         vehicles.some(
-          (st) => st.name === vehicle.name
+          (st) => st.registrationNumber === vehicle.registrationNumber && vehicle.ownerId === st.ownerId
         )
       ) {
-        throw new Error("Vehicle with similar name already exists.");
+        throw new Error("Vehicle with similar registration number already exists.");
       }
-      let newVehicle = {
+      const newVehicle = {
         ...vehicle,
         ...auditCreate(adminId),
         id: crypto.randomUUID(),
@@ -81,10 +80,10 @@ export class VehicleRepository extends JsonRepository<Vehicle> {
       return newVehicle;
     } else {
       // We are updating an existing vehicle
-      const vehicleIndex = vehicles.findIndex((vehicle) => vehicle.id === vehicleId);
+      const vehicleIndex = vehicles.findIndex((vehicle) => vehicle.id === id);
 
       if (vehicleIndex === -1) {
-        throw new Error(`Vehicle with id ${vehicleId} not found.`);
+        throw new Error(`Vehicle with id ${id} not found.`);
       }
 
       const newVehicle = { ...vehicles[vehicleIndex], ...vehicle, ...auditUpdate(adminId) };

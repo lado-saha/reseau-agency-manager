@@ -13,7 +13,6 @@ type Params = Promise<{ stationId: string; id: string }>;
 export default async function Page({ params }: { params: Params }) {
   const { id, stationId } = await params;
   const repo = new StationRepository();
-  let original: Station | undefined;
   const isNew = stationId === 'new';
   const session = await auth(); // Implement this function
 
@@ -21,7 +20,7 @@ export default async function Page({ params }: { params: Params }) {
   if (!session || !session?.user?.id) {
     redirect('/auth/login'); // Redirect unauthorized users
   }
-  const userId = session.user?.id!!;
+  const userId = session.user?.id
 
   if (isNew) {
     return (
@@ -33,7 +32,7 @@ export default async function Page({ params }: { params: Params }) {
     );
   }
 
-  original = await repo.getById(stationId);
+  const original = await repo.getById(stationId);
   
   if (original === undefined) {
     return notFound();

@@ -59,8 +59,8 @@ export function StationBasicInfoForm({
   const [stationChief, setStationChief] = useState<User | undefined>(
     oldStation?.chief as User | undefined
   );
-  const [entrancePhotoPreview, setEntrancePhotoPreview] = useState<string | null>(oldStation?.entrancePhoto || null);
-  const [selectedEntrancePhoto, setSelectedEntrancePhoto] = useState<File | null>(null);
+  const [entrancePhotoPreview, setEntrancePhotoPreview] = useState<string | undefined>(oldStation?.entrancePhoto as string);
+  const [selectedEntrancePhoto, setSelectedEntrancePhoto] = useState<File | undefined>(undefined);
   const [errorMessage, setErrorMessage] = useState('');
   const [isPending, setIsPending] = useState<boolean>(false);
 
@@ -116,7 +116,7 @@ export function StationBasicInfoForm({
             name: data.name,
             chief: stationChief.id,
             agency: agencyId,
-            entrancePhoto: selectedEntrancePhoto ? selectedEntrancePhoto : entrancePhotoPreview!!,
+            entrancePhoto: selectedEntrancePhoto ? selectedEntrancePhoto : entrancePhotoPreview!,
           },
           adminId,
         );
@@ -146,8 +146,8 @@ export function StationBasicInfoForm({
   };
 
   const handleRemoveEntrancePhoto = () => {
-    setEntrancePhotoPreview(null);
-    setSelectedEntrancePhoto(null);
+    setEntrancePhotoPreview(undefined);
+    setSelectedEntrancePhoto(undefined);
     const fileInput = document.getElementById('photo-upload') as HTMLInputElement;
     if (fileInput) {
       fileInput.value = ''; // Clear the input value

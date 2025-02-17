@@ -22,54 +22,58 @@ import {
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Vehicle } from '@/lib/models/resource';
-import {
-  VehicleGridItem,
-  VehicleTableItem
-} from '@/components/vehicle/item-vehicle';
+// import {
+//   VehicleGridItem,
+//   VehicleTableItem
+// } from '@/components/vehicle/item-vehicle';
 import { TabsVehicle } from '@/lib/models/helpers';
 import { PAGE_OFFSET } from '@/lib/utils';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import { VehicleGridItem, VehicleTableItem } from './item-vehicle';
 
 export interface PropsVehicles {
-  stations: Vehicle[];
+  vehicles: Vehicle[];
   offset: number;
+  currentId: string;
   totalVehicles: number;
-  currentTab: TabsVehicle;
-  viewOnMap: (lat: number, lon: number) => void;
+  tab: TabsVehicle;
+  viewOnMapAction: (lat: number, lon: number) => void;
+  detailsAction: (id: string) => void
 }
 
-export function vehicleTableSortingOptions(currentTab: string) {
+export function vehicleTableSortingOptions(tab: string) {
   // Default options for 'all' tab
   const defaultOptions = [
+    { displayName: 'Image', fieldName: 'photo' },
     { displayName: 'Model', fieldName: 'model' },
-    { displayName: 'Immatriculation', fieldName: 'immatriculation' },
-    { displayName: 'Seats', fieldName: 'nbSeats' },
+    { displayName: 'Registration Number', fieldName: 'registrationNumber' },
     { displayName: 'Status', fieldName: 'status' },
-    { displayName: 'Health', fieldName: 'health' }
+    { displayName: 'Production Year', fieldName: 'productionYear' },
+    { displayName: 'Health Status', fieldName: 'healthStatus' },
+    { displayName: 'Seat Count', fieldName: 'model.seatCount' },
+    { displayName: 'Fuel Type', fieldName: 'model.fuelType' },
+    { displayName: 'Luggage Spaces', fieldName: 'model.luggageSpaces' },
   ];
 
   // Additional options for specific tabs
   let additionalOptions: { displayName: string; fieldName: string }[] = [];
 
-  switch (currentTab) {
+  switch (tab) {
     case 'incoming':
       additionalOptions = [
-        { displayName: 'Origin', fieldName: 'origin' },
-        { displayName: 'Departure Time', fieldName: 'departureTime' },
-        { displayName: 'Estimated Arrival', fieldName: 'estimatedArrivalTime' }
+        { displayName: 'Origin', fieldName: 'tenant.address.city' },
+        { displayName: 'Arrival Time', fieldName: 'tenancyEndTime' },
       ];
       break;
     case 'outgoing':
       additionalOptions = [
-        { displayName: 'Destination', fieldName: 'destination' },
-        { displayName: 'Departure Time', fieldName: 'departureTime' },
-        { displayName: 'Estimated Arrival', fieldName: 'estimatedArrivalTime' }
+        { displayName: 'Destination', fieldName: 'nextTenant.address.city' },
+        { displayName: 'Arrival Time', fieldName: 'lastStatusSwitchTime' },
       ];
       break;
     case 'stationed':
       additionalOptions = [
-        { displayName: 'Arrived On', fieldName: 'arrivedOn' },
-        { displayName: 'Arrived From', fieldName: 'arrivedFrom' }
+        { displayName: 'Arrived On', fieldName: 'tenancyStartedTime' },
       ];
       break;
     default:
@@ -158,42 +162,39 @@ function Pagination({
 }
 
 // Reusable function to render headers
-function RenderTableHeaders(currentTab: TabsVehicle) {
-  switch (currentTab) {
+
+function RenderTableHeaders(tab: TabsVehicle) {
+  switch (tab) {
     case 'incoming':
       return (
         <>
           <TableHead>Origin</TableHead>
-          <TableHead>Departure Time</TableHead>
-          <TableHead>Estimated Arrival</TableHead>
+          <TableHead>Arrival Time</TableHead>
         </>
       );
     case 'outgoing':
       return (
         <>
           <TableHead>Destination</TableHead>
-          <TableHead>Departure Time</TableHead>
-          <TableHead>Estimated Arrival</TableHead>
+          <TableHead>Arrival Time</TableHead>
         </>
       );
     case 'stationed':
       return (
         <>
           <TableHead>Arrived On</TableHead>
-          <TableHead>Arrived From</TableHead>
         </>
       );
     default:
       return null;
   }
 }
-
 export function TableVehicles({
-  stations: vehicles,
+  vehicles,
   offset,
   totalVehicles,
-  currentTab,
-  viewOnMap
+  tab,
+  viewOnMapAction, detailsAction, currentId
 }: PropsVehicles) {
   return (
     <Card>
@@ -211,11 +212,14 @@ export function TableVehicles({
                 <span>Image</span>
               </TableHead>
               <TableHead>Model</TableHead>
-              <TableHead>Immatriculation</TableHead>
-              {currentTab === 'all' && <TableHead>Status</TableHead>}
-              <TableHead>Seats</TableHead>
-              <TableHead>Health</TableHead>
-              {RenderTableHeaders(currentTab)}
+              <TableHead>Registration Number</TableHead>
+              {tab === 'all' && <TableHead>Status</TableHead>}
+              <TableHead>Production Year</TableHead>
+              <TableHead>Health Status</TableHead>
+              <TableHead>Seat Count</TableHead>
+              <TableHead>Fuel Type</TableHead>
+              <TableHead>Luggage Spaces</TableHead>
+              {RenderTableHeaders(tab)}
               <TableHead>
                 <span className="sr-only">Actions</span>
               </TableHead>
@@ -224,10 +228,12 @@ export function TableVehicles({
           <TableBody>
             {vehicles.map((vehicle) => (
               <VehicleTableItem
-                viewOnMap={viewOnMap}
-                key={vehicle.immatriculation}
+                viewOnMapAction={viewOnMapAction}
+                key={vehicle.registrationNumber}
                 vehicle={vehicle}
-                currentTab={currentTab}
+                tab={tab}
+                currentId={currentId}
+                detailsAction={detailsAction}
               />
             ))}
           </TableBody>
@@ -239,11 +245,11 @@ export function TableVehicles({
 }
 
 export function GridVehicles({
-  stations: vehicles,
+  vehicles,
   offset,
   totalVehicles,
-  currentTab,
-  viewOnMap
+  tab,
+  viewOnMapAction, detailsAction, currentId
 }: PropsVehicles) {
   return (
     <Card>
@@ -257,10 +263,12 @@ export function GridVehicles({
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {vehicles.map((vehicle) => (
             <VehicleGridItem
-              viewOnMap={viewOnMap}
-              key={vehicle.immatriculation}
+              viewOnMapAction={viewOnMapAction}
+              key={vehicle.registrationNumber}
               vehicle={vehicle}
-              currentTab={currentTab}
+              tab={tab}
+              currentId={currentId}
+              detailsAction={detailsAction}
             />
           ))}
         </div>

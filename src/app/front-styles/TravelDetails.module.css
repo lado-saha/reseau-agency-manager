@@ -1,0 +1,105 @@
+.detailsContainer {
+  width: 90%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Première carte */
+.card {
+  margin: 70px 0;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  height: 350px;
+}
+
+.imageContainer img {
+  width: 150vh;
+  height: 250px;
+  max-width: 200px;
+  border-radius: 8px;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.content p{
+  margin: 7px 20px;
+}
+
+.content h2{
+  margin: 7px 20px;
+}
+/* Deuxième carte */
+.extraCard {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.infoCard {
+  flex: 1;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.busImage,
+.driverImage {
+  width: 100%;
+  max-width: 100px;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .card {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .extraCard {
+    flex-direction: column;
+  }
+}
+
+
+
+
+.buttons {
+  display: flex;
+  gap: 20px;
+}
+
+.buttons .bookButton {
+  background-color: #0066cc;
+  color: #fff;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 16px;
+  margin: 5px 20px;
+}
+
+.buttons .bookButton:hover {
+  background-color: #004a99;
+}
+

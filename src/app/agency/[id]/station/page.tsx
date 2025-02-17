@@ -9,7 +9,6 @@ import StationListView from '@/components/station/list-station';
 export const metadata: Metadata = {
   title: 'Station'
 };
-
 export default async function Page(props: {
   searchParams: Promise<{
     query: string;

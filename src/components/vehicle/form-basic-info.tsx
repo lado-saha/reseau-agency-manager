@@ -21,11 +21,9 @@ import {
   CardDescription,
   CardContent,
 } from '@/components/ui/card';
-import { HEALTH_STATUS, HEALTH_STATUS_OPTIONS, Vehicle, VehicleModel } from '@/lib/models/resource';
+import { convertBitmaskToMatrix, HEALTH_STATUS, HEALTH_STATUS_OPTIONS, Vehicle, VehicleModel } from '@/lib/models/resource';
 import { ErrorDialog } from '../dialogs/dialog-error';
 import VehicleModelLayoutEditor from '../vehicle-model/editor-vehicle-model-schema';
-import { SearchDialogVehicleModel } from '../vehicle-model/search-diag-vehicle-model';
-import { convertBitmaskToMatrix } from '@/lib/models/resource';
 import { auditUpdOrNew } from '@/lib/models/helpers';
 import { saveVehicleBasicInfo, searchVehicleModel } from '@/lib/actions';
 import { SearchDialogGeneric } from '../dialogs/search-dialog';
@@ -73,8 +71,8 @@ export function VehicleBasicInfoForm({
   adminId: string;
   agencyId: string;
 }) {
-  const [vehicleModel, setVehicleModel] = useState<VehicleModel | undefined>(originalVehicle?.model);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [vehicleModel, setVehicleModel] = useState<VehicleModel | undefined>(originalVehicle?.model as VehicleModel);
+  const [errorMessage, setErrorMessage] = useState('')
   const [isPending, setIsPending] = useState<boolean>(false);
 
   const form = useForm<FormValues>({
@@ -104,7 +102,7 @@ export function VehicleBasicInfoForm({
 
       }, adminId)
 
-      onSubmitCompleteAction(newVehicle.id!!, newVehicle);
+      onSubmitCompleteAction(newVehicle.id!, newVehicle);
     } catch (error) {
       setErrorMessage((error as Error).message);
     } finally {

@@ -33,17 +33,17 @@ const ALLOWED_FILE_TYPES = ['image/jpeg', 'image/png', 'application/pdf'];
 
 const fileSchema = isClient
   ? z
-      .instanceof(File, { message: 'A valid file is required.' })
-      .refine((file) => file.size > 0, { message: 'File cannot be empty.' })
-      .refine((file) => file.size <= MAX_FILE_SIZE, {
-        message: 'File size must be 2MB or less.'
-      })
-      .refine((file) => ALLOWED_FILE_TYPES.includes(file.type), {
-        message: 'Only JPEG, PNG, and PDF files are allowed.'
-      })
-      .refine((file) => !!file.name && file.name.trim().length > 0, {
-        message: 'File must have a valid name.'
-      })
+    .instanceof(File, { message: 'A valid file is required.' })
+    .refine((file) => file.size > 0, { message: 'File cannot be empty.' })
+    .refine((file) => file.size <= MAX_FILE_SIZE, {
+      message: 'File size must be 2MB or less.'
+    })
+    .refine((file) => ALLOWED_FILE_TYPES.includes(file.type), {
+      message: 'Only JPEG, PNG, and PDF files are allowed.'
+    })
+    .refine((file) => !!file.name && file.name.trim().length > 0, {
+      message: 'File must have a valid name.'
+    })
   : z.any();
 
 const legalDocumentsSchema = z.object({
@@ -66,7 +66,7 @@ export function LegalDocumentsForm({
   oldLegalInfo?: AgencyLegalDocuments;
   onSubmitCompleteAction: (data: AgencyLegalDocuments) => void;
 }) {
-  const [filePreviews, setFilePreviews] = useState<Record<string, string>>({});
+  const [filePreviews, setFilePreviews] = useState<Record<string, string | File>>({});
   const [errorMessage, setErrorMessage] = useState('');
   const [isPending, setIsPending] = useState(false);
 
@@ -123,7 +123,7 @@ export function LegalDocumentsForm({
     description: string,
     accept: string
   ) => {
-    const fileInputRef = useRef<HTMLInputElement | null>(null); // Reference to input
+    const fileInputRef = useRef<HTMLInputElement | undefined>(undefined); // Reference to input
 
     return (
       <FormField
@@ -136,7 +136,7 @@ export function LegalDocumentsForm({
             <FormControl>
               <div className="flex w-full items-center space-x-2">
                 <Input
-                  ref={(ref) => (fileInputRef.current = ref)} // Attach ref
+                  ref={(ref) => { fileInputRef.current = ref || undefined }} // Attach ref
                   type="file"
                   accept={accept}
                   onChange={(e) => {
@@ -151,7 +151,7 @@ export function LegalDocumentsForm({
                       variant="outline"
                       onClick={async (e) => {
                         e.preventDefault();
-                        const url = await getBlobURL(filePreviews[name]);
+                        const url = await getBlobURL(filePreviews[name] as string);
                         url && window.open(url, '_blank');
                       }}
                     >

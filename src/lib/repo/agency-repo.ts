@@ -16,7 +16,7 @@ export class AgencyRepository extends JsonRepository<Agency> {
 
       if (typeof fileOrUrl !== 'string') {
         const formData = new FormData();
-        formData.append('file', fileOrUrl);
+        formData.append('file', fileOrUrl as File);
 
         const uploadResponse = await fetch(`${API_URL}/api/upload`, { method: 'POST', body: formData });
         const { fileUrl } = await uploadResponse.json();
@@ -54,7 +54,7 @@ export class AgencyRepository extends JsonRepository<Agency> {
         newBasicInfo.logo = fileUrl
       }
 
-      let newAgency = {
+      const newAgency = {
         id: crypto.randomUUID(),
         ownerId: adminId,
         basicInfo: newBasicInfo,

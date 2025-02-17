@@ -1,0 +1,160 @@
+/* styles/FooterSection.module.css */
+
+.footer {
+    background-color: #333;
+    color: #fff;
+    padding: 2rem 1rem;
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.9rem;
+  }
+  
+  .footerContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 1200px;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .footerLogo,
+  .footerApps,
+  .footerLinks,
+  .footerSocial {
+    flex: 1;
+    padding: 0.5rem;
+  }
+  
+  .footerLogo h3 {
+    font-size: 1.5rem;
+    color: #f9a826;
+  }
+  
+  .footerLogo p {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  
+  .footerApps h4,
+  .footerLinks h4,
+  .footerSocial h4 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .downloadLinks {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  .downloadButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #444;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.3s;
+  }
+  
+  .downloadButton:hover {
+    background-color: #555;
+  }
+  
+  .chatbotButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #f9a826;
+    color: #333;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.3s;
+    margin-top: 1rem;
+  }
+  
+  .chatbotButton:hover {
+    background-color: #ffbf4f;
+  }
+  
+  .footerLinks ul,
+  .footerBottom ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .footerLinks ul li a,
+  .footerBottom ul li a {
+    color: #ddd;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  
+  .footerLinks ul li a:hover,
+  .footerBottom ul li a:hover {
+    color: #f9a826;
+  }
+  
+  .footerSocial .socialIcons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  .socialIcons a {
+    color: #ddd;
+    background-color: #444;
+    padding: 0.5rem;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s, color 0.3s;
+  }
+  
+  .socialIcons a:hover {
+    color: white;
+    background-color: #f9a826;
+  }
+  
+  .footerBottom {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.8rem;
+    color: #aaa;
+    border-top: 1px solid #555;
+    padding-top: 1rem;
+    width: 100%;
+    max-width: 1200px;
+  }
+  
+  .footerBottom ul {
+    margin-top: 1rem;
+  }
+  
+  .footerBottom p {
+    margin: 0;
+  }
+  
+  @media (min-width: 768px) {
+    .footerContainer {
+      flex-direction: row;
+      text-align: left;
+    }
+  }
+  

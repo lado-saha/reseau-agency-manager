@@ -58,8 +58,21 @@ export class EmployeeRepository<T extends Employee<EmployeeRole>> extends JsonRe
     if (!employee) {
       throw new Error('This user is not currently employed')
     }
-    return employee;
+    return employee as unknown as Employee<T>;
   }
+
+  async getByUserIdOnly<T extends EmployeeRole>(
+    userId: string
+  ): Promise<Employee<T>> {
+    const employees = await this.fetchData();
+
+    const employee = employees.find((empl) => empl.user == userId)
+    if (!employee) {
+      throw new Error('This user is not currently employed')
+    }
+    return employee as unknown as Employee<T>;
+  }
+
 
   async getByUserEmail<T extends EmployeeRole>(
     email: string,
@@ -76,7 +89,7 @@ export class EmployeeRepository<T extends Employee<EmployeeRole>> extends JsonRe
       throw new Error('This user is not currently employed')
     }
     empl.user = user
-    return empl
+    return empl as unknown as Employee<T>
   }
 
 
@@ -84,7 +97,6 @@ export class EmployeeRepository<T extends Employee<EmployeeRole>> extends JsonRe
   async addEmployee(
     employee: T,
     adminId: string,
-    agencyId: string,
   ): Promise<T> {
     const employees = await this.fetchData();
     const empId = employee.id || 'new'
@@ -131,7 +143,7 @@ export class EmployeeRepository<T extends Employee<EmployeeRole>> extends JsonRe
   async getById(id: string): Promise<T | undefined> {
     const empl = await super.getById(id)
     const user = await this.userRepo.getById(empl?.user as string)
-    return { ...empl!!, user }
+    return { ...empl!, user }
   }
   // Update Employee
   //

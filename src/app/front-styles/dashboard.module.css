@@ -1,0 +1,462 @@
+/* app/styles/dashboard.module.css */
+
+.dashboardLayout {
+  display: flex;
+  height: 100vh;
+  background-color: #f4f5f7;
+  cursor: pointer;
+  padding: 10px;
+  border: none;
+  color: #fff;
+  border-radius: 4px;
+  font-family: Arial, sans-serif;
+  margin: -1%;
+  padding: 0;
+  transition: background-color 0.3s;
+  -webkit-transition: background-color 0.3s;
+  -moz-transition: background-color 0.3s;
+  -ms-transition: background-color 0.3s;
+  -o-transition: background-color 0.3s;
+}
+
+
+
+
+
+.sidebar button:hover {
+  background-color: #3c4048;
+}
+
+.mainContent {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+
+
+
+
+
+
+
+
+.topbar {
+  height: 65px;
+  background-color: #0070f3;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  position: sticky;
+  top: 0; /* Assure que la Topbar reste en haut de la page */
+  z-index: 0; 
+} 
+
+
+
+.hamburger {
+  background: none;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.searchContainer {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+}
+
+.searchIcon {
+  color: #888;
+  margin-right: 8px;
+}
+
+.searchInput {
+  width: 100%;
+  max-width: 300px;
+  padding: 8px;
+  border-radius: 4px;
+  border: none;
+  outline: none;
+}
+
+.accountSwitch {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .topbar {
+    flex-direction: column;
+    height: auto;
+    padding: 10px;
+  }
+
+  .hamburger {
+    align-self: flex-start;
+  }
+
+  .searchContainer {
+    width: 100%;
+    padding: 10px 0;
+  }
+
+  .searchInput {
+    max-width: 100%;
+  }
+}
+
+
+
+/* Topbar */
+
+
+.topbar {
+height: 60px;
+background-color: #0070f3;
+color: #ffffff;
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 0 20px;
+position: sticky;
+top: 0;
+z-index: 1000;
+}
+
+.hamburger {
+background: none;
+border: none;
+color: #ffffff;
+cursor: pointer;
+display: flex;
+align-items: center;
+}
+
+/* Sidebar */
+
+.sidebar {
+position: fixed;
+top: 0;
+left: -250px; /* Masqué par défaut en dehors de l'écran */
+width: 250px;
+height: 100vh;
+background-color: #333;
+color: #ffffff;
+padding: 20px;
+transition: left 0.3s ease;
+z-index: 500;
+}
+
+.sidebarVisible {
+left: 0; /* Lorsque la Sidebar est visible, elle s'affiche */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+.topbar {
+  flex-direction: column;
+  height: auto;
+  padding: 10px;
+}
+
+.hamburger {
+  align-self: flex-start;
+}
+
+.searchContainer {
+  width: 100%;
+  padding: 10px 0;
+}
+
+.searchInput {
+  max-width: 100%;
+}
+
+.sidebar {
+  width: 200px; /* Réduire la largeur de la Sidebar sur mobile */
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Sidebar */
+.sidebar {
+width: 210px;
+background-color: #34495e;
+color: #ecf0f1;
+padding: 20px;
+font-family: 'Arial', sans-serif;
+height: 100vh;
+position: fixed;
+overflow-y: auto;
+box-shadow: 2px 0 5px rgba(0, 0, 0, 0.15);
+transition: all 0.3s ease;
+}
+
+/* Sidebar when visible */
+.sidebar.sidebarVisible {
+width: 225px;
+transition: width 0.3s ease;
+}
+
+/* Sidebar when closed */
+.sidebar.closed {
+width: 0;
+padding: 0;
+overflow: hidden;
+transition: width 0.3s ease;
+}
+
+/* Sidebar title styling */
+.sidebar h3 {
+color: #ecf0f1;
+text-align: center;
+font-size: 2.7em;
+margin-bottom: 30px;
+font-weight: bold;
+}
+
+/* Main menu list */
+.menu-list {
+list-style-type: none; /* Remove bullets */
+padding: 0;
+margin: 0;
+}
+
+/* Menu item styling */
+.menu-list li {
+margin-bottom: 20px; /* Space between items */
+display: flex;
+align-items: center;
+cursor: pointer;
+padding: 10px 15px;
+color: #ecf0f1;
+border-radius: 4px;
+transition: background-color 0.3s ease;
+}
+
+.menu-list li:hover {
+background-color: #1abc9c;
+}
+
+/* Submenu styling */
+.submenu {
+list-style-type: none; /* Remove bullets */
+padding-left: 20px;
+margin-top: 10px;
+}
+
+.submenu li {
+margin-bottom: 10px; /* Space between submenu items */
+}
+
+/* Submenu links */
+.submenu a {
+color: #bdc3c7;
+font-size: 0.9em;
+text-decoration: none;
+}
+
+.submenu a:hover {
+color: #ffffff;
+}
+
+/* Sidebar links */
+.sidebar a {
+color: #d7d9da;
+text-decoration: none;
+display: flex;
+align-items: center;
+padding: 12px 15px;
+border-radius: 4px;
+transition: background-color 0.3s ease;
+}
+
+.sidebar a:hover {
+background-color: #1abc9c;
+}
+
+/* Arrow icon styling */
+.arrow {
+margin-left: auto;
+font-size: 0.9em;
+color: #bdc3c7;
+}
+
+/* Category title styling with additional spacing */
+.category-title {
+font-size: 2.4em;
+color: rgba(245, 243, 243, 0.7);
+margin-top: 30px; /* More space above sections */
+margin-bottom: 15px; /* Space below each section title */
+}
+
+/* Icon spacing */
+.fa-icon {
+margin-right: 55px;
+}
+
+
+
+/* body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f0f2f5;
+}
+*/
+/*
+button:hover {
+  background-color: #005bb5;
+}
+*/
+
+
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 45px; /* Ajustez cette valeur pour correspondre à la hauteur de la topbar */
+  left: -250px; /* Masqué par défaut en dehors de l'écran */
+  width: 200px;
+  height: calc(100vh - 65px); /* Ajuste la hauteur pour ne pas recouvrir la topbar */
+  color: #ffffff;
+  padding: 20px;
+  transition: left 0.3s ease;
+  z-index: 500; /* Assurez-vous que c'est inférieur au z-index de la topbar */
+}
+
+.sidebarVisible {
+  left: 0; /* Lorsque la Sidebar est visible, elle s'affiche */
+}
+
+/* Topbar */
+.topbar {
+  height: 65px;
+  background-color: #0070f3;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  position: sticky;
+  top: 0;
+  z-index: 1000; /* Assurez-vous que la topbar est au-dessus de la sidebar */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Enlever les puces et appliquer des styles professionnels aux éléments de menu */
+.menuList {
+  list-style-type: none; /* Enlève les puces */
+  padding: 0;
+  margin: 0;
+}
+
+.menuList li {
+  display: flex;
+  align-items: center;
+  padding: 1px 15px;
+  margin-bottom: 1px; /* Espacement entre chaque élément */
+  color: #ecf0f1;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  cursor: pointer;
+}
+
+.menuList li:hover {
+  background-color: #0070f3; /* Couleur de fond au survol */
+  color: #ffffff;
+}
+
+.menuList li a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit; /* Utilise la couleur de l'élément parent */
+  width: 100%; /* Prend tout l'espace disponible */
+}
+
+/* Style des icônes dans le menu */
+.menuList li .fa-icon {
+  margin-right: 10px; /* Espace entre l'icône et le texte */
+  font-size: 18px; /* Taille de l'icône */
+  color: #bdc3c7;
+  transition: color 0.3s ease;
+}
+
+/* Style du texte de chaque élément */
+.menuList li span {
+  font-size: 16px; /* Taille du texte */
+  font-weight: 500;
+}
+
+/* Catégories de la sidebar */
+.categoryTitle {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: rgb(255, 255, 255); /* Rouge légèrement transparent */
+  margin-top: 5px; /* Espace au-dessus de chaque catégorie */
+  margin-bottom: 0px; /* Espace en dessous de chaque titre */
+}
+
+/* Espacement pour les sous-catégories */
+.submenu {
+  list-style-type: none; /* Enlève les puces */
+  padding-left: 20px;
+  margin-top: 5px;
+}
+
+.submenu li {
+  margin-bottom: 10px;
+}
+
+/* Améliorer l'apparence des liens de la sidebar */
+.sidebar a {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar a:hover {
+  background-color: #0070f3;
+  color: #ffffff;
+}

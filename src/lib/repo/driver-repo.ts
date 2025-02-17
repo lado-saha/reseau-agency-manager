@@ -44,7 +44,7 @@ export class DriverRepository extends JsonRepository<Driver> {
   } 
 
   async getById(id: string): Promise<Driver | undefined> {
-    const driver = (await super.getById(id))!!
+    const driver = (await super.getById(id))!
 
     const empl = await this.emplRepo.getById(driver?.employee as string)
     return { ...driver, employee: empl as AgencyEmployee }
@@ -61,7 +61,7 @@ export class DriverRepository extends JsonRepository<Driver> {
     if ((driver as Driver).license === undefined) {// We are saving from employee
       const empl = driver as AgencyEmployee
 
-      let newDriver = {
+      const newDriver = {
         ...newResource(crypto.randomUUID(), empl.orgId, adminId),
         employee: empl.id,
         license: '',

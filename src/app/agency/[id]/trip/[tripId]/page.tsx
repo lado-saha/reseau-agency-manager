@@ -13,7 +13,7 @@ type Params = Promise<{ tripId: string; id: string }>;
 export default async function Page({ params }: { params: Params }) {
   const { id, tripId } = await params;
   const repo = new TripRepository();
-  let original: Trip | undefined;
+  // let original: Trip | undefined;
   const isNew = tripId === 'new';
   const session = await auth(); // Implement this function
 
@@ -21,7 +21,7 @@ export default async function Page({ params }: { params: Params }) {
   if (!session || !session?.user?.id) {
     redirect('/auth/login'); // Redirect unauthorized users
   }
-  const userId = session.user?.id!!;
+  const userId = session.user?.id!;
 
   if (isNew) {
     return (
@@ -34,7 +34,7 @@ export default async function Page({ params }: { params: Params }) {
     );
   }
 
-  original = await repo.getById(tripId);
+  const original = await repo.getById(tripId);
 
   if (original === undefined) {
     return notFound();
