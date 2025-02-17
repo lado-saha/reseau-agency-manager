@@ -68,6 +68,7 @@ export const auditUpdate = (by: string) => ({
  * The different tabs under which we can view a  bus. The all tab shows everything
  */
 export type TabsVehicle = 'all' | 'incoming' | 'outgoing' | 'stationed';
+export type TabsDriver = 'all' | 'incoming' | 'outgoing' | 'stationed';
 export type TabsVehicleModel = 'all' | 'car' | 'bus' | 'coaster';
 export type TabsVehicleModelDetails = 'info' | 'layout' | 'stats';
 export type TabsAgencyDetails = 'creator-info' | 'basic-info' | 'legal-info' | 'social-media';
