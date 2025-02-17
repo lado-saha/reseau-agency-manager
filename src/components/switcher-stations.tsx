@@ -1,12 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { ChevronsUpDown, Plus, Search } from 'lucide-react';
-
-/**
- *
- * The list view to select the station
- */
+import { ChevronsUpDown, Plus } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,10 +18,35 @@ import {
   useSidebar
 } from 'src/components/ui/sidebar';
 import { SearchInput } from '@/components/search-bar';
-import { Choice } from '@/lib/paths';
-export function StationSwitcher({ choices }: { choices: Choice[] }) {
+import { usePathname } from 'next/navigation';
+import { StationRepository } from '@/lib/repo/station-repo';
+import { Station } from '@/lib/models/station';
+
+export function StationSwitcher() {
   const { isMobile } = useSidebar();
-  const [activeChoice, setActiveTeam] = React.useState(choices[0]);
+  const pathname = usePathname();
+  const agencyId = pathname.split('/')[2];
+
+  const [stations, setStations] = React.useState<Station[] | undefined>(undefined);
+  const [activeStation, setActiveStation] = React.useState<Station | undefined>();
+
+  React.useEffect(() => {
+    const getStations = async () => {
+      try {
+        const stationRepo = new StationRepository();
+        const result = await stationRepo.getAll('');
+        setStations(result.items);
+        // Set the first station as active by default
+        if (result.items.length > 0) {
+          setActiveStation(result.items[0]);
+        }
+      } catch (e) {
+        console.error((e as Error).message);
+      }
+    };
+
+    getStations();
+  }, []); // Empty dependency array ensures this runs only once on mount
 
   return (
     <SidebarMenu>
@@ -37,15 +57,24 @@ export function StationSwitcher({ choices }: { choices: Choice[] }) {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                <activeChoice.logo className="size-4" />
-              </div>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">
-                  {activeChoice.name}
-                </span>
-                <span className="truncate text-xs">{activeChoice.plan}</span>
-              </div>
+              {activeStation ? (
+                <>
+                  <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                    {/* Replace with your station logo or icon */}
+                    <span className="size-4">🚉</span>
+                  </div>
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    <span className="truncate font-semibold">
+                      {activeStation.name}
+                    </span>
+                    <span className="truncate text-xs">Station</span>
+                  </div>
+                </>
+              ) : (
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-semibold">No Station Selected</span>
+                </div>
+              )}
               <ChevronsUpDown className="ml-auto" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
@@ -55,8 +84,6 @@ export function StationSwitcher({ choices }: { choices: Choice[] }) {
             side={isMobile ? 'bottom' : 'right'}
             sideOffset={4}
           >
-            {/* <SearchInput className="flex  w-full bg-background" /> */}
-            <SearchInput />
             <DropdownMenuLabel className="text-xs text-muted-foreground">
               Travel Station
             </DropdownMenuLabel>
@@ -67,18 +94,18 @@ export function StationSwitcher({ choices }: { choices: Choice[] }) {
               <div className="font-bold text-muted-foreground">New</div>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuSeparator />
             <div className="overflow-y-auto max-h-64">
-              {choices.map((stations, index) => (
+              {stations?.map((station, index) => (
                 <DropdownMenuItem
-                  key={stations.name}
-                  onClick={() => setActiveTeam(stations)}
+                  key={station.id}
+                  onClick={() => setActiveStation(station)}
                   className="gap-2 p-2"
                 >
                   <div className="flex size-6 items-center justify-center rounded-sm border">
-                    <stations.logo className="size-4 shrink-0" />
+                    {/* Replace with your station logo or icon */}
+                    <span className="size-4">🚉</span>
                   </div>
-                  {stations.name}
+                  {station.name}
                   <DropdownMenuShortcut>Ctrl+{index + 1}</DropdownMenuShortcut>
                 </DropdownMenuItem>
               ))}

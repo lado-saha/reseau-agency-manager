@@ -31,21 +31,19 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   showCalendar: boolean;
   user: User;
   urlPaths: UrlPath[];
-  choices: Choice[];
 }
 
 export function AppSidebar({
   showCalendar,
   user,
   urlPaths,
-  choices,
   ...props
 }: AppSidebarProps) {
   // const user = (await auth())?.user!!;
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
-        <StationSwitcher choices={choices} />
+        <StationSwitcher />
       </SidebarHeader>
       <SidebarContent className="overflow-x-hidden">
         {showCalendar && (

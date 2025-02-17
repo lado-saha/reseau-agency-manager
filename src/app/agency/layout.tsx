@@ -54,7 +54,6 @@ export default function AgencyLayout({ children }: { children: React.ReactNode }
       {!hideSidebar && user ? (
         <AppSidebar
           urlPaths={URL_PATHS_AGENCY}
-          choices={[{ logo: CompassIcon, name: 'General Voyage', plan: 'Construire un futur' }]}
           user={user}
           showCalendar={showCalendar}
         />

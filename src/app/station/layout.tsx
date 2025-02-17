@@ -68,7 +68,6 @@ export default function StationLayout({
 
           showCalendar={['vehicles'].includes(currentPage)}
           urlPaths={[]}
-          choices={[{ logo: PersonStandingIcon, name: 'Joe', plan: 'jsd' }]}
         />
       )}
 
